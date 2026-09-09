@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+node_modules/.tmp
+
+# Claude Code local settings
+.claude/settings.local.json

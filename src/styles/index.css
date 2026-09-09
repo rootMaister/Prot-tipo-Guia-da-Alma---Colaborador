@@ -1,0 +1,78 @@
+/* Tailwind v4 entry.
+
+   Deliberately NOT `@import '@guia-da-alma/ds/styles'`: the package's dist/styles.css
+   still carries `@source './src'` and `@source './.storybook'` — paths that exist in the
+   design-system repo but not inside dist/. Importing it yields the tokens, but Tailwind
+   never scans the DS's own compiled JS, so every utility class used *inside* the DS
+   components is missing from the output and they render unstyled, with no error at all.
+   So we pull the tokens only, and do the DS source scan ourselves. */
+@import 'tailwindcss';
+@plugin 'tailwindcss-animate';
+@source '../../node_modules/@guia-da-alma/ds/dist';
+@import '@guia-da-alma/ds/tokens';
+
+/* Grayscale antialiasing, to match how Figma rasterises text.
+
+   Chrome on macOS defaults to subpixel antialiasing, which thickens every stroke — most
+   visibly on Calma Serif, whose thin strokes gain roughly half a pixel each and read as a
+   heavier weight than the file. Figma always renders grayscale, so the two only agree
+   once the page asks for it too.
+
+   This is not a Calma-only fix and it is not a workaround for the missing SemiBold: it is
+   the setting that makes screen rendering match the design tool. Belongs in the design
+   system rather than here — see DS-GAPS.md. */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* The only place the step transition is allowed to be clipped.
+
+     Screens slide ±24px on the way in and out, which would otherwise widen the page and
+     raise a horizontal scrollbar mid-transition. Clipping it here, at the viewport, rather
+     than around the content is deliberate: the DS input focus ring is a 4px box-shadow,
+     and any `overflow` container near the fields slices it off. See item 30 of
+     DS-GAPS.md. */
+  overflow-x: hidden;
+}
+
+/* Calma Serif ships only the Regular (400) weight — there is no SemiBold file in the
+   design system. A weight utility on display text would therefore not fail visibly; the
+   browser would synthesise a fake bold instead. Turning synthesis off makes that
+   impossible, so display text always renders the real typeface.
+
+   This matches the design: the Figma text styles bind a `font-weight/semibold` variable
+   but resolve to `weight: 400`, because the face has nothing heavier to pick. */
+.font-display {
+  font-synthesis-weight: none;
+}
+
+/* Error shake, used by `field-shake` to point at whichever input just failed. Small
+   amplitude and a short run: enough to catch the eye, not enough to read as a bug. */
+@keyframes field-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+.animate-field-shake {
+  animation: field-shake 400ms var(--ease-standard, ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-field-shake {
+    animation: none;
+  }
+}
