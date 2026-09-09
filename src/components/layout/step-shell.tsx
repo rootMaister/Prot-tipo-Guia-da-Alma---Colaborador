@@ -59,7 +59,7 @@ export function StepShell({ stepLabel, progress, onBack, wide = false, children 
   const setFooterNode = useFooterSlot()
 
   return (
-    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col gap-3 lg:gap-0">
+    <div className="bg-surface-base pt-safe px-safe flex h-app flex-col gap-3 lg:gap-0">
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
       </header>

@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
     element: <CadastroLayout />,
     children: [
       { index: true, element: <Navigate to="splash" replace /> },
-      // The screen owns the full viewport: no review chrome wraps it, so `min-h-dvh`
+      // The screen owns the full viewport: no review chrome wraps it, so `min-h-app`
       // means the real thing.
       { path: ':step', element: <CadastroStepRoute /> },
     ],

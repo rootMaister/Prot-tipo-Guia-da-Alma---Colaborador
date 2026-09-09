@@ -104,6 +104,23 @@ tela decide mas que aparecem no chrome viajam por `step-chrome.tsx`:
 - **progresso dinâmico** — `progress` no `StepBody`, só onde a barra depende da resposta
   (50→60 ao escolher horário, 75→85 ao preencher o CPF).
 
+### Altura da tela e o teclado
+
+Não use `min-h-dvh`. No iOS o teclado **não** encolhe o viewport de layout, então `dvh`
+continua medindo a tela inteira enquanto só uma faixa está visível — o rodapé cai atrás do
+teclado e a página vira rolável só para alcançar o botão de ação.
+
+`lib/use-viewport-height.ts` publica `visualViewport.height` em `--app-height`, e há duas
+utilidades:
+
+- **`h-app`** (altura definida) para telas que fixam rodapé e rolam por dentro — os dois
+  shells de formulário e o detalhe da sessão. `min-height` não serve aqui: é só um piso, o
+  conteúdo continua empurrando a caixa e a área `flex-1` nunca encolhe.
+- **`min-h-app`** para as demais, que crescem e rolam com a página.
+
+Quem usa `h-app` precisa de `min-h-0` em toda a cadeia flex até o contêiner de rolagem,
+senão o item flex não encolhe abaixo do conteúdo.
+
 Cor do chrome do navegador: `lib/use-screen-surface.ts`. Cada shell (e cada tela de sangria
 total) declara seu token de superfície, e o hook espelha a cor resolvida no `background` do
 `<html>` e na meta `theme-color` — que é de onde o Safari no iOS tinge a barra de status e a

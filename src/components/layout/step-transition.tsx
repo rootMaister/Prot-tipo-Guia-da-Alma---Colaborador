@@ -45,7 +45,7 @@ type StepTransitionProps = {
  * Slides one step out and the next one in: forward, the incoming screen comes from the
  * right; going back, it comes from the left.
  *
- * `mode="wait"` so the two screens never overlap — both are `min-h-dvh`, and letting them
+ * `mode="wait"` so the two screens never overlap — both are `min-h-app`, and letting them
  * coexist would double the page height and fight the scroll position. The exit is quicker
  * than the entrance, which keeps the pair feeling like one movement rather than two.
  *

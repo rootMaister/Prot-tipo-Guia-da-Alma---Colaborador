@@ -52,7 +52,7 @@ export function SignUpShell({ stepLabel, progress, onBack, children }: SignUpShe
   const setFooterNode = useFooterSlot()
 
   return (
-    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">
+    <div className="bg-surface-base pt-safe px-safe flex h-app flex-col">
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
       </header>

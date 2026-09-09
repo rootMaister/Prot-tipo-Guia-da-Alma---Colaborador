@@ -34,7 +34,7 @@ export function SplashScreen() {
   }, [goNext])
 
   return (
-    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh items-center justify-center">
+    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-app items-center justify-center">
       <GuiaLockup height={26} className="text-fg-on-brand" />
     </div>
   )

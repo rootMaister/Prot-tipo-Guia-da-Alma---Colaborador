@@ -150,8 +150,8 @@ export function DetalhesScreen() {
   return (
     <>
       {/* Mobile */}
-      <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col lg:hidden">
-        <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-6 py-6">
+      <div className="bg-surface-base pt-safe px-safe flex h-app flex-col lg:hidden">
+        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-6 py-6">
           <p className="text-label-l text-fg-default">{SESSAO.titulo}</p>
           <ProfissionalResumo {...SESSAO.profissional} />
           <Tabs value={aba} onValueChange={setAba} className="flex flex-col gap-4">
@@ -196,11 +196,11 @@ export function DetalhesScreen() {
       </div>
 
       {/* Desktop */}
-      <div className="bg-surface-base pt-safe px-safe hidden min-h-dvh flex-col lg:flex">
+      <div className="bg-surface-base pt-safe px-safe hidden h-app flex-col lg:flex">
         <header className="w-full px-8 py-8">
           <GuiaLockup height={18} className="text-fg-default" />
         </header>
-        <div className="flex flex-1 justify-center gap-16 overflow-hidden px-9 pb-12">
+        <div className="flex min-h-0 flex-1 justify-center gap-16 overflow-hidden px-9 pb-12">
           <div className="flex w-full max-w-[450px] flex-col gap-8">
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}

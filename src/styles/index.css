@@ -112,3 +112,24 @@ html {
 .pb-safe {
   padding-bottom: max(var(--pb-safe, 0px), env(safe-area-inset-bottom));
 }
+
+/* Full-screen height that also respects the software keyboard.
+
+   `100dvh` is the fallback and what desktop effectively gets; `--app-height` is published
+   by `use-viewport-height` from `visualViewport.height`, the only measurement that shrinks
+   when the iOS keyboard opens. Without it a screen keeps its footer under the keyboard and
+   the page has to be scrolled to reach the action button. */
+.min-h-app {
+  min-height: var(--app-height, 100dvh);
+}
+
+/* The same measurement as a *definite* height, for screens that pin a footer and scroll
+   their content internally.
+
+   `min-height` alone is not enough there: it only sets a floor, so the content keeps
+   pushing the box taller and the `flex-1` scroll area never shrinks — which is exactly
+   what left the action button below the keyboard. A definite height gives the flex chain
+   something to divide, so the content area is the part that gives way. */
+.h-app {
+  height: var(--app-height, 100dvh);
+}

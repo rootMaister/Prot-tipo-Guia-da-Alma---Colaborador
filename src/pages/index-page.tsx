@@ -42,7 +42,7 @@ export function IndexPage() {
   const totalScreens = flows.reduce((total, flow) => total + flow.steps.length, 0)
 
   return (
-    <div className="bg-surface-subtle pt-safe px-safe pb-safe min-h-dvh [--pb-safe:3rem]">
+    <div className="bg-surface-subtle pt-safe px-safe pb-safe min-h-app [--pb-safe:3rem]">
       {/* Bottom spacing lives on the root, which is what carries the safe inset. */}
       <div className="mx-auto flex max-w-5xl flex-col gap-12 px-6 pt-12">
         <header className="flex flex-col gap-3">
