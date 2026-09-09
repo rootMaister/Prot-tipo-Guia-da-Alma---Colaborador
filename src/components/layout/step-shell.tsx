@@ -9,6 +9,8 @@ import { useAdvancingProgress } from '@/lib/use-advancing-progress'
 
 import { StepFooter, useChromeProgress, useFooterSlot, usePublishProgress } from './step-chrome'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 type StepShellProps = {
   /** Text beside the progress bar. Taken from the rendered copy, not the layer name. */
   stepLabel: string
@@ -46,6 +48,8 @@ type StepShellProps = {
  * design system renders them rather than patched over with className. See DS-GAPS.md.
  */
 export function StepShell({ stepLabel, progress, onBack, wide = false, children }: StepShellProps) {
+  useScreenSurface('surface-base')
+
   // The flow name is the first path segment, so the bar of each flow animates from its own
   // previous step and never from another flow's.
   const flow = useLocation().pathname.split('/')[1] ?? 'app'
@@ -55,7 +59,7 @@ export function StepShell({ stepLabel, progress, onBack, wide = false, children 
   const setFooterNode = useFooterSlot()
 
   return (
-    <div className="bg-surface-base flex min-h-dvh flex-col gap-3 lg:gap-0">
+    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col gap-3 lg:gap-0">
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
       </header>
@@ -93,7 +97,7 @@ export function StepShell({ stepLabel, progress, onBack, wide = false, children 
           */}
           <footer
             ref={setFooterNode}
-            className="bg-surface-base border-outline-subtle flex w-full min-h-[76px] flex-col gap-4 border-t px-6 pt-3 pb-8 lg:px-0"
+            className="bg-surface-base border-outline-subtle pb-safe flex w-full min-h-[76px] flex-col gap-4 border-t px-6 pt-3 [--pb-safe:2rem] lg:px-0"
           />
         </div>
       </div>

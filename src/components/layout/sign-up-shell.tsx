@@ -10,6 +10,8 @@ import { useAdvancingProgress } from '@/lib/use-advancing-progress'
 
 import { StepFooter, useChromeProgress, useFooterSlot, usePublishProgress } from './step-chrome'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 type SignUpShellProps = {
   /** Text beside the progress bar. Taken from the rendered copy, not the layer name. */
   stepLabel: string
@@ -41,6 +43,8 @@ type SignUpShellProps = {
  * patched over with className. See DS-GAPS.md.
  */
 export function SignUpShell({ stepLabel, progress, onBack, children }: SignUpShellProps) {
+  useScreenSurface('surface-base')
+
   const flow = useLocation().pathname.split('/')[1] ?? 'app'
   const override = useChromeProgress()
   const alvo = override ?? progress
@@ -48,7 +52,7 @@ export function SignUpShell({ stepLabel, progress, onBack, children }: SignUpShe
   const setFooterNode = useFooterSlot()
 
   return (
-    <div className="bg-surface-base flex min-h-dvh flex-col">
+    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
       </header>
@@ -81,7 +85,7 @@ export function SignUpShell({ stepLabel, progress, onBack, children }: SignUpShe
           */}
           <footer
             ref={setFooterNode}
-            className="border-outline-subtle min-h-[92px] w-full border-t px-6 pt-3 pb-8 lg:border-t-0 lg:px-0 lg:pb-16"
+            className="border-outline-subtle pb-safe min-h-[92px] w-full border-t px-6 pt-3 [--pb-safe:2rem] lg:border-t-0 lg:px-0 lg:[--pb-safe:4rem]"
           />
         </div>
       </div>

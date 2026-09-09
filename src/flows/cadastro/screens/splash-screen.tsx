@@ -5,6 +5,8 @@ import { GuiaLockup } from '@/components/local/guia-lockup'
 
 import { useStepNavigation } from '../use-step-navigation'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 /** Launch screens are brief by nature; long enough to read the mark, short enough not to annoy. */
 const SPLASH_DURATION_MS = 1800
 
@@ -19,6 +21,8 @@ const SPLASH_DURATION_MS = 1800
  * #ffffff. Using the semantic token; the difference is imperceptible on the dark ground.
  */
 export function SplashScreen() {
+  useScreenSurface('surface-brand-strong')
+
   const { goNext } = useStepNavigation('splash')
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export function SplashScreen() {
   }, [goNext])
 
   return (
-    <div className="bg-surface-brand-strong flex min-h-dvh items-center justify-center">
+    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh items-center justify-center">
       <GuiaLockup height={26} className="text-fg-on-brand" />
     </div>
   )

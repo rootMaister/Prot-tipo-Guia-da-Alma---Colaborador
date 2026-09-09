@@ -12,6 +12,8 @@ import { ProfissionalResumo } from '@/components/local/profissional-resumo'
 import { SESSAO } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 /**
  * Step 1 — nodes 1184:5171 (mobile) and 1236:12522 (desktop); 1184:5198 and 1184:5259 are
  * the other two mobile tabs, 1279:13740 the desktop scrolled.
@@ -105,6 +107,8 @@ const AVALIACOES_TOTAL = 38
 const AVALIACOES_MEDIA = '4,5'
 
 export function DetalhesScreen() {
+  useScreenSurface('surface-base')
+
   const { goNext } = useStepNavigation('detalhes')
   const navigate = useNavigate()
   const { search } = useLocation()
@@ -146,7 +150,7 @@ export function DetalhesScreen() {
   return (
     <>
       {/* Mobile */}
-      <div className="bg-surface-base flex min-h-dvh flex-col lg:hidden">
+      <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col lg:hidden">
         <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-6 py-6">
           <p className="text-label-l text-fg-default">{SESSAO.titulo}</p>
           <ProfissionalResumo {...SESSAO.profissional} />
@@ -188,11 +192,11 @@ export function DetalhesScreen() {
             </TabsContent>
           </Tabs>
         </div>
-        <div className="flex w-full flex-col gap-4 px-6 pt-3 pb-5">{acoes}</div>
+        <div className="pb-safe flex w-full flex-col gap-4 px-6 pt-3 [--pb-safe:1.25rem]">{acoes}</div>
       </div>
 
       {/* Desktop */}
-      <div className="bg-surface-base hidden min-h-dvh flex-col lg:flex">
+      <div className="bg-surface-base pt-safe px-safe hidden min-h-dvh flex-col lg:flex">
         <header className="w-full px-8 py-8">
           <GuiaLockup height={18} className="text-fg-default" />
         </header>

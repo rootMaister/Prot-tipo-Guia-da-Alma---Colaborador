@@ -4,6 +4,8 @@ import { GuiaDaAlmaSymbol } from '@guia-da-alma/ds'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 type StatusShellProps = {
   illustration: ReactNode
   title: string
@@ -20,8 +22,10 @@ type StatusShellProps = {
  * and centres everything.
  */
 export function StatusShell({ illustration, title, body, footer }: StatusShellProps) {
+  useScreenSurface('surface-base')
+
   return (
-    <div className="bg-surface-base flex min-h-dvh flex-col">
+    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">
       <div className="flex w-full flex-col items-center px-8 py-8 lg:items-start">
         <GuiaDaAlmaSymbol className="text-fg-default h-[33px] w-[38px] lg:hidden" />
         <GuiaLockup height={18} className="text-fg-default hidden lg:inline-flex" />
@@ -38,7 +42,7 @@ export function StatusShell({ illustration, title, body, footer }: StatusShellPr
           <p className="text-body-m text-fg-subtle">{body}</p>
         </div>
       </div>
-      <div className="border-outline-subtle flex w-full items-center justify-between border-t p-6 lg:justify-center lg:gap-4">
+      <div className="border-outline-subtle pb-safe flex w-full items-center justify-between border-t p-6 [--pb-safe:1.5rem] lg:justify-center lg:gap-4">
         {footer}
       </div>
     </div>

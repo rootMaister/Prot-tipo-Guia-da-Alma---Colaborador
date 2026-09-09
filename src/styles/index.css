@@ -33,6 +33,13 @@ html {
      and any `overflow` container near the fields slices it off. See item 30 of
      DS-GAPS.md. */
   overflow-x: hidden;
+
+  /* The screen colour lives on an inner `min-h-dvh` element, so without this the document
+     stays white and shows through wherever the page does not reach: the rubber-band area
+     past the top and bottom on iOS, and the strip behind the browser bars. Overridden per
+     screen by `useScreenSurface`; this is only the value before React mounts, and matches
+     the `theme-color` in index.html. */
+  background-color: var(--color-surface-subtle);
 }
 
 /* Calma Serif ships only the Regular (400) weight — there is no SemiBold file in the
@@ -75,4 +82,33 @@ html {
   .animate-field-shake {
     animation: none;
   }
+}
+
+/* Device safe areas.
+
+   With `viewport-fit=cover` the layout viewport covers the whole screen, notch and home
+   indicator included, so anything sitting against an edge would slide underneath them.
+   These add the inset back. They go on the element that carries the background, never on
+   an inner wrapper: a background paints its padding box, so the colour still bleeds to the
+   physical edge while the content stays clear of the hardware.
+
+   On a device without insets every `env()` here resolves to 0, so nothing moves. */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* `max()` here too, so an element that already has horizontal padding keeps it: these
+   utilities are defined after Tailwind's, so a plain `padding-left` would silently beat
+   `px-6`. Callers declare their own value with `[--px-safe:1.5rem]`. */
+.px-safe {
+  padding-left: max(var(--px-safe, 0px), env(safe-area-inset-left));
+  padding-right: max(var(--px-safe, 0px), env(safe-area-inset-right));
+}
+
+/* `max()` rather than a sum: the Figma frames are 393×852, the *full* screen, and the
+   design already draws its bottom padding inside that — so adding the home indicator on
+   top of it would double the gap. Whichever is larger wins. Callers set the design's own
+   value with `[--pb-safe:2rem]`, and may vary it per breakpoint. */
+.pb-safe {
+  padding-bottom: max(var(--pb-safe, 0px), env(safe-area-inset-bottom));
 }

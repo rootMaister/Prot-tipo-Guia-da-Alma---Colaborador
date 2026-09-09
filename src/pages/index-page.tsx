@@ -5,6 +5,8 @@ import { agendamentoSteps } from '@/flows/agendamento/steps'
 import { cadastroSteps, figmaNodeUrl } from '@/flows/cadastro/steps'
 import { matchSteps } from '@/flows/match/steps'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 /**
  * Index of every screen in the prototype, grouped by flow. All the flows live in the same
  * Figma file, so one `figmaNodeUrl` serves them.
@@ -35,11 +37,14 @@ const flows = [
 ]
 
 export function IndexPage() {
+  useScreenSurface('surface-subtle')
+
   const totalScreens = flows.reduce((total, flow) => total + flow.steps.length, 0)
 
   return (
-    <div className="bg-surface-subtle min-h-dvh px-6 py-12">
-      <div className="mx-auto flex max-w-5xl flex-col gap-12">
+    <div className="bg-surface-subtle pt-safe px-safe pb-safe min-h-dvh [--pb-safe:3rem]">
+      {/* Bottom spacing lives on the root, which is what carries the safe inset. */}
+      <div className="mx-auto flex max-w-5xl flex-col gap-12 px-6 pt-12">
         <header className="flex flex-col gap-3">
           <GuiaLockup height={26} className="text-fg-default" />
           <h1 className="font-display text-heading-m text-fg-default">

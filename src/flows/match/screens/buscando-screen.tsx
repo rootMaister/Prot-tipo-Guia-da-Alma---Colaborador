@@ -4,6 +4,8 @@ import { GuiaOrb } from '@/components/local/guia-orb'
 
 import { useStepNavigation } from '../use-step-navigation'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 /** Mocked matching run. Long enough to see the orb turn, short enough to keep moving. */
 const SEARCH_DELAY_MS = 4000
 
@@ -19,6 +21,8 @@ const SEARCH_DELAY_MS = 4000
  * desktop frame has them.
  */
 export function BuscandoScreen() {
+  useScreenSurface('surface-brand-strong')
+
   const { goNext } = useStepNavigation('buscando')
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export function BuscandoScreen() {
   }, [goNext])
 
   return (
-    <div className="bg-surface-brand-strong flex min-h-dvh flex-col items-center justify-center gap-16 px-6">
+    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh flex-col items-center justify-center gap-16 [--px-safe:1.5rem]">
       <GuiaOrb halo />
 
       <p className="text-label-s text-fg-on-action max-w-[280px] text-center">

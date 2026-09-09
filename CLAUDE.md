@@ -104,6 +104,12 @@ tela decide mas que aparecem no chrome viajam por `step-chrome.tsx`:
 - **progresso dinâmico** — `progress` no `StepBody`, só onde a barra depende da resposta
   (50→60 ao escolher horário, 75→85 ao preencher o CPF).
 
+Cor do chrome do navegador: `lib/use-screen-surface.ts`. Cada shell (e cada tela de sangria
+total) declara seu token de superfície, e o hook espelha a cor resolvida no `background` do
+`<html>` e na meta `theme-color` — que é de onde o Safari no iOS tinge a barra de status e a
+barra de endereço. Sem isso o documento fica branco por trás e aparecem as faixas duras em
+cima e embaixo. Ao criar uma tela nova de fundo próprio, chame o hook.
+
 A barra que avança está em `lib/use-advancing-progress.ts`: guarda o valor anterior de cada
 fluxo em escopo de módulo, porque o shell desmonta ao sair do fluxo e não há pai comum que
 sobreviva a isso.

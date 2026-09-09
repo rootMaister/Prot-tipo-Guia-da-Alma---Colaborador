@@ -2,6 +2,8 @@ import type { ElementType, ReactNode } from 'react'
 
 import { FeaturedIcon, GuiaDaAlmaSymbol } from '@guia-da-alma/ds'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 type FeatureShellProps = {
   icon: ElementType
   /**
@@ -24,8 +26,10 @@ type FeatureShellProps = {
  * where Figma draws 36px — xxl is the largest size the component offers.
  */
 export function FeatureShell({ icon, eyebrow, title, footer }: FeatureShellProps) {
+  useScreenSurface('category-green-surface')
+
   return (
-    <div className="bg-category-green-surface flex min-h-dvh flex-col">
+    <div className="bg-category-green-surface pt-safe px-safe flex min-h-dvh flex-col">
       {/* No status bar on these two screens — the design just opens with 48px of air. */}
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaDaAlmaSymbol className="text-category-green-text h-[33px] w-[38px]" />
@@ -58,7 +62,7 @@ export function FeatureShell({ icon, eyebrow, title, footer }: FeatureShellProps
           </div>
         </div>
 
-        <div className="w-full px-6 pt-3 pb-16 lg:max-w-[450px] lg:px-0">{footer}</div>
+        <div className="pb-safe w-full px-6 pt-3 [--pb-safe:4rem] lg:max-w-[450px] lg:px-0">{footer}</div>
       </div>
     </div>
   )

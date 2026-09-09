@@ -6,6 +6,8 @@ import { GuiaLockup } from '@/components/local/guia-lockup'
 
 import { useStepNavigation } from '../use-step-navigation'
 
+import { useScreenSurface } from '@/lib/use-screen-surface'
+
 /**
  * Entry screen — nodes 779:415 (mobile) and 826:3114 (desktop).
  *
@@ -17,15 +19,17 @@ import { useStepNavigation } from '../use-step-navigation'
  * "Entre na sua conta" is rendered but inert — Login is a later slice of the prototype.
  */
 export function WelcomeScreen() {
+  useScreenSurface('surface-brand-strong')
+
   const { goNext } = useStepNavigation('welcome')
 
   return (
     <>
       {/* Mobile */}
-      <div className="relative isolate flex min-h-dvh flex-col justify-end bg-surface-brand-strong lg:hidden">
+      <div className="pt-safe px-safe relative isolate flex min-h-dvh flex-col justify-end bg-surface-brand-strong lg:hidden">
         <GradientBackdrop variant="mobile" className="z-0" />
 
-        <div className="relative z-10 flex w-full flex-col gap-8 px-6 pt-3 pb-8">
+        <div className="pb-safe relative z-10 flex w-full flex-col gap-8 px-6 pt-3 [--pb-safe:2rem]">
           <div className="flex flex-col justify-center gap-6">
             <GuiaDaAlmaSymbol className="h-[60px] w-[70px] text-fg-default" />
             <h1 className="font-display text-heading-m text-fg-default">
@@ -49,7 +53,7 @@ export function WelcomeScreen() {
       </div>
 
       {/* Desktop */}
-      <div className="bg-surface-subtle hidden min-h-dvh items-stretch lg:flex">
+      <div className="bg-surface-subtle pt-safe px-safe hidden min-h-dvh items-stretch lg:flex">
         <div className="flex min-w-0 flex-1 items-center bg-surface-brand-strong p-4">
           <div className="relative flex h-full max-h-[928px] w-full flex-col gap-2.5 overflow-hidden rounded-2xl px-12 py-24">
             <GradientBackdrop variant="desktop" className="z-0" />
