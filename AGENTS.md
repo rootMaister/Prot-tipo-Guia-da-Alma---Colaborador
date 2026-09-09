@@ -23,15 +23,25 @@ cada mudança implica no arquivo do Figma, está em [SYNC-FIGMA.md](SYNC-FIGMA.m
 pnpm dev            # http://localhost:5173
 ```
 
-Para mexer no design system junto, deixe o watch dele rodando em outro terminal:
+O design system **não** é mais consumido por `link:../design-system`, e sim por
+`file:vendor/guia-da-alma-ds.tgz` — um snapshot commitado, gerado por:
 
 ```bash
-cd ../design-system && pnpm dev   # tsup --watch
+pnpm ds:vendor      # constrói o DS local, empacota e reinstala
 ```
 
-O pacote é consumido por `link:../design-system`, e o Vite trata pacotes linkados como
-código-fonte — então `editar src do DS → tsup reconstrói dist/ → o protótipo já serve o
-novo código`, sem reinstalar nem reiniciar.
+A troca foi feita para o deploy funcionar: a Vercel constrói a partir de um clone deste
+repo, onde `../design-system` não existe, e a 0.1.9 publicada no GitHub Packages ainda não
+exporta `IconButton`, `FeaturedIcon`, `GuiaDaAlmaSymbol` e `GuiaDaAlmaWordmark`, que este
+protótipo usa. Procedência do snapshot em [vendor/PROCEDENCIA.md](vendor/PROCEDENCIA.md).
+
+O preço é que **mexer no src do DS não chega mais aqui sozinho**. O ciclo antigo (`tsup
+--watch` reconstruindo `dist/` e o Vite servindo na hora) morreu junto com o `link:`: agora
+é `editar o DS → pnpm ds:vendor → commitar o tarball e o lockfile`. Para iterar de verdade
+no DS, volte o `link:` temporariamente e desfaça antes de commitar.
+
+O lockfile guarda o sha512 do tarball, então um snapshot novo commitado sem o lockfile
+atualizado faz a Vercel falhar na instalação — alto, não silenciosamente com código velho.
 
 ## Armadilhas do setup
 
@@ -43,8 +53,8 @@ Três coisas que quebram silenciosamente se mexidas:
    compilado do DS, e os componentes dele renderizam **sem estilo nenhum, sem erro**. Por
    isso importamos só os tokens e fazemos o `@source` para o `dist` por conta própria.
 2. **`resolve.dedupe: ['react', 'react-dom']` no `vite.config.ts` é obrigatório.** Sem
-   isso o `node_modules` do design-system fornece uma segunda cópia do React (18.3.1,
-   contra a 19 do app) e todo hook quebra.
+   isso o `node_modules` do DS fornece uma segunda cópia do React (18.3.1, contra a 19 do
+   app) e todo hook quebra.
 3. **O alias `@` usa `fileURLToPath`, não `URL.pathname`.** O nome desta pasta tem acento
    e espaço, que o `pathname` devolve percent-encoded.
 
