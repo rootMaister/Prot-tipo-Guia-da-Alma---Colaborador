@@ -79,7 +79,12 @@ export function StepShell({
 
   return (
     <div
-      className="bg-surface-base pt-safe px-safe flex h-app flex-col gap-3 lg:gap-0"
+      className={cn(
+        'bg-surface-base px-safe flex h-app flex-col gap-3 lg:gap-0',
+        // With the keyboard up the screen is translated below the status bar, so the top
+        // inset is no longer buying anything — and ~59px matter in the strip that is left.
+        keyboardOpen ? 'pt-0' : 'pt-safe',
+      )}
     >
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
