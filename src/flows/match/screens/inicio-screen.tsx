@@ -46,7 +46,7 @@ export function InicioScreen() {
           </div>
         </div>
 
-        <div className="pb-safe flex w-full flex-col gap-3 border-t border-black/3 px-6 pt-3 [--pb-safe:2rem]">
+        <div className="pb-safe flex w-full flex-col gap-3 border-t border-black/3 px-6 pt-3 [--pb-safe:1rem]">
           <Button variant="lime" className="w-full" onClick={goNext}>
             Continuar
           </Button>

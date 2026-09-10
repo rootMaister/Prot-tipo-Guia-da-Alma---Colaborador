@@ -197,7 +197,7 @@ export function DetalhesScreen() {
             </TabsContent>
           </Tabs>
         </div>
-        <div className="pb-safe flex w-full flex-col gap-4 px-6 pt-3 [--pb-safe:1.25rem]">{acoes}</div>
+        <div className="pb-safe flex w-full flex-col gap-4 px-6 pt-3 [--pb-safe:0.75rem]">{acoes}</div>
       </div>
 
       {/* Desktop */}

@@ -62,7 +62,7 @@ export function FeatureShell({ icon, eyebrow, title, footer }: FeatureShellProps
           </div>
         </div>
 
-        <div className="pb-safe w-full px-6 pt-3 [--pb-safe:4rem] lg:max-w-[450px] lg:px-0">{footer}</div>
+        <div className="pb-safe w-full px-6 pt-3 [--pb-safe:2.5rem] lg:max-w-[450px] lg:px-0">{footer}</div>
       </div>
     </div>
   )

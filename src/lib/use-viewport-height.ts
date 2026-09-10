@@ -46,7 +46,9 @@ export function useViewportHeight() {
         ativo instanceof HTMLTextAreaElement ||
         ativo instanceof HTMLSelectElement
       ) {
-        ativo.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        // `nearest`, not `center`: it scrolls the least amount that makes the field
+        // visible, so the title and the question above it stay on screen where they fit.
+        ativo.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
       }
     }
 

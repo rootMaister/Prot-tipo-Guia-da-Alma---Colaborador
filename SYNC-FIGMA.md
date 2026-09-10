@@ -29,6 +29,7 @@ design system. Ordenado por onde a mudança precisa acontecer.
 | **Entrada da tela de código da empresa** | Cadastro → Identificador da empresa | Os elementos sobem 16px com fade, em cascata. |
 | **CTA sempre visível** | Match → Suas sessões; Cadastro → Identificador da empresa | O arquivo só desenha o botão de avançar no estado preenchido, ou cinza sem explicação. No protótipo ele fica sempre visível e o rótulo diz o que falta — "Selecione um dia ou horário", "Digite os 6 dígitos" —, no mesmo padrão que "Insira o seu CPF" já usava. Esconder o primário tira a referência do que a tela faz e o gatilho para descobrir o que impede de continuar. |
 | **CTA de passo opcional** | Match → Mais detalhes | O primário aparecia só depois de o campo ter texto. Como o passo é opcional, não há mínimo a exigir: ele fica sempre ativo. |
+| **Sem foco automático no código da empresa** | Cadastro → Identificador da empresa | O campo focava sozinho ao abrir, o que subia o teclado na hora e rolava o título para fora — a tela abria sem dizer do que se tratava. Agora abre parada e o teclado só sobe ao toque. |
 | **Rodapé com teclado aberto** | Todos os formulários, mobile | Enquanto o teclado está aberto o rodapé deixa de ser ancorado e rola junto com o conteúdo, para os campos ficarem com o que sobra de tela; o header vira sticky e continua parado. Sem teclado nada muda. Não é algo que o arquivo desenhe — vale decidir se entra como estado no Figma. |
 
 ## Não precisa mudar no Figma — era erro do código

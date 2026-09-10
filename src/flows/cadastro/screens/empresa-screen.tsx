@@ -98,7 +98,6 @@ export function EmpresaScreen() {
             onChange={handleChange}
             error={hasError}
             disabled={isLooking}
-            autoFocus
           />
         </FieldShake>
         <p className="text-caption text-fg-error min-h-5" role="alert">

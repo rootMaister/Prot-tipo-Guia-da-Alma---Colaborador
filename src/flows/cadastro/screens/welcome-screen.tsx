@@ -29,7 +29,7 @@ export function WelcomeScreen() {
       <div className="pt-safe px-safe relative isolate flex min-h-app flex-col justify-end bg-surface-brand-strong lg:hidden">
         <GradientBackdrop variant="mobile" className="z-0" />
 
-        <div className="pb-safe relative z-10 flex w-full flex-col gap-8 px-6 pt-3 [--pb-safe:2rem]">
+        <div className="pb-safe relative z-10 flex w-full flex-col gap-8 px-6 pt-3 [--pb-safe:1rem]">
           <div className="flex flex-col justify-center gap-6">
             <GuiaDaAlmaSymbol className="h-[60px] w-[70px] text-fg-default" />
             <h1 className="font-display text-heading-m text-fg-default">

@@ -42,7 +42,7 @@ export function StatusShell({ illustration, title, body, footer }: StatusShellPr
           <p className="text-body-m text-fg-subtle">{body}</p>
         </div>
       </div>
-      <div className="border-outline-subtle pb-safe flex w-full items-center justify-between border-t p-6 [--pb-safe:1.5rem] lg:justify-center lg:gap-4">
+      <div className="border-outline-subtle pb-safe flex w-full items-center justify-between border-t p-6 [--pb-safe:1rem] lg:justify-center lg:gap-4">
         {footer}
       </div>
     </div>

@@ -34,12 +34,8 @@ export function AgendamentoLayout() {
     <StepTransition
       stepKey={slug}
       direction={direction}
-      wrapperClassName={tecladoAberto ? 'flex flex-col' : 'flex min-h-0 flex-1 flex-col'}
-      className={
-        tecladoAberto
-          ? 'flex flex-col lg:-mx-1.5 lg:px-1.5'
-          : 'flex min-h-0 flex-1 flex-col overflow-y-auto lg:-mx-1.5 lg:px-1.5'
-      }
+      wrapperClassName="flex min-h-0 flex-1 flex-col"
+      className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:-mx-1.5 lg:px-1.5"
     >
       <Outlet />
     </StepTransition>
