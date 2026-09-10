@@ -11,6 +11,7 @@ import { useAdvancingProgress } from '@/lib/use-advancing-progress'
 import { StepFooter, useChromeProgress, useFooterSlot, usePublishProgress } from './step-chrome'
 
 import { useScreenSurface } from '@/lib/use-screen-surface'
+import { useLockedDocumentScroll } from '@/lib/use-locked-document-scroll'
 
 type SignUpShellProps = {
   /** Text beside the progress bar. Taken from the rendered copy, not the layer name. */
@@ -43,6 +44,10 @@ type SignUpShellProps = {
  * patched over with className. See DS-GAPS.md.
  */
 export function SignUpShell({ stepLabel, progress, onBack, children }: SignUpShellProps) {
+  // Fixed height with an internal scroll area: the page itself must not scroll, or the
+  // keyboard drags the header out of place. See the hook.
+  useLockedDocumentScroll()
+
   useScreenSurface('surface-base')
 
   const flow = useLocation().pathname.split('/')[1] ?? 'app'

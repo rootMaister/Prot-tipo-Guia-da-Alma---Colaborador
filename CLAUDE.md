@@ -118,8 +118,18 @@ utilidades:
   conteúdo continua empurrando a caixa e a área `flex-1` nunca encolhe.
 - **`min-h-app`** para as demais, que crescem e rolam com a página.
 
-Quem usa `h-app` precisa de `min-h-0` em toda a cadeia flex até o contêiner de rolagem,
-senão o item flex não encolhe abaixo do conteúdo.
+Quem usa `h-app` precisa de duas coisas a mais:
+
+- `min-h-0` em toda a cadeia flex até o contêiner de rolagem, senão o item flex não encolhe
+  abaixo do conteúdo.
+- `useLockedDocumentScroll`, que impede o documento de rolar. Sem isso o iOS rola a
+  **página** para revelar o campo em foco e arrasta header, botão de voltar e barra de
+  progresso para debaixo da barra de status. Com o documento travado, quem rola é a nossa
+  área de conteúdo.
+
+`use-viewport-height` também traz o campo em foco de volta à vista depois do resize: o iOS
+revela o campo *antes* de a tela encolher, então sem isso ele sai de vista de novo assim que
+o layout assenta.
 
 Cor do chrome do navegador: `lib/use-screen-surface.ts`. Cada shell (e cada tela de sangria
 total) declara seu token de superfície, e o hook espelha a cor resolvida no `background` do

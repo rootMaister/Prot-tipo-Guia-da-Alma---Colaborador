@@ -13,6 +13,7 @@ import { SESSAO } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
 import { useScreenSurface } from '@/lib/use-screen-surface'
+import { useLockedDocumentScroll } from '@/lib/use-locked-document-scroll'
 
 /**
  * Step 1 — nodes 1184:5171 (mobile) and 1236:12522 (desktop); 1184:5198 and 1184:5259 are
@@ -107,6 +108,10 @@ const AVALIACOES_TOTAL = 38
 const AVALIACOES_MEDIA = '4,5'
 
 export function DetalhesScreen() {
+  // Fixed height with an internal scroll area: the page itself must not scroll, or the
+  // keyboard drags the header out of place. See the hook.
+  useLockedDocumentScroll()
+
   useScreenSurface('surface-base')
 
   const { goNext } = useStepNavigation('detalhes')

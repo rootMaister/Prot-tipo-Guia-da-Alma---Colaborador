@@ -29,15 +29,42 @@ export function useViewportHeight() {
       document.documentElement.style.setProperty('--app-height', `${vv.height}px`)
     }
 
+    /*
+      iOS reveals the focused field when the keyboard opens, but it does that *before* this
+      hook shrinks the screen — so the field it just revealed can end up out of view again
+      once the layout settles. Re-revealing it after the resize is what actually keeps it on
+      screen, and by then the content area is the only thing that can scroll.
+
+      Only on `resize`, never on `scroll`: doing it on scroll would yank the view back every
+      time the user panned.
+    */
+    const revelarCampoFocado = () => {
+      const ativo = document.activeElement
+
+      if (
+        ativo instanceof HTMLInputElement ||
+        ativo instanceof HTMLTextAreaElement ||
+        ativo instanceof HTMLSelectElement
+      ) {
+        ativo.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      }
+    }
+
+    const aoRedimensionar = () => {
+      publicar()
+      // A frame late, so the new height is in effect before anything is measured.
+      requestAnimationFrame(revelarCampoFocado)
+    }
+
     publicar()
 
     // `scroll` matters as much as `resize`: iOS shifts the visual viewport when it pans to
     // reveal a focused field, and the height reported can change with it.
-    vv.addEventListener('resize', publicar)
+    vv.addEventListener('resize', aoRedimensionar)
     vv.addEventListener('scroll', publicar)
 
     return () => {
-      vv.removeEventListener('resize', publicar)
+      vv.removeEventListener('resize', aoRedimensionar)
       vv.removeEventListener('scroll', publicar)
       document.documentElement.style.removeProperty('--app-height')
     }

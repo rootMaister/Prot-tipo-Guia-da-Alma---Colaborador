@@ -10,6 +10,7 @@ import { useAdvancingProgress } from '@/lib/use-advancing-progress'
 import { StepFooter, useChromeProgress, useFooterSlot, usePublishProgress } from './step-chrome'
 
 import { useScreenSurface } from '@/lib/use-screen-surface'
+import { useLockedDocumentScroll } from '@/lib/use-locked-document-scroll'
 
 type StepShellProps = {
   /** Text beside the progress bar. Taken from the rendered copy, not the layer name. */
@@ -48,6 +49,10 @@ type StepShellProps = {
  * design system renders them rather than patched over with className. See DS-GAPS.md.
  */
 export function StepShell({ stepLabel, progress, onBack, wide = false, children }: StepShellProps) {
+  // Fixed height with an internal scroll area: the page itself must not scroll, or the
+  // keyboard drags the header out of place. See the hook.
+  useLockedDocumentScroll()
+
   useScreenSurface('surface-base')
 
   // The flow name is the first path segment, so the bar of each flow animates from its own
