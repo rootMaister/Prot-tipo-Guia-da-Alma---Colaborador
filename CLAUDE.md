@@ -110,8 +110,14 @@ Não use `min-h-dvh`. No iOS o teclado **não** encolhe o viewport de layout, en
 continua medindo a tela inteira enquanto só uma faixa está visível — o rodapé cai atrás do
 teclado e a página vira rolável só para alcançar o botão de ação.
 
-`lib/use-viewport-height.ts` publica `visualViewport.height` em `--app-height`, e há duas
-utilidades:
+`lib/use-viewport-height.ts` publica duas coisas: `visualViewport.height` em `--app-height`
+e `visualViewport.offsetTop` em `--app-offset`. A altura sozinha não basta — o iOS não só
+encolhe a área visível, ele a **desloca** dentro do viewport de layout para revelar o campo
+em foco. Uma caixa com a altura certa mas ancorada no topo termina antes da faixa visível, e
+o fundo do documento aparece no resto: é o vão grande sob o botão. Por isso `h-app` também
+aplica `translateY(var(--app-offset))`.
+
+Há duas utilidades:
 
 - **`h-app`** (altura definida) para telas que fixam rodapé e rolam por dentro — os dois
   shells de formulário e o detalhe da sessão. `min-height` não serve aqui: é só um piso, o

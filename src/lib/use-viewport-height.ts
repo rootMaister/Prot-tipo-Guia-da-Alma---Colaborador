@@ -13,9 +13,15 @@ import { useEffect } from 'react'
  * also already accounts for the browser's own bars, so it stays correct as the URL bar
  * collapses on scroll — the behaviour `dvh` was giving us before.
  *
+ * It also publishes `--app-offset` from `visualViewport.offsetTop`. Height alone is not
+ * enough: iOS does not only shrink the visible area, it *pans* it down inside the layout
+ * viewport to reveal the focused field. A box that is the right height but still anchored
+ * to the top of the layout ends before the visible strip does, and the page background
+ * shows through the rest — which reads as a large gap under the action button.
+ *
  * Android needs no script for this: `interactive-widget=resizes-content` in the viewport
- * meta makes the keyboard shrink the layout viewport there. iOS ignores that property,
- * hence this.
+ * meta makes the keyboard shrink the layout viewport there, with no pan. iOS ignores that
+ * property, hence this.
  */
 export function useViewportHeight() {
   useEffect(() => {
@@ -26,7 +32,9 @@ export function useViewportHeight() {
     }
 
     const publicar = () => {
-      document.documentElement.style.setProperty('--app-height', `${vv.height}px`)
+      const raiz = document.documentElement
+      raiz.style.setProperty('--app-height', `${vv.height}px`)
+      raiz.style.setProperty('--app-offset', `${vv.offsetTop}px`)
     }
 
     /*
@@ -69,6 +77,7 @@ export function useViewportHeight() {
       vv.removeEventListener('resize', aoRedimensionar)
       vv.removeEventListener('scroll', publicar)
       document.documentElement.style.removeProperty('--app-height')
+      document.documentElement.style.removeProperty('--app-offset')
     }
   }, [])
 }

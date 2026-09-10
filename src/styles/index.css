@@ -132,4 +132,10 @@ html {
    something to divide, so the content area is the part that gives way. */
 .h-app {
   height: var(--app-height, 100dvh);
+
+  /* Follows the visual viewport down when iOS pans it to reveal a focused field. Without
+     this the box keeps the right height but stays anchored to the top of the layout
+     viewport, so it ends before the visible strip does and the page background fills the
+     remainder — which looks like a gap between the action button and the keyboard. */
+  transform: translateY(var(--app-offset, 0px));
 }
