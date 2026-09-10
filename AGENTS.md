@@ -104,38 +104,18 @@ tela decide mas que aparecem no chrome viajam por `step-chrome.tsx`:
 - **progresso dinâmico** — `progress` no `StepBody`, só onde a barra depende da resposta
   (50→60 ao escolher horário, 75→85 ao preencher o CPF).
 
-### Altura da tela e o teclado
+### Rolagem e cabeçalho
 
-Não use `min-h-dvh`. No iOS o teclado **não** encolhe o viewport de layout, então `dvh`
-continua medindo a tela inteira enquanto só uma faixa está visível — o rodapé cai atrás do
-teclado e a página vira rolável só para alcançar o botão de ação.
+A página rola normalmente — nada de altura fixa, contêiner de rolagem interno ou trava de
+documento. O que fica parado é só o cabeçalho do passo (botão de voltar + barra de
+progresso), que é `sticky top-0` no mobile e volta a `static` no desktop.
 
-`lib/use-viewport-height.ts` publica duas coisas: `visualViewport.height` em `--app-height`
-e `visualViewport.offsetTop` em `--app-offset`. A altura sozinha não basta — o iOS não só
-encolhe a área visível, ele a **desloca** dentro do viewport de layout para revelar o campo
-em foco. Uma caixa com a altura certa mas ancorada no topo termina antes da faixa visível, e
-o fundo do documento aparece no resto: é o vão grande sob o botão. Por isso `h-app` também
-aplica `translateY(var(--app-offset))`.
-
-Há duas utilidades:
-
-- **`h-app`** (altura definida) para telas que fixam rodapé e rolam por dentro — os dois
-  shells de formulário e o detalhe da sessão. `min-height` não serve aqui: é só um piso, o
-  conteúdo continua empurrando a caixa e a área `flex-1` nunca encolhe.
-- **`min-h-app`** para as demais, que crescem e rolam com a página.
-
-Quem usa `h-app` precisa de duas coisas a mais:
-
-- `min-h-0` em toda a cadeia flex até o contêiner de rolagem, senão o item flex não encolhe
-  abaixo do conteúdo.
-- `useLockedDocumentScroll`, que impede o documento de rolar. Sem isso o iOS rola a
-  **página** para revelar o campo em foco e arrasta header, botão de voltar e barra de
-  progresso para debaixo da barra de status. Com o documento travado, quem rola é a nossa
-  área de conteúdo.
-
-`use-viewport-height` também traz o campo em foco de volta à vista depois do resize: o iOS
-revela o campo *antes* de a tela encolher, então sem isso ele sai de vista de novo assim que
-o layout assenta.
+Isso é uma decisão deliberada, tomada depois de várias tentativas de manter o botão de ação
+acima do teclado no iOS. Cada abordagem — dimensionar pelo `visualViewport`, travar a
+rolagem do documento, acompanhar o deslocamento do viewport visual — corrigia uma camada e
+revelava outra. Com o teclado aberto a página simplesmente rola, e a pessoa rola até o
+botão. **Não reintroduza `100dvh` fixo, `overflow: hidden` no body nem cálculo de altura por
+`visualViewport` aqui sem testar em aparelho real.**
 
 Cor do chrome do navegador: `lib/use-screen-surface.ts`. Cada shell (e cada tela de sangria
 total) declara seu token de superfície, e o hook espelha a cor resolvida no `background` do

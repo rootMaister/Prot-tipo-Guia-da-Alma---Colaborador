@@ -10,7 +10,6 @@ import { useAdvancingProgress } from '@/lib/use-advancing-progress'
 import { StepFooter, useChromeProgress, useFooterSlot, usePublishProgress } from './step-chrome'
 
 import { useScreenSurface } from '@/lib/use-screen-surface'
-import { useLockedDocumentScroll } from '@/lib/use-locked-document-scroll'
 
 type StepShellProps = {
   /** Text beside the progress bar. Taken from the rendered copy, not the layer name. */
@@ -18,13 +17,6 @@ type StepShellProps = {
   /** The step's own percentage; a screen can override it through `StepBody`. */
   progress: number
   onBack?: () => void
-  /**
-   * Trims the footer's padding while the keyboard is up, where every pixel of the strip
-   * that is left counts. Un-anchoring it entirely was tried and made things worse on iOS:
-   * the box then ends short of the layout viewport, which the keyboard does not shrink, and
-   * the empty document below shows up as a gap under the button.
-   */
-  keyboardOpen?: boolean
   /**
    * Widens the desktop column from 450px to the container's full 1000px. Only the Match
    * results screen uses it: its grid needs the room, which is why its desktop progress
@@ -59,14 +51,9 @@ export function StepShell({
   stepLabel,
   progress,
   onBack,
-  keyboardOpen = false,
   wide = false,
   children,
 }: StepShellProps) {
-  // Fixed height with an internal scroll area: the page itself must not scroll, or the
-  // keyboard drags the header out of place. See the hook.
-  useLockedDocumentScroll()
-
   useScreenSurface('surface-base')
 
   // The flow name is the first path segment, so the bar of each flow animates from its own
@@ -78,27 +65,20 @@ export function StepShell({
   const setFooterNode = useFooterSlot()
 
   return (
-    <div
-      className={cn(
-        'bg-surface-base px-safe flex h-app flex-col gap-3 lg:gap-0',
-        // With the keyboard up the screen is translated below the status bar, so the top
-        // inset is no longer buying anything — and ~59px matter in the strip that is left.
-        keyboardOpen ? 'pt-0' : 'pt-safe',
-      )}
-    >
+    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col gap-3 lg:gap-0">
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col lg:items-center lg:px-9">
+      <div className="flex flex-1 flex-col lg:items-center lg:px-9">
         <div
           className={cn(
-            'flex min-h-0 w-full flex-1 flex-col',
+            'flex w-full flex-1 flex-col',
             wide ? 'lg:max-w-[1000px]' : 'lg:max-w-[450px]',
           )}
         >
           <div
-            className="flex items-center gap-6 px-6 py-4 lg:items-end lg:px-0 lg:pt-5 lg:pb-12"
+            className="bg-surface-base sticky top-0 z-10 flex items-center gap-6 px-6 py-4 lg:static lg:items-end lg:px-0 lg:pt-5 lg:pb-12"
           >
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
@@ -125,10 +105,7 @@ export function StepShell({
           */}
           <footer
             ref={setFooterNode}
-            className={cn(
-              'bg-surface-base border-outline-subtle pb-safe flex w-full flex-col border-t px-6 lg:px-0',
-              keyboardOpen ? 'gap-2 pt-2 [--pb-safe:0.5rem]' : 'min-h-[76px] gap-4 pt-3 [--pb-safe:1rem]',
-            )}
+            className="bg-surface-base border-outline-subtle pb-safe flex w-full flex-col border-t px-6 lg:px-0 min-h-[76px] gap-4 pt-3 [--pb-safe:1rem]"
           />
         </div>
       </div>

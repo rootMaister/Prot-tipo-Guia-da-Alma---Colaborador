@@ -26,7 +26,7 @@ export function InicioScreen() {
   const { goNext } = useStepNavigation('inicio')
 
   return (
-    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-app flex-col lg:items-center lg:[--px-safe:2.25rem]">
+    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh flex-col lg:items-center lg:[--px-safe:2.25rem]">
       <div className="flex w-full flex-1 flex-col lg:max-w-[450px]">
         <div className="flex flex-1 flex-col items-center justify-end gap-6 px-6 py-12 lg:justify-center lg:gap-24 lg:px-0">
           <div className="flex flex-1 items-center justify-center lg:flex-none">

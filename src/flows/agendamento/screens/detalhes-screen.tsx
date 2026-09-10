@@ -13,7 +13,6 @@ import { SESSAO } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
 import { useScreenSurface } from '@/lib/use-screen-surface'
-import { useLockedDocumentScroll } from '@/lib/use-locked-document-scroll'
 
 /**
  * Step 1 — nodes 1184:5171 (mobile) and 1236:12522 (desktop); 1184:5198 and 1184:5259 are
@@ -108,9 +107,6 @@ const AVALIACOES_TOTAL = 38
 const AVALIACOES_MEDIA = '4,5'
 
 export function DetalhesScreen() {
-  // Fixed height with an internal scroll area: the page itself must not scroll, or the
-  // keyboard drags the header out of place. See the hook.
-  useLockedDocumentScroll()
 
   useScreenSurface('surface-base')
 
@@ -155,8 +151,8 @@ export function DetalhesScreen() {
   return (
     <>
       {/* Mobile */}
-      <div className="bg-surface-base pt-safe px-safe flex h-app flex-col lg:hidden">
-        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-6 py-6">
+      <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col lg:hidden">
+        <div className="flex flex-1 flex-col gap-6 px-6 py-6">
           <p className="text-label-l text-fg-default">{SESSAO.titulo}</p>
           <ProfissionalResumo {...SESSAO.profissional} />
           <Tabs value={aba} onValueChange={setAba} className="flex flex-col gap-4">
@@ -201,11 +197,11 @@ export function DetalhesScreen() {
       </div>
 
       {/* Desktop */}
-      <div className="bg-surface-base pt-safe px-safe hidden h-app flex-col lg:flex">
+      <div className="bg-surface-base pt-safe px-safe hidden min-h-dvh flex-col lg:flex">
         <header className="w-full px-8 py-8">
           <GuiaLockup height={18} className="text-fg-default" />
         </header>
-        <div className="flex min-h-0 flex-1 justify-center gap-16 overflow-hidden px-9 pb-12">
+        <div className="flex flex-1 justify-center gap-16 px-9 pb-12">
           <div className="flex w-full max-w-[450px] flex-col gap-8">
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
@@ -223,7 +219,7 @@ export function DetalhesScreen() {
               <p className="text-label-s text-fg-subtle w-full text-center">{SESSAO.duracao}</p>
             </div>
           </div>
-          <div className="flex w-full max-w-[450px] flex-col gap-12 overflow-y-auto">
+          <div className="flex w-full max-w-[450px] flex-col gap-12">
             <section className="flex flex-col gap-4">
               <h2 className="text-label-m text-fg-default">Sobre a sessão</h2>
               {descricao}

@@ -3,7 +3,6 @@ import { Navigate, Outlet, useLocation, useNavigate, useParams } from 'react-rou
 import { SignUpShell } from '@/components/layout/sign-up-shell'
 import { StepChromeProvider } from '@/components/layout/step-chrome'
 import { StepTransition, useStepDirection } from '@/components/layout/step-transition'
-import { useKeyboardOpen } from '@/lib/use-keyboard-open'
 
 import { CadastroProvider } from './cadastro-provider'
 import { screenComponents } from './screens/registry'
@@ -23,7 +22,6 @@ export function CadastroLayout() {
   const slug = pathname.split('/')[2] ?? ''
   const step = findStep(slug)
   const direction = useStepDirection(step ? getStepIndex(step.slug) : 0)
-  const tecladoAberto = useKeyboardOpen()
 
   const goBack = () => {
     const anterior = step ? getPreviousStep(step.slug) : undefined
@@ -34,8 +32,8 @@ export function CadastroLayout() {
     <StepTransition
       stepKey={slug}
       direction={direction}
-      wrapperClassName="flex min-h-0 flex-1 flex-col"
-      className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:-mx-1.5 lg:px-1.5"
+      wrapperClassName="flex flex-1 flex-col"
+      className="flex flex-1 flex-col"
     >
       <Outlet />
     </StepTransition>
@@ -51,7 +49,6 @@ export function CadastroLayout() {
             stepLabel={step.stepLabel!}
             progress={step.progress}
             onBack={goBack}
-            keyboardOpen={tecladoAberto}
           >
             {conteudo}
           </SignUpShell>

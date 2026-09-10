@@ -29,7 +29,7 @@ export function FeatureShell({ icon, eyebrow, title, footer }: FeatureShellProps
   useScreenSurface('category-green-surface')
 
   return (
-    <div className="bg-category-green-surface pt-safe px-safe flex min-h-app flex-col">
+    <div className="bg-category-green-surface pt-safe px-safe flex min-h-dvh flex-col">
       {/* No status bar on these two screens — the design just opens with 48px of air. */}
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaDaAlmaSymbol className="text-category-green-text h-[33px] w-[38px]" />

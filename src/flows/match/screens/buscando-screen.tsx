@@ -34,7 +34,7 @@ export function BuscandoScreen() {
   }, [goNext])
 
   return (
-    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-app flex-col items-center justify-center gap-16 [--px-safe:1.5rem]">
+    <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh flex-col items-center justify-center gap-16 [--px-safe:1.5rem]">
       <GuiaOrb halo />
 
       <p className="text-label-s text-fg-on-action max-w-[280px] text-center">

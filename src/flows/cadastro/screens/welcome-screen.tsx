@@ -26,7 +26,7 @@ export function WelcomeScreen() {
   return (
     <>
       {/* Mobile */}
-      <div className="pt-safe px-safe relative isolate flex min-h-app flex-col justify-end bg-surface-brand-strong lg:hidden">
+      <div className="pt-safe px-safe relative isolate flex min-h-dvh flex-col justify-end bg-surface-brand-strong lg:hidden">
         <GradientBackdrop variant="mobile" className="z-0" />
 
         <div className="pb-safe relative z-10 flex w-full flex-col gap-8 px-6 pt-3 [--pb-safe:1rem]">
@@ -53,7 +53,7 @@ export function WelcomeScreen() {
       </div>
 
       {/* Desktop */}
-      <div className="bg-surface-subtle pt-safe px-safe hidden min-h-app items-stretch lg:flex">
+      <div className="bg-surface-subtle pt-safe px-safe hidden min-h-dvh items-stretch lg:flex">
         <div className="flex min-w-0 flex-1 items-center bg-surface-brand-strong p-4">
           <div className="relative flex h-full max-h-[928px] w-full flex-col gap-2.5 overflow-hidden rounded-2xl px-12 py-24">
             <GradientBackdrop variant="desktop" className="z-0" />

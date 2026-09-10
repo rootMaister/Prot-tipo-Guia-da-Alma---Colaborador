@@ -25,7 +25,7 @@ export function StatusShell({ illustration, title, body, footer }: StatusShellPr
   useScreenSurface('surface-base')
 
   return (
-    <div className="bg-surface-base pt-safe px-safe flex min-h-app flex-col">
+    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">
       <div className="flex w-full flex-col items-center px-8 py-8 lg:items-start">
         <GuiaDaAlmaSymbol className="text-fg-default h-[33px] w-[38px] lg:hidden" />
         <GuiaLockup height={18} className="text-fg-default hidden lg:inline-flex" />
