@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@guia-da-alma/ds'
 import { RouterProvider } from 'react-router'
 
+import { ViewportDebug } from './components/local/viewport-debug'
 import { useViewportHeight } from './lib/use-viewport-height'
 import { router } from './routes'
 
@@ -14,6 +15,7 @@ export function App() {
     // "Dark mode — full dark palette is deferred". See DS-GAPS.md.
     <ThemeProvider defaultTheme="light" storageKey="prototipo-colaboradores-theme">
       <RouterProvider router={router} />
+      <ViewportDebug />
     </ThemeProvider>
   )
 }
