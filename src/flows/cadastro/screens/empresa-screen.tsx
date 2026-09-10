@@ -87,7 +87,7 @@ export function EmpresaScreen() {
           }
           trailingIcon={isLooking ? undefined : <ArrowRightIcon className="size-[18px]" />}
         >
-          {isLooking ? 'Identificando sua empresa' : 'Continuar'}
+          {isLooking ? 'Identificando sua empresa' : isComplete ? 'Continuar' : 'Digite os 6 dígitos'}
         </Button>
       }
     >

@@ -12,9 +12,17 @@ import { useEffect } from 'react'
  *
  * Only the fixed-height shells call it. Screens that legitimately grow past the viewport —
  * the index, the feedback screens — must keep the page scrollable.
+ *
+ * @param ativo pass `false` to release the lock. The shells drop it while the keyboard is
+ * open: there the footer is meant to scroll away with the content, which needs a scrollable
+ * page.
  */
-export function useLockedDocumentScroll() {
+export function useLockedDocumentScroll(ativo = true) {
   useEffect(() => {
+    if (!ativo) {
+      return
+    }
+
     const { documentElement: html, body } = document
 
     const anteriorHtml = html.style.overflow
@@ -29,5 +37,5 @@ export function useLockedDocumentScroll() {
       html.style.overflow = anteriorHtml
       body.style.overflow = anteriorBody
     }
-  }, [])
+  }, [ativo])
 }

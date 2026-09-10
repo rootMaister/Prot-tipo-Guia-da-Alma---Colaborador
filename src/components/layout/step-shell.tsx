@@ -19,6 +19,12 @@ type StepShellProps = {
   progress: number
   onBack?: () => void
   /**
+   * While the keyboard is up the footer stops being anchored and scrolls away with the
+   * content, so the fields get the whole of what little screen is left. The header stays
+   * put by going sticky.
+   */
+  keyboardOpen?: boolean
+  /**
    * Widens the desktop column from 450px to the container's full 1000px. Only the Match
    * results screen uses it: its grid needs the room, which is why its desktop progress
    * track is 934px where every other screen draws 384px.
@@ -48,10 +54,18 @@ type StepShellProps = {
  * DS-GAP: same `ProgressBar` track and `Badge` divergences as `SignUpShell` — left as the
  * design system renders them rather than patched over with className. See DS-GAPS.md.
  */
-export function StepShell({ stepLabel, progress, onBack, wide = false, children }: StepShellProps) {
+export function StepShell({
+  stepLabel,
+  progress,
+  onBack,
+  keyboardOpen = false,
+  wide = false,
+  children,
+}: StepShellProps) {
   // Fixed height with an internal scroll area: the page itself must not scroll, or the
-  // keyboard drags the header out of place. See the hook.
-  useLockedDocumentScroll()
+  // keyboard drags the header out of place. Released while the keyboard is up, where the
+  // page is supposed to scroll so the footer can be reached. See the hook.
+  useLockedDocumentScroll(!keyboardOpen)
 
   useScreenSurface('surface-base')
 
@@ -64,7 +78,12 @@ export function StepShell({ stepLabel, progress, onBack, wide = false, children 
   const setFooterNode = useFooterSlot()
 
   return (
-    <div className="bg-surface-base pt-safe px-safe flex h-app flex-col gap-3 lg:gap-0">
+    <div
+      className={cn(
+        'bg-surface-base pt-safe px-safe flex flex-col gap-3 lg:gap-0',
+        keyboardOpen ? 'min-h-app' : 'h-app',
+      )}
+    >
       <header className="hidden w-full px-8 py-8 lg:block">
         <GuiaLockup height={18} className="text-fg-default" />
       </header>
@@ -76,7 +95,12 @@ export function StepShell({ stepLabel, progress, onBack, wide = false, children 
             wide ? 'lg:max-w-[1000px]' : 'lg:max-w-[450px]',
           )}
         >
-          <div className="flex items-center gap-6 px-6 py-4 lg:items-end lg:px-0 lg:pt-5 lg:pb-12">
+          <div
+            className={cn(
+              'flex items-center gap-6 px-6 py-4 lg:items-end lg:px-0 lg:pt-5 lg:pb-12',
+              keyboardOpen && 'bg-surface-base sticky top-0 z-10',
+            )}
+          >
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
               aria-label="Voltar"

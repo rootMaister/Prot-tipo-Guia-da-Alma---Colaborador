@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation, useNavigate, useParams } from 'react-rou
 import { StepChromeProvider } from '@/components/layout/step-chrome'
 import { StepShell } from '@/components/layout/step-shell'
 import { StepTransition, useStepDirection } from '@/components/layout/step-transition'
+import { useKeyboardOpen } from '@/lib/use-keyboard-open'
 
 import { AgendamentoProvider } from './agendamento-provider'
 import { screenComponents } from './screens/registry'
@@ -22,6 +23,7 @@ export function AgendamentoLayout() {
   const slug = pathname.split('/')[2] ?? ''
   const step = findStep(slug)
   const direction = useStepDirection(step ? getStepIndex(step.slug) : 0)
+  const tecladoAberto = useKeyboardOpen()
 
   const goBack = () => {
     const anterior = step ? getPreviousStep(step.slug) : undefined
@@ -32,8 +34,12 @@ export function AgendamentoLayout() {
     <StepTransition
       stepKey={slug}
       direction={direction}
-      wrapperClassName="flex min-h-0 flex-1 flex-col"
-      className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:-mx-1.5 lg:px-1.5"
+      wrapperClassName={tecladoAberto ? 'flex flex-col' : 'flex min-h-0 flex-1 flex-col'}
+      className={
+        tecladoAberto
+          ? 'flex flex-col lg:-mx-1.5 lg:px-1.5'
+          : 'flex min-h-0 flex-1 flex-col overflow-y-auto lg:-mx-1.5 lg:px-1.5'
+      }
     >
       <Outlet />
     </StepTransition>
@@ -45,7 +51,12 @@ export function AgendamentoLayout() {
         {step?.progress === null || !step ? (
           conteudo
         ) : (
-          <StepShell stepLabel={step.stepLabel!} progress={step.progress} onBack={goBack}>
+          <StepShell
+            stepLabel={step.stepLabel!}
+            progress={step.progress}
+            onBack={goBack}
+            keyboardOpen={tecladoAberto}
+          >
             {conteudo}
           </StepShell>
         )}

@@ -43,11 +43,20 @@ export function SuasSessoesScreen() {
       subtitle="Selecione os melhores horários para as suas sessões"
       footer={
         <>
-          {hasSelection ? (
-            <Button variant="contained" className="w-full" onClick={goNext}>
-              Buscar sessões
-            </Button>
-          ) : null}
+          {/*
+            Visível sempre, mesmo sem seleção: esconder o CTA tira a referência do que a
+            tela faz e o gatilho para descobrir o que falta. Desabilitado, o rótulo é a
+            própria mensagem — o mesmo padrão que "Insira o seu CPF" já usa no Agendamento.
+            Diverge do Figma, que só desenha o botão no estado preenchido. Ver SYNC-FIGMA.md.
+          */}
+          <Button
+            variant="contained"
+            className="w-full"
+            disabled={!hasSelection}
+            onClick={goNext}
+          >
+            {hasSelection ? 'Buscar sessões' : 'Selecione um dia ou horário'}
+          </Button>
 
           <PularMatchButton />
         </>

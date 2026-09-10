@@ -15,7 +15,6 @@ export function InformacoesAdicionaisScreen() {
   const { goNext } = useStepNavigation('informacoes-adicionais')
   const { data, update } = useMatch()
 
-  const hasText = data.detalhes.trim().length > 0
 
   return (
     <StepBody
@@ -23,16 +22,19 @@ export function InformacoesAdicionaisScreen() {
       subtitle="Isso irá ajudar a trazer resultados de profissionais que mais se encaixam com o seu perfil"
       footer={
         <>
-          {hasText ? (
-            <Button
-              variant="contained"
-              className="w-full"
-              onClick={goNext}
-              trailingIcon={<ArrowRightIcon className="size-[18px]" />}
-            >
-              Escolher abordagem
-            </Button>
-          ) : null}
+          {/*
+            Este passo é opcional — não há mínimo a atingir —, então o primário fica sempre
+            ativo em vez de aparecer só depois que o campo tem texto. O Figma só o desenha no
+            frame preenchido. Ver SYNC-FIGMA.md.
+          */}
+          <Button
+            variant="contained"
+            className="w-full"
+            onClick={goNext}
+            trailingIcon={<ArrowRightIcon className="size-[18px]" />}
+          >
+            Escolher abordagem
+          </Button>
 
           <Button variant="outlined" className="w-full" onClick={goNext}>
             Pular essa parte
