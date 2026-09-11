@@ -14,10 +14,9 @@ import { agendamentosRestantes, useConta } from '@/state/conta-provider'
  * to "Sua próxima sessão".
  *
  * The desktop frame is on the file's older grid — a hand-built 406px nav column and a 628px
- * content measure — while the two newer desktop screens (Busca, Meus agendamentos) use the
- * `desktop-navigation` instance at 280 and a 1000px column. Normalised here onto the newer
- * grid, which also makes the two shortcut cards 492px, the same measure every other card on
- * those screens gets. See SYNC-FIGMA.md.
+ * content measure. Normalised here onto the one the newest desktop frames use (rail 280,
+ * 1000px column, centred), which also makes the two shortcut cards 492px, the same measure
+ * every other card in the app gets. The grid itself lives in `nav-shell`. See SYNC-FIGMA.md.
  */
 export function InicioScreen() {
   const navigate = useNavigate()

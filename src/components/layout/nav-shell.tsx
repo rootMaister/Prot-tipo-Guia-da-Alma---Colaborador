@@ -35,12 +35,19 @@ export function NavShell({ children }: { children: ReactNode }) {
       <MenuLateral slugAtivo={slugAtivo} />
 
       {/*
-        1440 = 280 (rail) + 1000 (content) + 160 ("Respiro lateral", the named spacer frame
-        1526:947). The content column keeps its 1000px on wider screens; the breathing room
-        is what grows.
+        The 1000px column is **centred** in what the rail leaves, not flush against it.
+        1440 = 280 (rail) + 1160, and the newest desktop grid in the file — the "Com
+        navegação" section, e.g. 1617:4660 — insets its content by 80 on each side of that
+        1160, which is exactly `lg:px-20` here. The oldest one, the Home at 590:9086,
+        centres too (406 of gutter on each side of a 628px column).
+
+        Busca (1526:908) and Meus agendamentos (1558:1876) are the two frames that do not:
+        they put the column at x=280, flush against the rail, with all 160px of "Respiro
+        lateral" on the right. Following those two left every desktop screen visibly pulled
+        to the left, and worse the wider the viewport. See SYNC-FIGMA.md.
       */}
-      <main className="flex w-full flex-1 flex-col pb-[108px] lg:max-w-[1160px] lg:pr-[160px] lg:pb-0">
-        {children}
+      <main className="flex w-full flex-1 flex-col pb-[108px] lg:items-center lg:px-20 lg:pb-0">
+        <div className="flex w-full flex-1 flex-col lg:max-w-[1000px]">{children}</div>
       </main>
 
       <BarraInferior slugAtivo={slugAtivo} />

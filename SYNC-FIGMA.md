@@ -73,13 +73,23 @@ Levantado ao implementar os três destinos do app. Mesma divisão da revisão ac
 
 ## Precisa mudar no arquivo do Figma
 
-- **O desktop do Início está numa grade antiga.** Ele usa uma coluna de navegação de 406px
-  montada à mão ("Nav Menu - Twitter style", 608:9988) e uma medida de conteúdo de 628px.
-  As duas telas desktop mais novas — Busca (1526:908) e Meus agendamentos (1558:1876) —
-  usam a instância `desktop-navigation` a 280px, conteúdo de 1000px e um "Respiro lateral"
-  de 160px. O protótipo normalizou o Início para essa grade, o que de quebra deixa os dois
-  cartões de atalho em 492px, a mesma medida de todo cartão das outras telas. **Sugerido:**
-  trocar a coluna do Início pela instância e refazer a medida.
+- **Há quatro grades de desktop no arquivo, e duas delas não centralizam o conteúdo.**
+
+  | tela | régua | conteúdo | sobra à direita | centrado? |
+  |---|---|---|---|---|
+  | Início (590:9086) | 406, montada à mão | 406→1034 (628) | 406 | sim |
+  | Busca (1526:908) | 280, instância | 280→1280 (1000) | 160 | **não** |
+  | Meus agendamentos (1558:1876) | 280, instância | 280→1280 (1000) | 160 | **não** |
+  | Agendamento — Com navegação (1617:4660) | 280, instância | 360→1360 (1000) | 80 | sim |
+
+  A mais antiga (Início) e a mais nova (a seção "Com navegação") centralizam; a Busca e
+  Meus agendamentos encostam a coluna na régua e jogam todo o "Respiro lateral" para a
+  direita. O protótipo segue a grade de 1617:4660 — régua 280 e coluna de 1000 centrada no
+  que sobra, o que a 1440 dá exatamente os 80/80 daquele frame e, em telas mais largas,
+  mantém a coluna no meio em vez de puxá-la para a esquerda. **Sugerido:** empurrar a
+  coluna da Busca e de Meus agendamentos em 80px e dividir o respiro, e trocar a coluna de
+  navegação do Início pela instância `desktop-navigation` — o que de quebra leva os dois
+  cartões de atalho a 492px, a mesma medida de todo cartão das outras telas.
 - **A pílula do item ativo da barra inferior tem três larguras fixas diferentes** — 98px
   (Início), 120px (Buscar), 144px (Agendamentos) — que não correspondem a um padding
   constante em volta de nenhum dos três rótulos. **Sugerido:** deixar o item ativo abraçar
