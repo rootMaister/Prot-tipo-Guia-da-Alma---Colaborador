@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { FeatureShell } from '@/components/layout/feature-shell'
 import { SESSAO_DEMO, useConta } from '@/state/conta-provider'
 
-import { formatarBadge, useAgendamento } from '../agendamento-provider'
+import { HOJE, useAgendamento } from '../agendamento-provider'
 
 /**
  * Step 5 — nodes 1236:11034 (mobile) and 1279:15911 (desktop).
@@ -28,12 +28,14 @@ export function AgendadaScreen() {
   const { data } = useAgendamento()
   const { agendar } = useConta()
 
-  const quando =
-    data.data && data.horario ? formatarBadge(data.data, data.horario) : 'Horário a confirmar'
+  // The provider always holds a slot — the card's availability, or `SLOT_PADRAO` on a cold
+  // deep-link — so these fallbacks only guard the types.
+  const dia = data.data ?? HOJE
+  const horario = data.horario ?? '19:00'
 
   useEffect(() => {
-    agendar({ ...SESSAO_DEMO, quando })
-  }, [agendar, quando])
+    agendar({ ...SESSAO_DEMO, data: dia, horario })
+  }, [agendar, dia, horario])
 
   return (
     <FeatureShell

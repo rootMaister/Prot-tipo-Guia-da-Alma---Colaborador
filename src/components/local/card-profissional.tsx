@@ -1,6 +1,8 @@
 import { Badge, Button } from '@guia-da-alma/ds'
 import { useLocation, useNavigate } from 'react-router'
 
+import { comOrigem } from '@/lib/origem'
+
 import { ProfissionalResumo, type Profissional } from './profissional-resumo'
 
 export type SessaoRecomendada = Profissional & {
@@ -22,6 +24,12 @@ export type SessaoRecomendada = Profissional & {
  * from here, so every card leads to the one session that flow is drawn around. The card's
  * availability rides along in router state, so the scheduling step opens on the slot this
  * card advertises rather than a fixed one.
+ *
+ * The card is drawn on two screens that are not in the same place — the Match results, a
+ * step of onboarding, and Busca, a destination of the app — so it also tells the flow where
+ * it was clicked. Without that, backing out of the booking always landed on the Match
+ * results, which from Busca means being dropped into the middle of onboarding.
+ * See `lib/origem.ts`.
  */
 export function CardProfissional({
   sessao,
@@ -30,7 +38,7 @@ export function CardProfissional({
   ...profissional
 }: SessaoRecomendada) {
   const navigate = useNavigate()
-  const { search } = useLocation()
+  const { pathname, search } = useLocation()
 
   return (
     <div className="bg-surface-faint border-outline-subtle relative flex w-full flex-col gap-4 rounded-2xl border p-3">
@@ -51,7 +59,9 @@ export function CardProfissional({
           <Button
             variant="contained"
             onClick={() =>
-              navigate(`/agendamento/detalhes${search}`, { state: { disponibilidade } })
+              navigate(comOrigem('/agendamento/detalhes', pathname, search), {
+                state: { disponibilidade },
+              })
             }
           >
             Ver agenda

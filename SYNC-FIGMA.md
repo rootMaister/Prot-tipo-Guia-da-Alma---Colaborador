@@ -126,3 +126,46 @@ Levantado ao implementar os três destinos do app. Mesma divisão da revisão ac
 - **O botão de abrir o Diário no cartão de atalho não navega**, mas continua com a
   aparência do desenho em vez do cinza de desabilitado — a mesma escolha feita para Diário
   e Meu progresso na régua.
+
+---
+
+# Sincronizar no Figma — `Detalhes da sessão` e as costuras (11/09/2026)
+
+Levantado ao consertar os botões do app que devolviam a pessoa para telas do onboarding.
+
+## Entra no protótipo
+
+- **A página "Sessão"** (`1769:9484`) — `[Mobile] 1a. Detalhes da sessão — pré-sessão`
+  (`1776:3`) e `[Desktop] 1a. Drawer — pré-sessão` (`1784:30`). É o destino de "Acessar
+  detalhes" no Início e de "Ver detalhes" em Meus agendamentos, que até agora abriam o passo 1
+  do fluxo de Agendamento — a tela de *pré*-agendamento, com "Agendar com Daniele" no rodapé,
+  para uma sessão que já estava marcada.
+
+## Precisa ser desenhado no Figma (não existe hoje)
+
+- **Onde "Ver perfil do psicólogo" leva.** Não há página de perfil em lugar nenhum do arquivo.
+  No protótipo o botão é desenhado como está e não navega.
+- **Onde "Entrar na sala" leva.** A sessão é online via Google Meet e não há sala. Mesmo
+  tratamento.
+- **O estado pós-sessão.** A página "Sessão" tem `1b. Sessão iniciada — profissional não
+  compareceu`, que não foi construído, e a página "Avaliação" (`1769:9713`) inteira também não.
+
+## Precisa mudar no arquivo do Figma
+
+- **A mesma sessão tem dois títulos.** Os cards escrevem "Sessão de Psicoterapia
+  Analítica/Junguiana | atendimento exclusivo para mulheres e pessoas LGBT+" e `Detalhes da
+  sessão` (`1776:38`) escreve "Sessão de Psicoterapia Junguiana". O protótipo reproduz os dois,
+  cada um onde é desenhado. **Sugerido:** escolher um, ou assumir os dois como campos
+  diferentes (título completo e título curto), que é como o código os trata.
+- **O botão "Quero explorar a plataforma"** (`/match/inicio`) não tem destino no protótipo do
+  Figma. É a porta de "pular o match e ir para o app", e é para lá que ele vai agora.
+- **"Voltar para as sessões"** é a cópia desenhada no passo de detalhe do Agendamento, e está
+  certa vindo dos resultados do Match. Vindo da Busca ela nomeia a lista errada, então o botão
+  passa a dizer "Voltar para a busca" / "Voltar para o início" / "Voltar para os agendamentos"
+  conforme a origem. **Cópia nova, precisa ser desenhada.**
+
+## Não precisa mudar no Figma — era erro do código
+
+- **Tudo que levava de volta ao onboarding.** O fluxo de Agendamento sempre voltava para os
+  resultados do Match, porque foi construído quando esse era o único jeito de chegar nele.
+  Agora ele carrega a origem na query string e devolve a pessoa para onde ela estava.

@@ -1,9 +1,11 @@
+import { useState } from 'react'
+
 import { Badge, FeaturedIcon, IconButton } from '@guia-da-alma/ds'
 import { ArrowUpRightIcon, NotebookPenIcon } from 'lucide-react'
-import { useNavigate } from 'react-router'
 
 import { BarraConta } from '@/components/local/barra-conta'
 import { CardSessao } from '@/components/local/card-sessao'
+import { DetalhesSessao } from '@/components/local/detalhes-sessao'
 import { PromoMatch } from '@/components/local/promo-match'
 import { agendamentosRestantes, useConta } from '@/state/conta-provider'
 
@@ -21,8 +23,8 @@ import { agendamentosRestantes, useConta } from '@/state/conta-provider'
  * See SYNC-FIGMA.md.
  */
 export function InicioScreen() {
-  const navigate = useNavigate()
   const { conta } = useConta()
+  const [detalhesAbertos, setDetalhesAbertos] = useState(false)
 
   const proxima = conta.sessoes[0]
 
@@ -87,10 +89,14 @@ export function InicioScreen() {
           {proxima ? (
             <section className="flex w-full flex-col gap-4 px-4 lg:px-0">
               <h2 className="text-label-m text-fg-muted">Sua próxima sessão</h2>
+              {/*
+                The session is already booked, so this opens `Detalhes da sessão` — not the
+                Agendamento flow's pre-booking step, which is where it used to land.
+              */}
               <CardSessao
                 sessao={proxima}
                 acao="Acessar detalhes"
-                onAcao={() => navigate('/agendamento/detalhes')}
+                onAcao={() => setDetalhesAbertos(true)}
               />
             </section>
           ) : (
@@ -100,6 +106,14 @@ export function InicioScreen() {
           )}
         </div>
       </div>
+
+      {detalhesAbertos && proxima ? (
+        <DetalhesSessao
+          sessao={proxima}
+          origem="/app/inicio"
+          onFechar={() => setDetalhesAbertos(false)}
+        />
+      ) : null}
     </div>
   )
 }

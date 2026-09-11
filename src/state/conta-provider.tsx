@@ -3,13 +3,30 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import avatar from '@/assets/match/profissional-1.jpg'
 
 export type SessaoAgendada = {
-  /** Date badge exactly as the card renders it — "Hoje, 24 de Ago ás 19:00". */
-  quando: string
+  /**
+   * The slot itself, not a formatted line. The card writes it one way ("5 de agosto •
+   * 14:00") and `Detalhes da sessão` another ("Qua, 5 de agosto de 2026" / "14:00 – 14:45"),
+   * so each screen formats from the date rather than from the other's string — see
+   * `lib/sessao-formato.ts`.
+   */
+  data: Date
+  horario: string
   titulo: string
+  /**
+   * The same session is titled twice in the file: the cards carry the long line, and
+   * `Detalhes da sessão` (1776:38) a short one. Both are reproduced rather than one being
+   * chosen for the other — see SYNC-FIGMA.md.
+   */
+  tituloCurto: string
   /** Abbreviated title as drawn: "Psi." on some cards, "Psic." on others. */
   profissionalTitulo: string
   profissionalNome: string
+  /** Spelled out — "Psicóloga" — which is how `Detalhes da sessão` writes it. */
+  profissionalProfissao: string
   avatar: string
+  /** As the detail screen writes the rating: "★ 4,5 · 67 avaliações". */
+  nota: string
+  avaliacoes: number
 }
 
 export type Conta = {
@@ -44,12 +61,16 @@ const CONTA_INICIAL: Conta = {
 }
 
 /** What the Agendamento flow books, matching the session that flow is drawn around. */
-export const SESSAO_DEMO: Omit<SessaoAgendada, 'quando'> = {
+export const SESSAO_DEMO: Omit<SessaoAgendada, 'data' | 'horario'> = {
   titulo:
     'Sessão de Psicoterapia Analítica/Junguiana | atendimento exclusivo para mulheres e pessoas LGBT+',
+  tituloCurto: 'Sessão de Psicoterapia Junguiana',
   profissionalTitulo: 'Psi.',
   profissionalNome: 'Daniele Tramontina',
+  profissionalProfissao: 'Psicóloga',
   avatar,
+  nota: '4,5',
+  avaliacoes: 67,
 }
 
 type ContaContextValue = {
@@ -66,7 +87,7 @@ export function ContaProvider({ children }: { children: ReactNode }) {
   const agendar = useCallback((sessao: SessaoAgendada) => {
     setConta((atual) => {
       // Booking the same slot twice — re-walking the flow — should not stack duplicates.
-      if (atual.sessoes.some((s) => s.quando === sessao.quando)) {
+      if (atual.sessoes.some((s) => chaveSessao(s) === chaveSessao(sessao))) {
         return atual
       }
 
@@ -90,6 +111,10 @@ export function useConta(): ContaContextValue {
 
   return context
 }
+
+/** A session is its slot: same day and same time is the same booking. */
+export const chaveSessao = (sessao: SessaoAgendada): string =>
+  `${sessao.data.toDateString()} ${sessao.horario}`
 
 /** Sessions left this month, for the "Seu plano" card. */
 export const agendamentosRestantes = (conta: Conta): number =>

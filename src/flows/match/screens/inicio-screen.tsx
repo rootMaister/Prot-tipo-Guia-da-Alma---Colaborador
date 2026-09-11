@@ -1,6 +1,8 @@
 import { Button } from '@guia-da-alma/ds'
+import { useLocation, useNavigate } from 'react-router'
 
 import { GuiaOrb } from '@/components/local/guia-orb'
+import { lerOrigem } from '@/lib/origem'
 
 import { useStepNavigation } from '../use-step-navigation'
 
@@ -24,6 +26,11 @@ export function InicioScreen() {
   useScreenSurface('surface-brand-strong')
 
   const { goNext } = useStepNavigation('inicio')
+  const navigate = useNavigate()
+  const { search } = useLocation()
+
+  // Where the app is, for someone who opened the Match from it; the Home otherwise.
+  const explorar = () => navigate(lerOrigem(search, '/app/inicio'))
 
   return (
     <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh flex-col lg:items-center lg:[--px-safe:2.25rem]">
@@ -50,7 +57,12 @@ export function InicioScreen() {
           <Button variant="lime" className="w-full" onClick={goNext}>
             Continuar
           </Button>
-          <Button variant="contained" className="w-full">
+          {/*
+            Drawn with no destination, because when this screen was built there was nowhere
+            to explore. There is now: it is the "skip the match and go to the app" door, the
+            same place "Pular match" lands.
+          */}
+          <Button variant="contained" className="w-full" onClick={explorar}>
             Quero explorar a plataforma
           </Button>
         </div>

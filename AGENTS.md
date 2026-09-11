@@ -107,10 +107,23 @@ fluxo novo (Login, Home…) é criar `src/flows/<nome>/` no mesmo formato, regis
 `routes.tsx` e a entrada em `index-page.tsx` — nenhuma tela existente precisa mudar. Foi
 exatamente assim que o Match entrou.
 
-As costuras entre fluxos são explícitas: o CTA de `aprovado-screen` (Cadastro) navega para
-`/match/inicio`, o "Ver agenda" de `card-profissional` (Match e Busca) para
-`/agendamento/detalhes`, e o "Continuar" de `agendada-screen` fecha o ciclo em
-`/app/inicio`.
+### Costuras: quem abre um fluxo diz para onde voltar
+
+As costuras são explícitas: o CTA de `aprovado-screen` (Cadastro) navega para `/match/inicio`,
+o "Ver agenda" de `card-profissional` (Match **e** Busca) para `/agendamento/detalhes`, o
+"Reagendar" de `detalhes-sessao` para `/agendamento/horario`, e o "Continuar" de
+`agendada-screen` fecha o ciclo em `/app/inicio`.
+
+O mesmo fluxo é alcançável de mais de um lugar, e um deles é o app. Por isso quem abre passa a
+**origem** em `lib/origem.ts`, e o fluxo devolve a pessoa para lá: `comOrigem()` na saída,
+`lerOrigem(search, padrao)` na volta. Vai na **query string**, não em router state — os fluxos
+já anexam `search` a cada navegação de passo, e router state não sobrevive a isso (é por essa
+mesma razão que `agendamento-provider` lê `disponibilidade` uma única vez no inicializador).
+O `padrao` é sempre o comportamento anterior, para deep-link frio não mudar.
+
+Sem isso, agendar pela Busca e apertar voltar deixava a pessoa no meio do questionário do
+Match. Ao acrescentar uma porta nova para um fluxo, passe a origem — e ao ler o retorno, nunca
+fixe um caminho de onboarding no código.
 
 ### Chrome fixo e conteúdo que desliza
 
@@ -173,8 +186,9 @@ no Figma entre a biblioteca compartilhada e os componentes locais do arquivo Col
 - Agendamento: `month-calendar`, `card-review`, `card-outra-sessao`, e
   `profissional-resumo`, extraído para não triplicar entre Match e Agendamento.
 - App (Início, Busca, Agendamentos): `barra-conta` (nível, pontos e moedas),
-  `card-sessao` (a sessão já agendada), `promo-match` (o banner escuro do Início sem
-  sessão), `painel-filtro` (a folha de filtro da Busca).
+  `card-sessao` (a sessão já agendada), `detalhes-sessao` (a tela/drawer de uma sessão
+  marcada), `promo-match` (o banner escuro do Início sem sessão), `painel-filtro` (a folha de
+  filtro da Busca).
 - Transversais: `field-shake` (tremor do campo em erro), `password-strength`,
   `pular-match-button` (o botão com o modal de confirmação).
 
@@ -187,6 +201,11 @@ sessão, avaliação, disponibilidade, "Ver agenda"), usado pelo Match e pela Bu
 `card-sessao` é o cartão de sessão já marcada (badge de data, "Ver detalhes"), usado pelo
 Início e por Meus agendamentos. No Figma os dois se chamam `card-profissional` e não têm
 quase nada em comum.
+
+E com dois "detalhes da sessão": o passo `detalhes` do fluxo de Agendamento (1184:5171) é o que
+se lê **antes** de marcar, e termina em "Agendar com Daniele"; `detalhes-sessao` (1776:3 e
+1784:30, página "Sessão") é o de uma sessão **já** marcada, e termina em "Entrar na sala".
+Mandar um botão do app para o primeiro é o bug que essa distinção existe para evitar.
 
 ## Regras ao construir uma tela
 

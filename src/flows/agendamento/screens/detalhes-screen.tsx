@@ -12,6 +12,7 @@ import { ProfissionalResumo } from '@/components/local/profissional-resumo'
 import { SESSAO } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
+import { lerOrigem } from '@/lib/origem'
 import { useScreenSurface } from '@/lib/use-screen-surface'
 
 /**
@@ -102,6 +103,18 @@ const OUTRAS_SESSOES: OutraSessao[] = [
   },
 ]
 
+/**
+ * The copy of the back button, by where the flow was opened from. "Voltar para as sessões"
+ * is what the frame draws, and it is right for the Match results; coming from Busca it would
+ * name the wrong list. The Busca wording is new copy — see SYNC-FIGMA.md.
+ */
+const ROTULO_VOLTAR: Record<string, string> = {
+  '/match/sessoes-recomendadas': 'Voltar para as sessões',
+  '/app/busca': 'Voltar para a busca',
+  '/app/inicio': 'Voltar para o início',
+  '/app/agendamentos': 'Voltar para os agendamentos',
+}
+
 /** Only on desktop: the header above the review list there states both. */
 const AVALIACOES_TOTAL = 38
 const AVALIACOES_MEDIA = '4,5'
@@ -116,11 +129,14 @@ export function DetalhesScreen() {
   const [aba, setAba] = useState('descricao')
 
   /*
-    This is the first step of its own flow, so the generic `goBack` would fall through to
-    the prototype index. The screen is always reached from the Match results, so back
-    means back to that list.
+    This is the first step of its own flow, so the generic `goBack` would fall through to the
+    prototype index. It is reached from the Match results during onboarding and from Busca
+    once the app exists, so back means back to whichever one opened it — the default keeps
+    the onboarding behaviour for a cold deep-link. See `lib/origem.ts`.
   */
-  const voltarParaResultados = () => navigate(`/match/sessoes-recomendadas${search}`)
+  const origem = lerOrigem(search, '/match/sessoes-recomendadas')
+  const voltar = () => navigate(origem)
+  const rotuloVoltar = ROTULO_VOLTAR[origem] ?? 'Voltar'
 
   const descricao = (
     <div className="text-body-s text-fg-muted flex flex-col gap-2">
@@ -140,10 +156,10 @@ export function DetalhesScreen() {
       <Button
         variant="outlined"
         className="w-full"
-        onClick={voltarParaResultados}
+        onClick={voltar}
         leadingIcon={<ArrowLeftIcon className="size-[18px]" />}
       >
-        Voltar para as sessões
+        {rotuloVoltar}
       </Button>
     </>
   )
@@ -205,8 +221,8 @@ export function DetalhesScreen() {
           <div className="flex w-full max-w-[450px] flex-col gap-8">
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
-              aria-label="Voltar para as sessões"
-              onClick={voltarParaResultados}
+              aria-label={rotuloVoltar}
+              onClick={voltar}
             />
 
             {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}

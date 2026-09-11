@@ -1,5 +1,7 @@
 import { Badge, Button } from '@guia-da-alma/ds'
 
+import { badgeSessao } from '@/lib/sessao-formato'
+
 import type { SessaoAgendada } from '@/state/conta-provider'
 
 type CardSessaoProps = {
@@ -29,7 +31,7 @@ export function CardSessao({ sessao, acao, onAcao }: CardSessaoProps) {
     <div className="bg-surface-base border-outline-subtle flex w-full flex-col justify-center gap-4 rounded-2xl border p-3">
       <div className="flex w-full flex-col gap-4">
         <div className="flex w-full items-center justify-between">
-          <Badge variant="success">{sessao.quando}</Badge>
+          <Badge variant="success">{badgeSessao(sessao.data, sessao.horario)}</Badge>
         </div>
 
         <div className="flex w-full items-start gap-4 py-2">

@@ -987,8 +987,13 @@ conviver com dois botões de fechar.
 
 **Contorno:** `src/components/local/painel-filtro.tsx`, com overlay próprio e `Escape`.
 
-**Correção sugerida:** uma variante `sheet` / `fullscreen` do `DialogContent`, e tornar o
-botão de fechar embutido opcional.
+**Reincidiu** em `src/components/local/detalhes-sessao.tsx`: o mesmo `modal-drawer` do Figma,
+agora ancorado à direita com 512px e um scrim de 30% (`1794:349`). São dois componentes locais
+desenhando o mesmo componente do arquivo porque o DS não tem como — é o sinal mais forte até
+aqui de que a lacuna vale correção.
+
+**Correção sugerida:** uma variante `sheet` / `fullscreen` / `drawer` do `DialogContent`, com
+ancoragem por prop, e tornar o botão de fechar embutido opcional.
 
 ## 35. Divergências menores acumuladas — Início, Busca e Meus agendamentos
 

@@ -11,6 +11,8 @@ import {
 } from '@guia-da-alma/ds'
 import { useLocation, useNavigate } from 'react-router'
 
+import { lerOrigem } from '@/lib/origem'
+
 /**
  * The "Pular match" action, which appears in the footer of every questionnaire screen.
  *
@@ -42,7 +44,7 @@ export function PularMatchButton() {
             <Button variant="outlined" onClick={() => setAberto(false)}>
               Voltar
             </Button>
-            <Button variant="contained" onClick={() => navigate(`/app/inicio${search}`)}>
+            <Button variant="contained" onClick={() => navigate(lerOrigem(search, '/app/inicio'))}>
               Pular match
             </Button>
           </DialogFooter>

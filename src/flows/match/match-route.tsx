@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation, useNavigate, useParams } from 'react-router'
 
 import { StepChromeProvider } from '@/components/layout/step-chrome'
+import { lerOrigem } from '@/lib/origem'
 import { StepShell } from '@/components/layout/step-shell'
 import { StepTransition, useStepDirection } from '@/components/layout/step-transition'
 
@@ -25,7 +26,7 @@ export function MatchLayout() {
 
   const goBack = () => {
     const anterior = step ? getPreviousStep(step.slug) : undefined
-    navigate(anterior ? `/match/${anterior.slug}${search}` : `/${search}`)
+    navigate(anterior ? `/match/${anterior.slug}${search}` : lerOrigem(search, '/'))
   }
 
   const conteudo = (

@@ -2,6 +2,8 @@ import { Button } from '@guia-da-alma/ds'
 import { ArrowRightIcon } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
+import { comOrigem } from '@/lib/origem'
+
 import { GuiaOrb } from './guia-orb'
 
 /**
@@ -46,7 +48,7 @@ export function PromoMatch() {
           variant="lime"
           className="w-full"
           trailingIcon={<ArrowRightIcon className="size-[18px]" />}
-          onClick={() => navigate('/match/inicio')}
+          onClick={() => navigate(comOrigem('/match/inicio', '/app/inicio'))}
         >
           Match de terapia
         </Button>
