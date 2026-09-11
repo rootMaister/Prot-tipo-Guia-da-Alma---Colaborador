@@ -1,9 +1,13 @@
+import { useEffect } from 'react'
+
 import { Button } from '@guia-da-alma/ds'
 import { CheckIcon } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router'
 
 import { FeatureShell } from '@/components/layout/feature-shell'
+import { SESSAO_DEMO, useConta } from '@/state/conta-provider'
 
-import { useStepNavigation } from '../use-step-navigation'
+import { formatarBadge, useAgendamento } from '../agendamento-provider'
 
 /**
  * Step 5 — nodes 1236:11034 (mobile) and 1279:15911 (desktop).
@@ -11,10 +15,25 @@ import { useStepNavigation } from '../use-step-navigation'
  * The same celebratory shell as "Empresa encontrada" and "Perfil aprovado" in Cadastro —
  * which is literally where the desktop frame's name comes from, since it is still called
  * "[Desktop] 3. Empresa encontrada" in Figma. This one drops the eyebrow line.
+ *
+ * Reaching it is also what books the session on the account, and that is what flips the
+ * Home from the Match banner to "Sua próxima sessão" and fills Meus agendamentos.
+ * Registering here rather than on the confirm button ties it to the flow actually
+ * finishing; `agendar` ignores a repeat of the same slot, so re-walking does not stack
+ * duplicates.
  */
 export function AgendadaScreen() {
-  // Last step of the flow: `goNext` has nowhere to go, so it returns to the index.
-  const { goNext } = useStepNavigation('agendada')
+  const navigate = useNavigate()
+  const { search } = useLocation()
+  const { data } = useAgendamento()
+  const { agendar } = useConta()
+
+  const quando =
+    data.data && data.horario ? formatarBadge(data.data, data.horario) : 'Horário a confirmar'
+
+  useEffect(() => {
+    agendar({ ...SESSAO_DEMO, quando })
+  }, [agendar, quando])
 
   return (
     <FeatureShell
@@ -27,7 +46,12 @@ export function AgendadaScreen() {
         </>
       }
       footer={
-        <Button variant="contained" className="w-full" onClick={goNext}>
+        <Button
+          variant="contained"
+          className="w-full"
+          // The flow now ends on the Home, where the session it just booked is waiting.
+          onClick={() => navigate(`/app/inicio${search}`)}
+        >
           Continuar
         </Button>
       }

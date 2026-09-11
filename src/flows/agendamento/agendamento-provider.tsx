@@ -136,3 +136,12 @@ export const formatarQuando = (data: Date, horario: string): string => {
 
   return `${prefixo}${texto} ás ${horario}`
 }
+
+/**
+ * "8 de setembro • 19:00" — the short form on the date badge of a booked session's card
+ * (1568:2128 on Meus agendamentos). The Home draws the same badge of the same component as
+ * "Hoje, 24 de Ago ás 19:00"; one format serves both, since one session feeds both
+ * screens. See SYNC-FIGMA.md.
+ */
+export const formatarBadge = (data: Date, horario: string): string =>
+  `${data.getDate()} de ${data.toLocaleDateString('pt-BR', { month: 'long' })} • ${horario}`

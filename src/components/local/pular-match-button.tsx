@@ -17,8 +17,8 @@ import { useLocation, useNavigate } from 'react-router'
  * Skipping loses whatever was answered so far, so it asks first — added in review. The
  * copy is the reviewer's, reproduced verbatim.
  *
- * Confirming leaves the flow for the prototype index, since there is no Home flow yet for
- * it to land on.
+ * Confirming leaves the flow for the Home, which is where someone who skips the match
+ * lands — it draws the Match banner precisely for them.
  */
 export function PularMatchButton() {
   const [aberto, setAberto] = useState(false)
@@ -42,7 +42,7 @@ export function PularMatchButton() {
             <Button variant="outlined" onClick={() => setAberto(false)}>
               Voltar
             </Button>
-            <Button variant="contained" onClick={() => navigate(`/${search}`)}>
+            <Button variant="contained" onClick={() => navigate(`/app/inicio${search}`)}>
               Pular match
             </Button>
           </DialogFooter>

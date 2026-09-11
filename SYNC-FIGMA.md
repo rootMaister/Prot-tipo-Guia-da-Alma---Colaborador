@@ -48,3 +48,69 @@ design system. Ordenado por onde a mudança precisa acontecer.
 | **Loading sem disabled** | `Button` | `disabled={isLoading \|\| disabled}` não deixa mostrar carregamento com o botão ativo. Item 28. |
 | **Cor na barra de progresso** | `ProgressBar` | Sem variante de cor, então a barra de força não pode ir de vermelho a verde. Item 29. |
 | **Hover e foco** | `Checkbox`, `Chip` | Sem estados de hover; o `Chip` do DS nem é o chip do design (item 18). |
+
+---
+
+# Sincronizar no Figma — Início, Busca e Meus agendamentos (11/09/2026)
+
+Levantado ao implementar os três destinos do app. Mesma divisão da revisão acima.
+
+## Precisa ser desenhado no Figma (não existe hoje)
+
+- **Lista de Especialidades.** O filtro tem botão ("Especialidades") e chip aplicado
+  ("Psicanálise"), mas o painel só existe para Temas. A lista usada no protótipo —
+  Psicanálise, Junguiana, Cognitivo-comportamental, Terapia familiar, Terapia de casal,
+  Humanista — foi tirada das abordagens que os próprios títulos de sessão citam, e não tem
+  desenho por trás.
+- **O que o botão de menu do Início abre no mobile.** O botão de 58px está desenhado em
+  1429:6287 e não leva a lugar nenhum: Diário e Meu progresso só aparecem na régua do
+  desktop. No protótipo ele abre um diálogo com os mesmos cinco destinos.
+- **Estado vazio de Meus agendamentos.** Os dois frames desenham duas sessões; ninguém
+  desenhou a tela de quem ainda não agendou.
+- **Estado vazio da Busca.** Nenhum frame mostra "nenhum resultado".
+- **Telas de Diário e Meu progresso.** Estão na régua do desktop e não existem em lugar
+  nenhum. No protótipo aparecem no menu, com a aparência do desenho, e não navegam.
+
+## Precisa mudar no arquivo do Figma
+
+- **O desktop do Início está numa grade antiga.** Ele usa uma coluna de navegação de 406px
+  montada à mão ("Nav Menu - Twitter style", 608:9988) e uma medida de conteúdo de 628px.
+  As duas telas desktop mais novas — Busca (1526:908) e Meus agendamentos (1558:1876) —
+  usam a instância `desktop-navigation` a 280px, conteúdo de 1000px e um "Respiro lateral"
+  de 160px. O protótipo normalizou o Início para essa grade, o que de quebra deixa os dois
+  cartões de atalho em 492px, a mesma medida de todo cartão das outras telas. **Sugerido:**
+  trocar a coluna do Início pela instância e refazer a medida.
+- **A pílula do item ativo da barra inferior tem três larguras fixas diferentes** — 98px
+  (Início), 120px (Buscar), 144px (Agendamentos) — que não correspondem a um padding
+  constante em volta de nenhum dos três rótulos. **Sugerido:** deixar o item ativo abraçar
+  o rótulo com padding fixo; é o que o protótipo faz.
+- **O mesmo `card-profissional` mostra a data em dois formatos.** "Hoje, 24 de Ago ás
+  19:00" no Início e "8 de setembro • 19:00" em Meus agendamentos, para a mesma sessão.
+  O protótipo usa o segundo nos dois lugares. **Sugerido:** escolher um.
+- **"Vícios" aparece duas vezes na lista de Temas** (1324:16928) — uma no meio e outra no
+  fim. A duplicata foi descartada.
+- **"3 restantes" fica igual nos dois estados do Início.** No frame sem sessão agendada
+  ainda diz 3, quando deveria dizer 4. No protótipo o número vem do estado.
+- **Os rótulos da régua do desktop não estão ligados ao token de tipografia.** São Inter
+  16/22 solto, enquanto o resto do arquivo usa `font-family-body` (Inter Tight). É o único
+  lugar do arquivo com essa solta. O protótipo usa Label M (16/24).
+- **`desktop-navigation` é desenhado com 385px e usado com 280px** em todas as telas. O
+  componente deveria nascer na largura em que é usado.
+- **O badge "Nível 1" é hex cru.** `#e5d7f7` e `#63359a` não estão ligados a variável
+  nenhuma — nem no arquivo, nem no DS. Ver item 35 do DS-GAPS.md.
+- **"Aplicar filtro" é desenhado desabilitado quando nada está marcado.** No protótipo ele
+  fica sempre ativo, porque aplicar uma seleção vazia é como se limpa o grupo — mesmo
+  raciocínio da decisão de revisão de manter o CTA visível e deixar o rótulo carregar a
+  mensagem.
+
+## Não precisa mudar no Figma — era decisão do protótipo
+
+- **O Início tem dois estados, não duas telas.** 1429:6283 (com sessão) e 1448:7654 (sem)
+  são o mesmo destino; qual aparece depende de o fluxo de Agendamento ter sido concluído.
+- **Os resultados da Busca são filtrados de verdade.** As etiquetas de tema e
+  especialidade de cada profissional não estão no arquivo — foram atribuídas para que o
+  resultado desenhado (Ansiedade + Estresse + Psicanálise → Lucas, Mariana, Carlos) saia
+  exatamente igual.
+- **O botão de abrir o Diário no cartão de atalho não navega**, mas continua com a
+  aparência do desenho em vez do cinza de desabilitado — a mesma escolha feita para Diário
+  e Meu progresso na régua.

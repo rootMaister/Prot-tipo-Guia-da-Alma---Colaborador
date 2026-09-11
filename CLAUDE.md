@@ -63,14 +63,37 @@ Três coisas que quebram silenciosamente se mexidas:
 ```
 src/
   components/
-    layout/    sign-up-shell · feature-shell · status-shell · step-shell
+    layout/    sign-up-shell · feature-shell · status-shell · step-shell · nav-shell
     local/     componentes exclusivos deste projeto (ver abaixo)
   flows/<fluxo>/           cadastro/, match/ e agendamento/, mesmo formato
     steps.ts               ordem, slugs, progresso e nodes do Figma
     <fluxo>-provider.tsx   estado mockado do formulário
     screens/               uma tela por passo + registry.tsx
-  pages/index-page.tsx     índice das telas, agrupado por fluxo
+  shell/                   o app depois do onboarding — destinos, não passos
+    destinos.ts            rótulos, ícones, nodes e o que ainda não existe
+    catalogo.ts            o que a Busca procura
+    shell-route.tsx        rota de layout com o nav-shell
+    screens/               uma tela por destino + registry.tsx
+  state/conta-provider.tsx estado de conta, acima do router
+  pages/index-page.tsx     índice das telas, app e fluxos
 ```
+
+### Fluxos e destinos são coisas diferentes
+
+Um **fluxo** (`src/flows/<nome>/`) é linear: tem ordem, progresso e um "próximo". Um
+**destino** (`src/shell/`) não tem nenhum dos três — tem entrada de menu. Por isso
+`destinos.ts` é para o shell o que `steps.ts` é para um fluxo: a fonte única de rótulo,
+ícone, node do Figma e de quais destinos já existem. O que está no menu e não foi desenhado
+(Diário, Meu progresso) fica lá com `disponivel: false`, aparece com a cara do desenho e não
+navega — esconder seria dar uma informação errada sobre o menu.
+
+As rotas dos destinos vivem sob `/app/`, o que evita a colisão entre `/agendamento` (o
+fluxo, uma tarefa) e `/agendamentos` (o destino, uma lista).
+
+`state/conta-provider.tsx` fica **acima do router**, em `app.tsx`, porque é a única coisa
+que precisa sobreviver à troca de fluxo: concluir o Agendamento registra a sessão, e é isso
+que faz o Início trocar o banner do Match por "Sua próxima sessão" e preencher Meus
+agendamentos. Provider de fluxo é desmontado na saída e não serviria.
 
 Cada tela ocupa a viewport inteira — não há chrome de revisão em volta, então `min-h-dvh`
 vale de verdade. **Não há barra de status do iOS**: os frames do Figma desenham uma, mas ela
@@ -85,12 +108,16 @@ fluxo novo (Login, Home…) é criar `src/flows/<nome>/` no mesmo formato, regis
 exatamente assim que o Match entrou.
 
 As costuras entre fluxos são explícitas: o CTA de `aprovado-screen` (Cadastro) navega para
-`/match/inicio`, e o "Ver agenda" de `card-profissional` (Match) para `/agendamento/detalhes`.
+`/match/inicio`, o "Ver agenda" de `card-profissional` (Match e Busca) para
+`/agendamento/detalhes`, e o "Continuar" de `agendada-screen` fecha o ciclo em
+`/app/inicio`.
 
 ### Chrome fixo e conteúdo que desliza
 
 O header, o botão de voltar, a barra de progresso e o rodapé **não são renderizados pelas
 telas** — são da rota de layout do fluxo, que o React Router mantém montada entre os passos.
+Vale igual para o `nav-shell`: a barra inferior e a régua lateral ficam na rota de layout do
+`/app`, e só o `<Outlet/>` desliza.
 Só o `<Outlet/>` entra em `step-transition.tsx` (pela direita ao avançar, pela esquerda ao
 voltar). Se o shell voltasse para dentro da tela, a tela que sai não teria como deslizar
 para fora: ela é desmontada junto com o próprio contêiner da animação.
@@ -145,12 +172,21 @@ no Figma entre a biblioteca compartilhada e os componentes locais do arquivo Col
   `card-profissional`.
 - Agendamento: `month-calendar`, `card-review`, `card-outra-sessao`, e
   `profissional-resumo`, extraído para não triplicar entre Match e Agendamento.
+- App (Início, Busca, Agendamentos): `barra-conta` (nível, pontos e moedas),
+  `card-sessao` (a sessão já agendada), `promo-match` (o banner escuro do Início sem
+  sessão), `painel-filtro` (a folha de filtro da Busca).
 - Transversais: `field-shake` (tremor do campo em erro), `password-strength`,
   `pular-match-button` (o botão com o modal de confirmação).
 
-`option-card`, `choice-chip` e `month-calendar` existem porque o DS não tem equivalente —
-itens 16, 18 e 23 do [DS-GAPS.md](DS-GAPS.md). São os candidatos mais fortes a subir para a
-biblioteca.
+`option-card`, `choice-chip`, `month-calendar` e agora o `nav-shell` existem porque o DS não
+tem equivalente — itens 16, 18, 23 e 31 do [DS-GAPS.md](DS-GAPS.md). São os candidatos mais
+fortes a subir para a biblioteca.
+
+Cuidado com dois nomes parecidos: `card-profissional` é o cartão de resultado (título da
+sessão, avaliação, disponibilidade, "Ver agenda"), usado pelo Match e pela Busca;
+`card-sessao` é o cartão de sessão já marcada (badge de data, "Ver detalhes"), usado pelo
+Início e por Meus agendamentos. No Figma os dois se chamam `card-profissional` e não têm
+quase nada em comum.
 
 ## Regras ao construir uma tela
 

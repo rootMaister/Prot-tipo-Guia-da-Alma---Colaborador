@@ -900,3 +900,109 @@ Um consumidor com layout de rolagem interna vai tropeçar nisso sem aviso.
 
 **Nota:** um `outline` com `outline-offset` não teria esse problema, já que outline não é
 recortado por overflow. Vale considerar na próxima revisão do componente.
+
+## 31. `NavBar` existe, não é exportado, e é a navegação de outro produto
+
+**Severidade:** alta — é o componente de que a seção inteira precisava
+
+Esta fatia do protótipo (Início, Busca, Meus agendamentos) é a primeira que precisa de
+navegação permanente. O DS tem um `NavBar`, e ele não serve por três razões independentes:
+
+1. **Não está no barrel.** `grep NavBar dist/index.js` → zero ocorrências no tarball
+   publicado. O componente existe no `src` do design system, mas não é empacotado, então
+   nenhum consumidor consegue importá-lo.
+2. **`NavBarProps` não tem prop de itens.** Os destinos são fixos dentro do componente.
+3. **Os destinos fixos são os do app do _profissional_** — `atendimentos`, `prontuarios`,
+   `servicos`. O colaborador precisa de Início / Buscar / Agendamentos / Diário / Meu
+   progresso.
+
+**Contorno:** `src/components/layout/nav-shell.tsx`, que desenha as duas formas do Figma —
+a pílula inferior do mobile (`bottom-nav-bar`, 28150:1265) e a régua de 280px do desktop
+(`desktop-navigation`, 1526:900) — a partir de `src/shell/destinos.ts`.
+
+**Correção sugerida:** exportar o componente e receber os itens como dado
+(`items: { href, label, icon }[]`), com o item ativo derivado por callback ou por prop. Um
+componente de navegação que embute os destinos de um produto não pode ser compartilhado
+entre dois.
+
+## 32. Os tokens `nav-*` de item ativo estão invertidos em relação ao design
+
+**Severidade:** alta (dentro do item 31)
+
+O Figma pinta o item ativo da barra inferior com `navigation/background-item/active`
+**#5A8200** e texto/ícone em `navigation/icon/active` **#F0FCDD** — chip escuro-oliva com
+texto claro. O DS declara o contrário:
+
+| token do DS | valor | o que o Figma quer |
+|---|---|---|
+| `--color-nav-bg-active` | `brand-lime-light-25` (#ECFACA) | #5A8200 |
+| `--color-nav-icon-active` | `brand-dark-800` (#1C2E17) | #F0FCDD |
+| `--color-nav-text-active` | `brand-lime-950` (#0B1500) | #F0FCDD |
+
+Os dois valores que o design pede existem no DS — `brand-lime-600` é #5A8200 e
+`brand-lime-medium-25` é #F0FCDD — mas só como primitivos, sem nome semântico.
+
+**Contorno:** `bg-[var(--color-brand-lime-600)]` e
+`text-[color:var(--color-brand-lime-medium-25)]` no item ativo, com o motivo no código.
+Usar o par semântico renderizaria uma barra visivelmente diferente do desenho. Ver também
+o item 33, que é por que não dá para escrever `bg-brand-lime-600`.
+
+**Correção sugerida:** trocar os valores de `nav-bg-active` / `nav-icon-active` /
+`nav-text-active` pelos do design. Os nomes já estão certos; só o que eles apontam é que
+está trocado.
+
+## 33. Os primitivos vivem em `:root`, não em `@theme` — não geram utilitário nenhum
+
+**Severidade:** média (armadilha silenciosa)
+
+`tokens/primitives.css` declara os ~275 primitivos dentro de `:root`. Só `colors.css`,
+`typography.css`, `spacing.css` e `shadows.css` usam `@theme`. Como o Tailwind v4 só gera
+utilitário a partir do namespace registrado em `@theme`, **`bg-brand-lime-600` e
+`text-brand-lime-medium-25` não existem** — a classe é escrita, o build passa, e nada é
+aplicado. O CSS gerado tem a variável, mas nenhuma regra que a use.
+
+Isso é coerente com o comentário do próprio arquivo ("Never imported directly by
+components — use semantic tokens"), e é a decisão certa. O problema é que o consumidor
+descobre a regra por um elemento que renderiza sem cor, sem erro nem aviso.
+
+**Contorno:** `bg-[var(--color-brand-lime-600)]`, que consome o token pelo nome e não
+embute hex nenhum. Note que na versão de cor o `color:` é obrigatório —
+`text-[var(--x)]` sem a dica é lido pelo Tailwind como tamanho de fonte, e falha do mesmo
+jeito silencioso.
+
+**Correção sugerida:** documentar em uma linha que os primitivos são deliberadamente
+inacessíveis como utilitário, e o que fazer quando um valor só existe lá (pedir o token
+semântico).
+
+## 34. Não existe `Dialog` em folha inteira — o painel de filtro da Busca não cabe nele
+
+**Severidade:** média
+
+`modal-drawer / Temas` (1794:2449) é uma folha que cobre a tela com 4px de recuo, raio 16,
+título à esquerda, `icon-button` de fechar à direita e a ação presa embaixo. O `Dialog` do
+DS não chega perto: `DialogContent` é fixo em `left-1/2 top-1/2 -translate-*`, `max-w-lg`,
+`rounded-lg`, e **embute um ✕ próprio** no canto que não é desligável por prop. Chegar no
+desenho exigiria reescrever posição, largura, raio e padding por `className` e ainda
+conviver com dois botões de fechar.
+
+**Contorno:** `src/components/local/painel-filtro.tsx`, com overlay próprio e `Escape`.
+
+**Correção sugerida:** uma variante `sheet` / `fullscreen` do `DialogContent`, e tornar o
+botão de fechar embutido opcional.
+
+## 35. Divergências menores acumuladas — Início, Busca e Meus agendamentos
+
+**Severidade:** baixa, em bloco
+
+| onde | Figma | DS | decisão |
+|---|---|---|---|
+| badge "Nível 1" | `#e5d7f7` / `#63359a` (hex cru, sem variável) | não existe: não há família `category/lavender`, e `brand-lavender-200` é #E5BAEE, um roxo mais rosado | `Badge variant="info"` (índigo) |
+| badge "123 pts" | `category/green/surface-strong` (#BAE384) | `Badge variant="success"` pinta `category/green/surface` (#ECFACA); não há opção "strong" | `success` |
+| badge "3 restantes" | pílula de contorno, fundo transparente + `outline/subtle` | `Badge` não tem variante de contorno | `neutral` |
+| botão de menu do Início | 58px | `IconButton` é fixo em 42px, sem prop de tamanho | 42px, como o DS renderiza |
+| campo de busca | ícone de lupa à esquerda, placeholder Body S | `Input` não tem slot de ícone; placeholder é `text-body-m` | ícone posicionado por cima, `pl-9` |
+| sombra do banner do Match | `0 2px 2px rgba(0,0,0,0.04)` | nenhum token bate | `shadow-xs` |
+| cartões (atalho, sessão, profissional) | `radius/xxl` = 24px | escala para em `rounded-2xl` = 16px | `rounded-2xl` — reincidência dos itens 9 e 9b |
+
+Nada aqui foi mascarado com `className`: onde o DS renderiza diferente, ele renderiza
+diferente e está anotado no código.

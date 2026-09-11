@@ -4,6 +4,7 @@ import { AgendamentoLayout, AgendamentoStepRoute } from '@/flows/agendamento/age
 import { CadastroLayout, CadastroStepRoute } from '@/flows/cadastro/cadastro-route'
 import { MatchLayout, MatchStepRoute } from '@/flows/match/match-route'
 import { IndexPage } from '@/pages/index-page'
+import { ShellDestinoRoute, ShellLayout } from '@/shell/shell-route'
 
 export const router = createBrowserRouter([
   { path: '/', element: <IndexPage /> },
@@ -32,6 +33,16 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="detalhes" replace /> },
       { path: ':step', element: <AgendamentoStepRoute /> },
+    ],
+  },
+  {
+    // `/app` prefixes the destinations so `/agendamento` (the flow, a task) and
+    // `/agendamentos` (the destination, a list) cannot collide.
+    path: '/app',
+    element: <ShellLayout />,
+    children: [
+      { index: true, element: <Navigate to="inicio" replace /> },
+      { path: ':destino', element: <ShellDestinoRoute /> },
     ],
   },
   { path: '*', element: <Navigate to="/" replace /> },
