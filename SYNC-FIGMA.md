@@ -73,27 +73,29 @@ Levantado ao implementar os três destinos do app. Mesma divisão da revisão ac
 
 ## Precisa mudar no arquivo do Figma
 
-- **Há quatro grades de desktop no arquivo, e duas delas não centralizam o conteúdo.**
+- **Há quatro grades de desktop no arquivo, e só uma centraliza o conteúdo na tela.**
 
-  | tela | régua | conteúdo | sobra à direita | centrado? |
+  | tela | régua | conteúdo | centro da coluna | centro do frame |
   |---|---|---|---|---|
-  | Início (590:9086) | 406, montada à mão | 406→1034 (628) | 406 | sim |
-  | Busca (1526:908) | 280, instância | 280→1280 (1000) | 160 | **não** |
-  | Meus agendamentos (1558:1876) | 280, instância | 280→1280 (1000) | 160 | **não** |
-  | Agendamento — Com navegação (1617:4660) | 280, instância | 360→1360 (1000) | 80 | sim |
+  | Início (590:9086) | 406, montada à mão (menu ocupa 222) | 406→1034 (628) | **720** | 720 |
+  | Busca (1526:908) | 280, instância | 280→1280 (1000) | 780 | 720 |
+  | Meus agendamentos (1558:1876) | 280, instância | 280→1280 (1000) | 780 | 720 |
+  | Agendamento — Com navegação (1617:4660) | 280, instância | 360→1360 (1000) | 860 | 720 |
 
-  A mais antiga (Início) e a mais nova (a seção "Com navegação") centralizam; a Busca e
-  Meus agendamentos encostam a coluna na régua e jogam todo o "Respiro lateral" para a
-  direita. O protótipo segue a grade de 1617:4660 — régua 280 e coluna de 1000 centrada no
-  que sobra, o que a 1440 dá exatamente os 80/80 daquele frame e, em telas mais largas,
-  mantém a coluna no meio em vez de puxá-la para a esquerda. **Sugerido:** empurrar a
-  coluna da Busca e de Meus agendamentos em 80px e dividir o respiro, e trocar a coluna de
-  navegação do Início pela instância `desktop-navigation` — o que de quebra leva os dois
-  cartões de atalho a 492px, a mesma medida de todo cartão das outras telas.
-- **A pílula do item ativo da barra inferior tem três larguras fixas diferentes** — 98px
-  (Início), 120px (Buscar), 144px (Agendamentos) — que não correspondem a um padding
-  constante em volta de nenhum dos três rótulos. **Sugerido:** deixar o item ativo abraçar
-  o rótulo com padding fixo; é o que o protótipo faz.
+  Só o Início centraliza de verdade: os 628px de conteúdo caem no centro exato do frame, e
+  a coluna de navegação de 406 é só a margem esquerda que por acaso segura o menu — que
+  ocupa 222 dela. As outras três empurram a coluna para a direita em graus diferentes.
+
+  **É a grade do Início que o protótipo segue**, porque é a única em que o conteúdo fica
+  centrado na tela: a régua sai do fluxo e a coluna centraliza na viewport inteira.
+  A largura passa a ser a variável livre — teto nos 1000 desenhados na Busca e em Meus
+  agendamentos, piso em ficar 24px livre da régua. 1000 simplesmente não cabe centralizado
+  num frame de 1440 com régua de 280 (começaria em 220, por baixo do menu), então a 1440
+  a coluna sai com 832 e a partir de 1608 com os 1000 cheios. Centrada em qualquer largura.
+
+  **Sugerido no arquivo:** centralizar a coluna nas outras três telas, e trocar a coluna de
+  navegação do Início pela instância `desktop-navigation`.
+
 - **O mesmo `card-profissional` mostra a data em dois formatos.** "Hoje, 24 de Ago ás
   19:00" no Início e "8 de setembro • 19:00" em Meus agendamentos, para a mesma sessão.
   O protótipo usa o segundo nos dois lugares. **Sugerido:** escolher um.

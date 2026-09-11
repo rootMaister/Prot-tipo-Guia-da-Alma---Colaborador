@@ -108,7 +108,7 @@ export function BuscaScreen() {
             Nenhum profissional encontrado com esses filtros.
           </p>
         ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-4 xl:grid-cols-2">
             {resultados.map((profissional) => (
               <CardProfissional key={profissional.nome} {...profissional} />
             ))}

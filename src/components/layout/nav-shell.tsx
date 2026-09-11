@@ -31,23 +31,24 @@ export function NavShell({ children }: { children: ReactNode }) {
   const slugAtivo = useLocation().pathname.split('/')[2] ?? ''
 
   return (
-    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col lg:flex-row">
+    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">
       <MenuLateral slugAtivo={slugAtivo} />
 
       {/*
-        The 1000px column is **centred** in what the rail leaves, not flush against it.
-        1440 = 280 (rail) + 1160, and the newest desktop grid in the file — the "Com
-        navegação" section, e.g. 1617:4660 — insets its content by 80 on each side of that
-        1160, which is exactly `lg:px-20` here. The oldest one, the Home at 590:9086,
-        centres too (406 of gutter on each side of a 628px column).
+        The column is centred on the **viewport**, not in what the rail leaves over. That is
+        how the Home is drawn (590:9086): its content runs 406→1034 of 1440, whose centre is
+        720 — dead centre of the frame — with the nav column being simply the left margin
+        that happens to hold the menu. The rail is therefore taken out of the flow, so it
+        does not shift the centre.
 
-        Busca (1526:908) and Meus agendamentos (1558:1876) are the two frames that do not:
-        they put the column at x=280, flush against the rail, with all 160px of "Respiro
-        lateral" on the right. Following those two left every desktop screen visibly pulled
-        to the left, and worse the wider the viewport. See SYNC-FIGMA.md.
+        Width: the designed measure is 1000 (Busca 1526:908, Meus agendamentos 1558:1876),
+        and 1000 cannot be centred on a 1440 viewport without sliding under a 280px rail —
+        it would start at 220. So centring is the constraint and the width is what gives:
+        capped at the designed 1000, floored by staying 24px clear of the rail. At 1440 that
+        is 832, at 1608 and up the full 1000. See SYNC-FIGMA.md.
       */}
-      <main className="flex w-full flex-1 flex-col pb-[108px] lg:items-center lg:px-20 lg:pb-0">
-        <div className="flex w-full flex-1 flex-col lg:max-w-[1000px]">{children}</div>
+      <main className="flex w-full flex-1 flex-col pb-[108px] lg:mx-auto lg:w-[min(1000px,100%-608px)] lg:pb-0">
+        {children}
       </main>
 
       <BarraInferior slugAtivo={slugAtivo} />
@@ -117,12 +118,16 @@ function BarraInferior({ slugAtivo }: { slugAtivo: string }) {
  * `desktop-navigation` (1526:900). Drawn 385px wide as a component but placed at **280** in
  * every screen that uses it, which is the width that counts.
  *
+ * Fixed rather than a flex column, so it does not take layout width: the content column
+ * centres on the whole viewport, the way the Home frame draws it, and the rail sits in the
+ * left margin that centring leaves over.
+ *
  * Diário and Meu progresso are in the design but have no screens in this prototype, so they
  * render exactly as drawn and simply do not navigate — hiding them would misreport the menu.
  */
 function MenuLateral({ slugAtivo }: { slugAtivo: string }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh w-[280px] shrink-0 flex-col lg:flex">
+    <aside className="hidden lg:fixed lg:top-0 lg:left-0 lg:flex lg:h-dvh lg:w-[280px] lg:flex-col">
       <div className="p-8">
         <GuiaLockup height={19} className="text-fg-default" />
       </div>

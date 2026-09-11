@@ -13,10 +13,12 @@ import { agendamentosRestantes, useConta } from '@/state/conta-provider'
  * than by the route: book a session in the Agendamento flow and the Match banner gives way
  * to "Sua próxima sessão".
  *
- * The desktop frame is on the file's older grid — a hand-built 406px nav column and a 628px
- * content measure. Normalised here onto the one the newest desktop frames use (rail 280,
- * 1000px column, centred), which also makes the two shortcut cards 492px, the same measure
- * every other card in the app gets. The grid itself lives in `nav-shell`. See SYNC-FIGMA.md.
+ * The desktop frame is the one grid in the file whose content is genuinely centred on the
+ * frame, and it is the grid the whole app follows — the rail is out of flow and the column
+ * centres on the viewport. That lives in `nav-shell`; here the frame's hand-built 406px nav
+ * column is replaced by the `desktop-navigation` instance the other screens use, which also
+ * widens the two shortcut cards to the measure every other card in the app gets.
+ * See SYNC-FIGMA.md.
  */
 export function InicioScreen() {
   const navigate = useNavigate()
