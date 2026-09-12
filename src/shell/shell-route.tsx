@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation, useParams } from 'react-router'
+import { Navigate, useLocation } from 'react-router'
 
 import { NavShell } from '@/components/layout/nav-shell'
 import { StepTransition, useStepDirection } from '@/components/layout/step-transition'
@@ -9,8 +9,11 @@ import { screenComponents } from './screens/registry'
 
 /**
  * Layout route for the app's destinations, mirroring what each flow's layout route does:
- * React Router keeps it mounted while the `<Outlet/>` changes, so the navigation stays put
- * and only the destination's content moves.
+ * React Router keeps it mounted while the destination changes, so the navigation stays put
+ * and only the content moves.
+ *
+ * A tela é resolvida aqui, pelo registry, e não por um `<Outlet/>` — ver a nota no
+ * `cadastro-route.tsx` e em CLAUDE.md.
  *
  * O deslize segue a ordem do menu, e o **eixo segue a forma do menu**: no desktop, onde a
  * régua é vertical, ir para um destino mais abaixo entra por baixo; no mobile, onde a barra
@@ -23,6 +26,13 @@ export function ShellLayout() {
   const direction = useStepDirection(indice < 0 ? 0 : indice)
   const noDesktop = useMediaQuery(DESKTOP)
 
+  const destino = findDestino(slug)
+  const Screen = destino ? screenComponents[destino.slug] : undefined
+
+  if (!Screen) {
+    return <Navigate to="/app/inicio" replace />
+  }
+
   return (
     <NavShell>
       <StepTransition
@@ -32,20 +42,8 @@ export function ShellLayout() {
         wrapperClassName="flex flex-1 flex-col"
         className="flex flex-1 flex-col"
       >
-        <Outlet />
+        <Screen />
       </StepTransition>
     </NavShell>
   )
-}
-
-export function ShellDestinoRoute() {
-  const { destino: slug } = useParams()
-  const destino = slug ? findDestino(slug) : undefined
-  const Screen = destino ? screenComponents[destino.slug] : undefined
-
-  if (!Screen) {
-    return <Navigate to="/app/inicio" replace />
-  }
-
-  return <Screen />
 }

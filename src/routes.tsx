@@ -1,49 +1,37 @@
 import { createBrowserRouter, Navigate } from 'react-router'
 
-import { AgendamentoLayout, AgendamentoStepRoute } from '@/flows/agendamento/agendamento-route'
-import { CadastroLayout, CadastroStepRoute } from '@/flows/cadastro/cadastro-route'
-import { MatchLayout, MatchStepRoute } from '@/flows/match/match-route'
+import { AgendamentoLayout } from '@/flows/agendamento/agendamento-route'
+import { CadastroLayout } from '@/flows/cadastro/cadastro-route'
+import { MatchLayout } from '@/flows/match/match-route'
 import { IndexPage } from '@/pages/index-page'
-import { ShellDestinoRoute, ShellLayout } from '@/shell/shell-route'
+import { ShellLayout } from '@/shell/shell-route'
 
 export const router = createBrowserRouter([
   { path: '/', element: <IndexPage /> },
+  { path: '/cadastro', element: <Navigate to="/cadastro/splash" replace /> },
   {
-    path: '/cadastro',
-    // Holds the flow state, so it survives navigation between steps.
+    // O layout casa o passo direto, sem rota filha: ele mantém o estado do fluxo e o chrome
+    // montados entre os passos, e resolve a tela pelo registry. Ver `cadastro-route.tsx`.
+    path: '/cadastro/:step',
     element: <CadastroLayout />,
-    children: [
-      { index: true, element: <Navigate to="splash" replace /> },
-      // The screen owns the full viewport: no review chrome wraps it, so `min-h-dvh`
-      // means the real thing.
-      { path: ':step', element: <CadastroStepRoute /> },
-    ],
   },
+  { path: '/match', element: <Navigate to="/match/inicio" replace /> },
   {
-    path: '/match',
+    // O layout casa o passo direto, sem rota filha: ele mantém o estado do fluxo e o chrome
+    // montados entre os passos, e resolve a tela pelo registry. Ver `match-route.tsx`.
+    path: '/match/:step',
     element: <MatchLayout />,
-    children: [
-      { index: true, element: <Navigate to="inicio" replace /> },
-      { path: ':step', element: <MatchStepRoute /> },
-    ],
   },
+  { path: '/agendamento', element: <Navigate to="/agendamento/detalhes" replace /> },
   {
-    path: '/agendamento',
+    // O layout casa o passo direto, sem rota filha: ele mantém o estado do fluxo e o chrome
+    // montados entre os passos, e resolve a tela pelo registry. Ver `agendamento-route.tsx`.
+    path: '/agendamento/:step',
     element: <AgendamentoLayout />,
-    children: [
-      { index: true, element: <Navigate to="detalhes" replace /> },
-      { path: ':step', element: <AgendamentoStepRoute /> },
-    ],
   },
-  {
-    // `/app` prefixes the destinations so `/agendamento` (the flow, a task) and
-    // `/agendamentos` (the destination, a list) cannot collide.
-    path: '/app',
-    element: <ShellLayout />,
-    children: [
-      { index: true, element: <Navigate to="inicio" replace /> },
-      { path: ':destino', element: <ShellDestinoRoute /> },
-    ],
-  },
+  // `/app` prefixa os destinos para `/agendamento` (o fluxo, uma tarefa) e `/agendamentos`
+  // (o destino, uma lista) não colidirem.
+  { path: '/app', element: <Navigate to="/app/inicio" replace /> },
+  { path: '/app/:destino', element: <ShellLayout /> },
   { path: '*', element: <Navigate to="/" replace /> },
 ])

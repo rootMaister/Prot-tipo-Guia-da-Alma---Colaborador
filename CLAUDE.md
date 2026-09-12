@@ -130,10 +130,18 @@ fixe um caminho de onboarding no código.
 O header, o botão de voltar, a barra de progresso e o rodapé **não são renderizados pelas
 telas** — são da rota de layout do fluxo, que o React Router mantém montada entre os passos.
 Vale igual para o `nav-shell`: a barra inferior e a régua lateral ficam na rota de layout do
-`/app`, e só o `<Outlet/>` desliza.
-Só o `<Outlet/>` entra em `step-transition.tsx` (pela direita ao avançar, pela esquerda ao
-voltar). Se o shell voltasse para dentro da tela, a tela que sai não teria como deslizar
-para fora: ela é desmontada junto com o próprio contêiner da animação.
+`/app`. Só o conteúdo do passo entra em `step-transition.tsx`. Se o shell voltasse para
+dentro da tela, a tela que sai não teria como deslizar para fora: ela é desmontada junto com
+o próprio contêiner da animação.
+
+**A tela é resolvida pelo layout, pelo registry — nunca por um `<Outlet/>` dentro da
+animação.** Cada layout casa `/<fluxo>/:step` direto, sem rota filha, e faz
+`screenComponents[step.slug]`. O motivo é específico e custou um bug: o `AnimatePresence`
+guarda o elemento que está saindo e o re-renderiza durante a saída, e um `Outlet` (ou
+qualquer componente que leia `useParams`) resolve a rota **atual** nessa hora. O elemento que
+devia estar saindo passava a mostrar a tela nova — a pessoa via a tela aparecer, sair e
+aparecer de novo. Ao acrescentar um fluxo, siga o mesmo formato: rota `:step` no layout,
+tela pelo registry.
 
 Consequência prática ao criar uma tela: ela renderiza `StepBody` (ou `SignUpBody`), **não**
 o shell. `stepLabel`, `progress` e `wide` vêm do `steps.ts` via layout. Duas coisas que a
