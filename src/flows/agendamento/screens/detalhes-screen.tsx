@@ -217,8 +217,9 @@ export function DetalhesScreen() {
         <header className="w-full px-8 py-8">
           <GuiaLockup height={18} className="text-fg-default" />
         </header>
-        <div className="flex flex-1 justify-center gap-16 px-9 pb-12">
-          <div className="flex w-full max-w-[450px] flex-col gap-8">
+        {/* 1000 = 24 + 436 + 80 + 436 + 24, the measures of `profissionals` (1236:12522). */}
+        <div className="mx-auto flex w-full max-w-[1000px] flex-1 gap-20 px-6 pb-12">
+          <div className="flex w-[436px] shrink-0 flex-col gap-12">
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
               aria-label={rotuloVoltar}
@@ -226,7 +227,8 @@ export function DetalhesScreen() {
             />
 
             {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
-            <h1 className="font-display text-display-s text-fg-default">{SESSAO.titulo}</h1>
+            {/* Heading L (32/40), the same size the other split steps give this title. */}
+            <h1 className="font-display text-heading-l text-fg-default">{SESSAO.titulo}</h1>
             <ProfissionalResumo {...SESSAO.profissional} />
             <div className="flex flex-col gap-4">
               <Button variant="contained" className="w-full" onClick={goNext}>
@@ -235,7 +237,7 @@ export function DetalhesScreen() {
               <p className="text-label-s text-fg-subtle w-full text-center">{SESSAO.duracao}</p>
             </div>
           </div>
-          <div className="flex w-full max-w-[450px] flex-col gap-12">
+          <div className="flex w-[436px] min-w-0 flex-col gap-12">
             <section className="flex flex-col gap-4">
               <h2 className="text-label-m text-fg-default">Sobre a sessão</h2>
               {descricao}

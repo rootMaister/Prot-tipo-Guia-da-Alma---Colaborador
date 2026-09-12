@@ -6,6 +6,7 @@ import { StepShell } from '@/components/layout/step-shell'
 import { StepTransition, useStepDirection } from '@/components/layout/step-transition'
 
 import { AgendamentoProvider } from './agendamento-provider'
+import { ResumoAgendamento } from './resumo-agendamento'
 import { screenComponents } from './screens/registry'
 import { findStep, getPreviousStep, getStepIndex } from './steps'
 
@@ -50,6 +51,7 @@ export function AgendamentoLayout() {
             stepLabel={step.stepLabel!}
             progress={step.progress}
             onBack={goBack}
+            aside={step.split ? <ResumoAgendamento /> : undefined}
           >
             {conteudo}
           </StepShell>

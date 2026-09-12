@@ -169,3 +169,51 @@ Levantado ao consertar os botões do app que devolviam a pessoa para telas do on
 - **Tudo que levava de volta ao onboarding.** O fluxo de Agendamento sempre voltava para os
   resultados do Match, porque foi construído quando esse era o único jeito de chegar nele.
   Agora ele carrega a origem na query string e devolve a pessoa para onde ela estava.
+
+---
+
+# Sincronizar no Figma — as duas colunas do Agendamento no desktop (11/09/2026)
+
+Eu tinha lido errado: registrei que só a seção "Com navegação" (`1617:*`) era de duas colunas.
+**Os frames de onboarding também são** — `1279:14636`, `1279:13985`, `1279:14976`,
+`1279:15398` e `1236:12522` todos trazem `profissionals` de 1000px com duas colunas de 436
+separadas por 80, dentro de um padding de 24. As telas estavam construídas em coluna única de
+450px. Corrigido.
+
+## Como a grade é
+
+| | |
+|---|---|
+| contêiner | 1000px, centrado na viewport (o frame tem 1536 e o conteúdo começa em 268) |
+| colunas | 436 + 80 + 436, com 24 de padding de cada lado |
+| coluna esquerda | botão de voltar, título da sessão (Calma Serif 32/40), `profissional-resumo`, e o resumo do que já foi preenchido |
+| coluna direita | barra de progresso + rótulo + badge, o conteúdo do passo, e a ação embaixo |
+
+O botão de voltar fica no **topo da coluna esquerda**, não ao lado da barra de progresso como
+no mobile.
+
+## O achado que muda o comportamento
+
+**O resumo da esquerda acende por opacidade conforme os dados existem** — os blocos estão
+desenhados em todos os frames e só ficam visíveis quando têm o que mostrar:
+
+| frame | "Data e horário" | "Seus dados" |
+|---|---|---|
+| escolher horário, nada escolhido | 0 | 0 |
+| escolher horário, hora escolhida | 1 | 0 |
+| informações, vazio | 1 | 0 |
+| informações, preenchido | 1 | 1 |
+
+Ou seja, é estado, não layout. O protótipo renderiza cada bloco quando o provider tem o dado,
+o que dá o mesmo resultado sem depender de opacidade.
+
+## Precisa mudar no arquivo do Figma
+
+- **O título da sessão em `1236:12522` estava sendo lido como Display S (44/52) no protótipo;
+  o arquivo desenha 32/40** nos três passos. Corrigido no código — vale conferir se a intenção
+  era mesmo o mesmo tamanho em todos.
+- **"Confirmar informações" (`1279:15578`) continua em coluna única de 450px**, sozinho entre
+  os passos do fluxo. Ou ele deveria ter o resumo à esquerda como os outros dois, ou os outros
+  não deveriam — hoje o fluxo troca de grade no último passo.
+- **Os frames de onboarding têm 1536 de largura e os "com menu" 1440.** A grade interna é a
+  mesma; só a moldura muda.

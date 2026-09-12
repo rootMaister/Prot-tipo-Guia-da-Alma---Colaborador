@@ -31,6 +31,15 @@ export type Step = {
   progress: number | null
   /** Label beside the progress bar, taken from the rendered text. */
   stepLabel: string | null
+  /**
+   * Whether the desktop frame is the two-column layout: a 436px running summary of the
+   * booking on the left, the step on the right. True for "Escolher data e horário" and
+   * "Informações complementares" — and in *both* sets of desktop frames, the onboarding ones
+   * (1279:14636, 1279:14976) and the "com menu" ones (1617:4660, 1617:4923). "Confirmar
+   * informações" is a single 450px column in both, and `detalhes` splits differently and
+   * draws its own.
+   */
+  split?: boolean
 }
 
 export const AGENDAMENTO_FILE_KEY = 'mHWlzkeyvbLscICaXIjkcG'
@@ -63,6 +72,7 @@ export const agendamentoSteps: readonly Step[] = [
     nodeDesktop: '1279:14636',
     progress: 50,
     stepLabel: 'Escolha a data e o horário',
+    split: true,
   },
   {
     slug: 'informacoes',
@@ -71,6 +81,7 @@ export const agendamentoSteps: readonly Step[] = [
     nodeDesktop: '1279:14976',
     progress: 75,
     stepLabel: 'Informações complementares',
+    split: true,
   },
   {
     slug: 'confirmar',

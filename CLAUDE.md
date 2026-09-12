@@ -170,6 +170,22 @@ sobreviva a isso.
 `step-shell` é o shell com barra de progresso, usado por **dois** fluxos — em Figma ele se
 chama `mobile-match`/`desktop-match`, mas o "match" ali é o nome do símbolo, não do fluxo.
 
+### Duas colunas no desktop do Agendamento
+
+O `StepShell` tem um prop `aside`: com ele, o desktop vira a grade de duas colunas em que o
+Agendamento é desenhado — 1000px centrados, 436 + 80 + 436 dentro de 24 de padding. O mobile
+não muda, porque lá não existe segunda coluna. O botão de voltar acompanha: no desktop ele
+fica no topo da coluna esquerda, e o da linha da barra de progresso some.
+
+Quais passos são de duas colunas está em `steps.ts` (`split: true`), não no código da tela —
+mesma regra de sempre. Vale para os dois conjuntos de frames, o de onboarding (`1279:*`) e o
+"com menu" (`1617:*`); "Confirmar informações" é coluna única nos dois, e `detalhes` desenha a
+sua própria porque a divisão dele é outra.
+
+A coluna esquerda é `flows/agendamento/resumo-agendamento.tsx`, e ela **preenche conforme o
+estado**: o arquivo desenha todos os blocos em todos os frames e usa opacidade 0/1 para revelar
+o que já foi preenchido. Ver SYNC-FIGMA.md.
+
 ## DS vs local
 
 Vem do `@guia-da-alma/ds`: `Button`, `IconButton`, `Badge`, `Checkbox`, `InputField`,

@@ -23,6 +23,16 @@ type StepShellProps = {
    * track is 934px where every other screen draws 384px.
    */
   wide?: boolean
+  /**
+   * Turns the desktop into the two-column layout the Agendamento flow is drawn in: a 436px
+   * summary on the left and the step itself on the right, 80px apart inside the 1000px
+   * container. Mobile is untouched — there is no second column there.
+   *
+   * The back button moves with it. On desktop the frames put it at the top of the **left**
+   * column, above the session title, not beside the progress bar, so the shell draws it
+   * there and hides the one in the header row.
+   */
+  aside?: ReactNode
   /** The part that transitions between steps. */
   children?: ReactNode
 }
@@ -52,6 +62,7 @@ export function StepShell({
   progress,
   onBack,
   wide = false,
+  aside,
   children,
 }: StepShellProps) {
   useScreenSurface('surface-base')
@@ -74,39 +85,69 @@ export function StepShell({
         <div
           className={cn(
             'flex w-full flex-1 flex-col',
-            wide ? 'lg:max-w-[1000px]' : 'lg:max-w-[450px]',
+            // 1000 = 24 + 436 + 80 + 436 + 24, the measures of `profissionals` (1279:14636).
+            aside
+              ? 'lg:max-w-[1000px] lg:flex-row lg:gap-20 lg:px-6 lg:pt-6'
+              : wide
+                ? 'lg:max-w-[1000px]'
+                : 'lg:max-w-[450px]',
           )}
         >
-          <div
-            className="bg-surface-base sticky top-0 z-10 flex items-center gap-6 px-6 py-4 lg:static lg:items-end lg:px-0 lg:pt-5 lg:pb-12"
-          >
-            <IconButton
-              icon={<ArrowLeftIcon className="size-[18px]" />}
-              aria-label="Voltar"
-              onClick={onBack}
-            />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <ProgressBar value={progressoAnimado} />
-              <div className="flex items-end justify-between pt-2 lg:items-center">
-                <p className="text-body-s text-fg-subtle lg:text-body-m whitespace-nowrap">
-                  {stepLabel}
-                </p>
-                <Badge variant="success">{alvo}%</Badge>
+          {aside ? (
+            <aside className="hidden lg:flex lg:w-[436px] lg:shrink-0 lg:flex-col lg:gap-12">
+              <IconButton
+                icon={<ArrowLeftIcon className="size-[18px]" />}
+                aria-label="Voltar"
+                onClick={onBack}
+              />
+              {aside}
+            </aside>
+          ) : null}
+
+          <div className={cn('flex w-full flex-1 flex-col', aside && 'lg:w-[436px] lg:min-w-0')}>
+            <div
+              className={cn(
+                'bg-surface-base sticky top-0 z-10 flex items-center gap-6 px-6 py-4',
+                'lg:static lg:items-end lg:px-0',
+                // Split: the progress bar sits 40px into the right column and the content
+                // 24px under it; otherwise the single-column spacing the other flows use.
+                aside ? 'lg:pt-4 lg:pb-6' : 'lg:pt-5 lg:pb-12',
+              )}
+            >
+              <IconButton
+                icon={<ArrowLeftIcon className="size-[18px]" />}
+                aria-label="Voltar"
+                onClick={onBack}
+                className={cn(aside && 'lg:hidden')}
+              />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <ProgressBar value={progressoAnimado} />
+                <div className="flex items-end justify-between pt-2 lg:items-center">
+                  <p className="text-body-s text-fg-subtle lg:text-body-m whitespace-nowrap">
+                    {stepLabel}
+                  </p>
+                  <Badge variant="success">{alvo}%</Badge>
+                </div>
               </div>
             </div>
+
+            {children}
+
+            {/*
+              `min-h-[76px]` holds the bar's height through the single frame between the
+              outgoing screen unmounting and the incoming one filling the portal, so the
+              layout does not jump at the handover.
+            */}
+            <footer
+              ref={setFooterNode}
+              className={cn(
+                'bg-surface-base border-outline-subtle pb-safe flex w-full flex-col border-t px-6',
+                'min-h-[76px] gap-4 pt-3 [--pb-safe:1rem] lg:px-0',
+                // The split frames draw no rule above the action, and give it more room.
+                aside && 'lg:border-t-0 lg:pt-12',
+              )}
+            />
           </div>
-
-          {children}
-
-          {/*
-            `min-h-[76px]` holds the bar's height through the single frame between the
-            outgoing screen unmounting and the incoming one filling the portal, so the
-            layout does not jump at the handover.
-          */}
-          <footer
-            ref={setFooterNode}
-            className="bg-surface-base border-outline-subtle pb-safe flex w-full flex-col border-t px-6 lg:px-0 min-h-[76px] gap-4 pt-3 [--pb-safe:1rem]"
-          />
         </div>
       </div>
     </div>
