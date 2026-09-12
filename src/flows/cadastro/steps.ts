@@ -59,8 +59,9 @@ export const cadastroSteps: readonly Step[] = [
   {
     slug: 'welcome',
     title: '1. Welcome',
-    nodeMobile: '779:415',
-    nodeDesktop: '826:3114',
+    // Redesenhada; os nodes antigos (779:415 / 826:3114) não existem mais no arquivo.
+    nodeMobile: '2028:647',
+    nodeDesktop: '2020:647',
     progress: null,
     stepLabel: null,
   },

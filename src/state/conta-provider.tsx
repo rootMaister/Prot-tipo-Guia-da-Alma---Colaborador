@@ -31,6 +31,12 @@ export type SessaoAgendada = {
 
 export type Conta = {
   nome: string
+  /**
+   * O arquivo só escreve "Lara", na saudação da Home. O sobrenome existe porque a revisão
+   * de 11/09/2026 pediu **duas** iniciais no menu ("ex: LD") — é invenção do protótipo, e
+   * está registrado no SYNC-FIGMA.md.
+   */
+  sobrenome: string
   nivel: number
   pontos: number
   moedas: number
@@ -53,6 +59,7 @@ export type Conta = {
  */
 const CONTA_INICIAL: Conta = {
   nome: 'Lara',
+  sobrenome: 'Duarte',
   nivel: 1,
   pontos: 123,
   moedas: 232,
@@ -111,6 +118,10 @@ export function useConta(): ContaContextValue {
 
   return context
 }
+
+/** "LD" — as iniciais que o menu do desktop mostra no avatar. */
+export const iniciais = (conta: Conta): string =>
+  `${conta.nome.charAt(0)}${conta.sobrenome.charAt(0)}`.toUpperCase()
 
 /** A session is its slot: same day and same time is the same booking. */
 export const chaveSessao = (sessao: SessaoAgendada): string =>

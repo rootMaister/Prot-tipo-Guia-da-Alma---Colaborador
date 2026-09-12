@@ -35,3 +35,16 @@ export function lerOrigem(search: string, padrao: string): string {
   // Only same-origin paths: this ends up in `navigate()`, and a query string is user input.
   return valor && valor.startsWith('/') && !valor.startsWith('//') ? valor : padrao
 }
+
+/**
+ * Se o fluxo foi aberto de dentro do app. É o que decide se a régua lateral continua na
+ * tela enquanto se agenda — os frames "com menu" (1617:*) desenham o fluxo com ela, e a
+ * revisão de 11/09/2026 pediu que ela não sumisse ao clicar em "Ver agenda" na Busca.
+ *
+ * Só o desktop: os frames "com menu" do mobile não têm barra nenhuma, porque agendar é
+ * tarefa e não destino.
+ */
+export const veioDoApp = (search: string): boolean => lerOrigem(search, '').startsWith('/app/')
+
+/** O destino do app de onde o fluxo veio, para marcar o item certo na régua. */
+export const slugDeOrigem = (search: string): string => lerOrigem(search, '').split('/')[2] ?? ''

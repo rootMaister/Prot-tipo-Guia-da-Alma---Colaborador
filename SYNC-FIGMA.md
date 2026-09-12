@@ -217,3 +217,47 @@ o que dá o mesmo resultado sem depender de opacidade.
   não deveriam — hoje o fluxo troca de grade no último passo.
 - **Os frames de onboarding têm 1536 de largura e os "com menu" 1440.** A grade interna é a
   mesma; só a moldura muda.
+
+---
+
+# Sincronizar no Figma — revisão de 11/09/2026 (nove itens)
+
+## Já estava no Figma e o protótipo não tinha
+
+- **Welcome redesenhado.** Os nodes antigos (779:415 / 826:3114) **não existem mais**; as
+  telas atuais são `2028:647` ("[Mobile] Welcome — A / Imersiva") e `2020:647`. Reconstruídas.
+  Com elas caiu o painel escuro invertido do desktop, que era a única exceção aberta à regra
+  de não mascarar cor do DS com `className` (item 12 do DS-GAPS.md).
+- **A atmosfera do Welcome é marcada como animada** (as duas elipses têm `rotate` no export),
+  mas o arquivo **não define timeline nenhuma** — `get_motion_context` volta vazio. Estão
+  paradas no protótipo. Precisa da animação desenhada para sair do lugar.
+- **O drawer de filtro da Busca é ancorado à direita**, 440px com 4px de recuo (`1526:5503`).
+  Estava centralizado no protótipo. Corrigido; o scrim de 30% veio do frame do drawer de
+  sessão (`1789:154`), já que os frames de Temas no desktop não desenham um.
+
+## Precisa ser desenhado no Figma (não existe hoje)
+
+- **Usuário no menu lateral.** O `desktop-navigation` (1526:900) tem só o lockup e os cinco
+  itens. A revisão pediu avatar com iniciais e nome "para indicar que está logado" — está no
+  pé da régua, que é onde esse bloco costuma ficar, mas é escolha do código.
+- **O sobrenome da pessoa.** O arquivo só escreve "Lara", na saudação da Home; a revisão pediu
+  **duas** iniciais ("ex: LD"). "Duarte" é invenção do protótipo.
+- **Tags de especialidade e abordagem no `card-profissional`** (1124:13061). Não existem no
+  desenho. Os valores saem dos títulos de sessão que o arquivo já escreve — "Mulheres e
+  LGBT+ / Junguiana" para a Daniele, e assim por diante.
+- **O botão terciário de "Encontramos sua empresa"** (670:606 / 670:616). A tela não tinha
+  saída se a empresa estivesse errada. Cópia nova: "Não é essa empresa?".
+
+## Mudou de comportamento por decisão da revisão
+
+- **"Mais detalhes" saiu do protótipo** — o passo 3 do Match, texto livre. Os nodes ficam
+  registrados em `PASSO_REMOVIDO_MAIS_DETALHES` (`flows/match/steps.ts`) e a tela volta
+  recriando a entrada. A barra de progresso passa de 6% direto para 33%, que são os valores
+  que o arquivo desenha nos passos vizinhos.
+- **Depois de agendar, a pessoa cai em Meus agendamentos**, não no Início — por qualquer
+  porta que tenha entrado.
+- **A transição entre destinos é vertical no desktop** e continua lateral no mobile: o eixo
+  segue a forma do menu (régua vertical × barra horizontal), em vez de ser sempre lateral.
+- **A régua lateral continua na tela ao agendar a partir da Busca** — é o que os frames "com
+  menu" (1617:*) desenham no desktop. No mobile não há barra nenhuma nesses frames, então lá
+  agendar segue em tela cheia.

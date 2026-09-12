@@ -33,6 +33,12 @@ type StepShellProps = {
    * there and hides the one in the header row.
    */
   aside?: ReactNode
+  /**
+   * Abre os 280px da régua lateral à esquerda, para quando o fluxo é aberto de dentro do
+   * app. O conteúdo deixa de centralizar na viewport e passa a centralizar no que sobra —
+   * que a 1440 dá exatamente os 80/1000/80 do frame 1617:4660.
+   */
+  comMenu?: boolean
   /** The part that transitions between steps. */
   children?: ReactNode
 }
@@ -63,6 +69,7 @@ export function StepShell({
   onBack,
   wide = false,
   aside,
+  comMenu = false,
   children,
 }: StepShellProps) {
   useScreenSurface('surface-base')
@@ -77,11 +84,24 @@ export function StepShell({
 
   return (
     <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col gap-3 lg:gap-0">
-      <header className="hidden w-full px-8 py-8 lg:block">
+      {/* Com a régua na tela o lockup já está nela, no topo. */}
+      <header className={cn('hidden w-full px-8 py-8 lg:block', comMenu && 'lg:hidden')}>
         <GuiaLockup height={18} className="text-fg-default" />
       </header>
 
-      <div className="flex flex-1 flex-col lg:items-center lg:px-9">
+      {/*
+        O recuo da régua vai aqui, e não na raiz: `.px-safe` é CSS escrito depois das
+        utilities do Tailwind em `styles/index.css`, então na raiz ele ganharia de qualquer
+        `lg:pl-*`. Ver a nota em CLAUDE.md.
+      */}
+      <div
+        className={cn(
+          'flex flex-1 flex-col lg:items-center',
+          // Com a régua, o respiro é a própria centralização no que sobra: 1440 = 280 +
+          // 80 + 1000 + 80, exatamente o frame 1617:4660. Sem ela, os 36px de sempre.
+          comMenu ? 'lg:pl-[280px]' : 'lg:px-9',
+        )}
+      >
         <div
           className={cn(
             'flex w-full flex-1 flex-col',

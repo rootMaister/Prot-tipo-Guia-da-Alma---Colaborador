@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { Button } from '@guia-da-alma/ds'
 import { CheckIcon } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import { FeatureShell } from '@/components/layout/feature-shell'
 import { SESSAO_DEMO, useConta } from '@/state/conta-provider'
@@ -24,7 +24,6 @@ import { HOJE, useAgendamento } from '../agendamento-provider'
  */
 export function AgendadaScreen() {
   const navigate = useNavigate()
-  const { search } = useLocation()
   const { data } = useAgendamento()
   const { agendar } = useConta()
 
@@ -51,8 +50,9 @@ export function AgendadaScreen() {
         <Button
           variant="contained"
           className="w-full"
-          // The flow now ends on the Home, where the session it just booked is waiting.
-          onClick={() => navigate(`/app/inicio${search}`)}
+          // Ends on Meus agendamentos, where the session it just booked is now listed —
+          // review decision of 11/09/2026, whichever door the booking came in through.
+          onClick={() => navigate('/app/agendamentos')}
         >
           Continuar
         </Button>

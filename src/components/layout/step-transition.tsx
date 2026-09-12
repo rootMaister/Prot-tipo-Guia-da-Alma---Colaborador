@@ -20,16 +20,33 @@ export function useStepDirection(index: number): 1 | -1 {
 
 const DESLOCAMENTO = 24
 
+type Eixo = 'x' | 'y'
+
+type Custom = { direction: 1 | -1; eixo: Eixo }
+
+const deslocar = ({ direction, eixo }: Custom, sinal: 1 | -1) => ({
+  opacity: 0,
+  [eixo]: direction * sinal * DESLOCAMENTO,
+})
+
 const variantes = {
-  enter: (direction: 1 | -1) => ({ opacity: 0, x: direction * DESLOCAMENTO }),
-  center: { opacity: 1, x: 0 },
-  exit: (direction: 1 | -1) => ({ opacity: 0, x: direction * -DESLOCAMENTO }),
+  enter: (custom: Custom) => deslocar(custom, 1),
+  center: { opacity: 1, x: 0, y: 0 },
+  exit: (custom: Custom) => deslocar(custom, -1),
 }
 
 type StepTransitionProps = {
   /** Changing this key is what plays the transition — pass the step slug. */
   stepKey: string
   direction: 1 | -1
+  /**
+   * Which way the content travels. `x` para fluxos, que são uma sequência horizontal de
+   * passos; `y` para os destinos do app no desktop, onde o menu é uma régua vertical e o
+   * deslize lateral contradiz a direção em que a pessoa acabou de clicar — pedido na
+   * revisão de 11/09/2026. No mobile os destinos voltam para `x`, porque lá a barra é
+   * horizontal.
+   */
+  eixo?: Eixo
   /** Classes for the moving element. Inside a shell this is the scrolling content area. */
   className?: string
   /**
@@ -55,16 +72,19 @@ type StepTransitionProps = {
 export function StepTransition({
   stepKey,
   direction,
+  eixo = 'x',
   className,
   wrapperClassName,
   children,
 }: StepTransitionProps) {
+  const custom: Custom = { direction, eixo }
+
   return (
     <div className={wrapperClassName}>
-      <AnimatePresence mode="wait" initial={false} custom={direction}>
+      <AnimatePresence mode="wait" initial={false} custom={custom}>
         <motion.div
           key={stepKey}
-          custom={direction}
+          custom={custom}
           variants={variantes}
           initial="enter"
           animate="center"

@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react'
 
-import { cn } from '@guia-da-alma/ds'
+import { Avatar, cn } from '@guia-da-alma/ds'
 import { NavLink, useLocation } from 'react-router'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
 import { useScreenSurface } from '@/lib/use-screen-surface'
 import { destinos, type Destino } from '@/shell/destinos'
+import { iniciais, useConta } from '@/state/conta-provider'
 
 /**
  * The permanent navigation of the app proper — everything after the onboarding flows.
@@ -32,7 +33,7 @@ export function NavShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">
-      <MenuLateral slugAtivo={slugAtivo} />
+      <NavRail slugAtivo={slugAtivo} />
 
       {/*
         The column is centred on the **viewport**, not in what the rail leaves over. That is
@@ -122,17 +123,21 @@ function BarraInferior({ slugAtivo }: { slugAtivo: string }) {
  * centres on the whole viewport, the way the Home frame draws it, and the rail sits in the
  * left margin that centring leaves over.
  *
+ * Exportada porque o fluxo de Agendamento também a desenha quando é aberto de dentro do app
+ * — os frames "com menu" (1617:4660 e irmãos). Lá ela não é margem: o conteúdo vem depois
+ * dela, e quem abre espaço é o `comMenu` do `StepShell`.
+ *
  * Diário and Meu progresso are in the design but have no screens in this prototype, so they
  * render exactly as drawn and simply do not navigate — hiding them would misreport the menu.
  */
-function MenuLateral({ slugAtivo }: { slugAtivo: string }) {
+export function NavRail({ slugAtivo }: { slugAtivo: string }) {
   return (
     <aside className="hidden lg:fixed lg:top-0 lg:left-0 lg:flex lg:h-dvh lg:w-[280px] lg:flex-col">
       <div className="p-8">
         <GuiaLockup height={19} className="text-fg-default" />
       </div>
 
-      <nav aria-label="Navegação principal" className="flex flex-col gap-8 px-8 py-16">
+      <nav aria-label="Navegação principal" className="flex flex-1 flex-col gap-8 px-8 py-16">
         {destinos.map((destino) => {
           const Icone = destino.icone
           const ativo = destino.slug === slugAtivo
@@ -169,6 +174,30 @@ function MenuLateral({ slugAtivo }: { slugAtivo: string }) {
           )
         })}
       </nav>
+
+      <Usuario />
     </aside>
+  )
+}
+
+/**
+ * Quem está logado, no pé da régua.
+ *
+ * Não existe no Figma: o `desktop-navigation` (1526:900) tem só o lockup e os cinco itens,
+ * e nenhum outro frame mostra o usuário no menu. Entrou na revisão de 11/09/2026, que pediu
+ * avatar com iniciais e nome "para indicar que está logado". O pé da régua é onde esse bloco
+ * costuma ficar; precisa ser desenhado. Ver SYNC-FIGMA.md.
+ */
+function Usuario() {
+  const { conta } = useConta()
+
+  return (
+    <div className="flex items-center gap-3 px-8 pb-8">
+      {/* `Avatar` é redondo e sem imagem cai no `fallback` — que aqui é o que queremos. */}
+      <Avatar fallback={iniciais(conta)} size="md" variant="primary" />
+      <p className="text-label-m text-fg-default min-w-0 truncate">
+        {conta.nome} {conta.sobrenome}
+      </p>
+    </div>
   )
 }

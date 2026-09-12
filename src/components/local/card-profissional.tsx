@@ -1,4 +1,4 @@
-import { Badge, Button } from '@guia-da-alma/ds'
+import { Badge, Button, Chip } from '@guia-da-alma/ds'
 import { useLocation, useNavigate } from 'react-router'
 
 import { comOrigem } from '@/lib/origem'
@@ -11,6 +11,13 @@ export type SessaoRecomendada = Profissional & {
   disponibilidade: string
   /** The indigo "Mais recomendada" pill, on the first card only. */
   destaque?: string
+  /**
+   * Especialidade e tipo de abordagem, nessa ordem. Não existem no desenho do card
+   * (1124:13061) — entraram na revisão de 11/09/2026, que pediu que o card dissesse o que o
+   * profissional atende e por qual escola. Os valores saem do próprio título da sessão que o
+   * arquivo já escreve, não de invenção. Ver SYNC-FIGMA.md.
+   */
+  tags?: string[]
 }
 
 /**
@@ -35,6 +42,7 @@ export function CardProfissional({
   sessao,
   disponibilidade,
   destaque,
+  tags,
   ...profissional
 }: SessaoRecomendada) {
   const navigate = useNavigate()
@@ -50,6 +58,18 @@ export function CardProfissional({
 
       <div className="flex w-full flex-col gap-2">
         <p className="text-label-s text-fg-default px-1 py-2">{sessao}</p>
+
+        {tags && tags.length > 0 ? (
+          <div className="flex flex-wrap gap-2 px-1">
+            {tags.map((tag) => (
+              // DS-GAP: `Chip` é o mais próximo de uma etiqueta só de leitura; `Tag` carrega
+              // estado de seleção que aqui não existe. Ver item 18 do DS-GAPS.md.
+              <Chip key={tag} color="neutral">
+                {tag}
+              </Chip>
+            ))}
+          </div>
+        ) : null}
 
         <ProfissionalResumo {...profissional} />
 

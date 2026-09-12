@@ -1,7 +1,8 @@
 import { Navigate, Outlet, useLocation, useNavigate, useParams } from 'react-router'
 
 import { StepChromeProvider } from '@/components/layout/step-chrome'
-import { lerOrigem } from '@/lib/origem'
+import { NavRail } from '@/components/layout/nav-shell'
+import { lerOrigem, slugDeOrigem, veioDoApp } from '@/lib/origem'
 import { StepShell } from '@/components/layout/step-shell'
 import { StepTransition, useStepDirection } from '@/components/layout/step-transition'
 
@@ -25,6 +26,8 @@ export function AgendamentoLayout() {
   const step = findStep(slug)
   const direction = useStepDirection(step ? getStepIndex(step.slug) : 0)
 
+  const comMenu = veioDoApp(search)
+
   const goBack = () => {
     const anterior = step ? getPreviousStep(step.slug) : undefined
     navigate(anterior ? `/agendamento/${anterior.slug}${search}` : lerOrigem(search, '/'))
@@ -44,6 +47,13 @@ export function AgendamentoLayout() {
   return (
     <AgendamentoProvider>
       <StepChromeProvider>
+        {/*
+          Aberto de dentro do app, o fluxo mantém a régua — é o que os frames "com menu"
+          desenham, e o que a revisão pediu. Ela é `fixed` e só aparece no desktop, então no
+          mobile nada muda: lá agendar continua sendo tarefa em tela cheia.
+        */}
+        {comMenu ? <NavRail slugAtivo={slugDeOrigem(search)} /> : null}
+
         {step?.progress === null || !step ? (
           conteudo
         ) : (
@@ -52,6 +62,7 @@ export function AgendamentoLayout() {
             progress={step.progress}
             onBack={goBack}
             aside={step.split ? <ResumoAgendamento /> : undefined}
+            comMenu={comMenu}
           >
             {conteudo}
           </StepShell>

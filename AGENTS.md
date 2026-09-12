@@ -157,6 +157,12 @@ revelava outra. Com o teclado aberto a página simplesmente rola, e a pessoa rol
 botão. **Não reintroduza `100dvh` fixo, `overflow: hidden` no body nem cálculo de altura por
 `visualViewport` aqui sem testar em aparelho real.**
 
+**Armadilha:** `pt-safe`, `px-safe` e `pb-safe` são CSS escrito *depois* do Tailwind em
+`styles/index.css`, então no mesmo elemento elas **ganham** de `pt-24`, `px-6`, `pl-[280px]`
+e afins — sem erro e sem aviso, o padding simplesmente some. As três aceitam o valor próprio
+por variável: use `[--pt-safe:6rem]`, `[--px-safe:1.5rem]`, `[--pb-safe:1rem]` em vez da
+utility de padding, ou ponha o padding num elemento interno. Isso já custou três bugs.
+
 Cor do chrome do navegador: `lib/use-screen-surface.ts`. Cada shell (e cada tela de sangria
 total) declara seu token de superfície, e o hook espelha a cor resolvida no `background` do
 `<html>` e na meta `theme-color` — que é de onde o Safari no iOS tinge a barra de status e a

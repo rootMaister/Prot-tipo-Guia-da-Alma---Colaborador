@@ -55,52 +55,57 @@ export function PainelFiltro({
     )
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={titulo}
-      className="pt-safe px-safe pb-safe fixed inset-0 z-30 flex flex-col p-1"
-    >
-      <div className="bg-surface-base border-outline-subtle flex min-h-0 flex-1 flex-col gap-6 rounded-2xl border p-4 lg:mx-auto lg:w-full lg:max-w-[480px]">
-        <div className="flex w-full items-center justify-between">
-          <h2 className="text-label-l text-fg-default">{titulo}</h2>
-          <IconButton
-            icon={<XIcon className="size-[18px]" />}
-            aria-label="Fechar"
-            onClick={onFechar}
-          />
-        </div>
+    <div role="dialog" aria-modal="true" aria-label={titulo}>
+      {/* Mobile is full-bleed, so the scrim only has anything to darken on desktop. */}
+      <div className="fixed inset-0 z-30 hidden bg-black/30 lg:block" onClick={onFechar} />
 
-        {picks.length > 0 ? (
-          <div className="flex w-full flex-col gap-2">
-            <p className="text-label-s text-fg-muted">Selecionados</p>
-            <div className="flex flex-wrap gap-2">
-              {picks.map((pick) => (
-                <Chip key={pick} color="green" onDismiss={() => alternar(pick)}>
-                  {pick}
-                </Chip>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {/* The list scrolls; the action below it does not. */}
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
-          {opcoes.map((opcao) => (
-            <OptionCard
-              key={opcao}
-              id={`filtro-${titulo}-${opcao}`}
-              label={opcao}
-              checked={picks.includes(opcao)}
-              onCheckedChange={() => alternar(opcao)}
+      <div className="pt-safe px-safe pb-safe fixed inset-0 z-30 flex flex-col">
+        {/*
+          Os 4px de recuo vêm de `m-1` no painel, não de `p-1` aqui: as utilities de área
+          segura são CSS escrito depois do Tailwind em `styles/index.css` e sobrescrevem
+          qualquer `p-*` deste mesmo elemento. Ver a nota em CLAUDE.md.
+        */}
+        <div className="bg-surface-base border-outline-subtle m-1 flex min-h-0 flex-1 flex-col gap-6 rounded-2xl border p-4 lg:ml-auto lg:w-[432px]">
+          <div className="flex w-full items-center justify-between">
+            <h2 className="text-label-l text-fg-default">{titulo}</h2>
+            <IconButton
+              icon={<XIcon className="size-[18px]" />}
+              aria-label="Fechar"
+              onClick={onFechar}
             />
-          ))}
-        </div>
+          </div>
 
-        <div className="flex w-full flex-col pt-3 pb-2">
-          <Button variant="contained" className="w-full" onClick={() => onAplicar(picks)}>
-            Aplicar filtro
-          </Button>
+          {picks.length > 0 ? (
+            <div className="flex w-full flex-col gap-2">
+              <p className="text-label-s text-fg-muted">Selecionados</p>
+              <div className="flex flex-wrap gap-2">
+                {picks.map((pick) => (
+                  <Chip key={pick} color="green" onDismiss={() => alternar(pick)}>
+                    {pick}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {/* The list scrolls; the action below it does not. */}
+          <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
+            {opcoes.map((opcao) => (
+              <OptionCard
+                key={opcao}
+                id={`filtro-${titulo}-${opcao}`}
+                label={opcao}
+                checked={picks.includes(opcao)}
+                onCheckedChange={() => alternar(opcao)}
+              />
+            ))}
+          </div>
+
+          <div className="flex w-full flex-col pt-3 pb-2">
+            <Button variant="contained" className="w-full" onClick={() => onAplicar(picks)}>
+              Aplicar filtro
+            </Button>
+          </div>
         </div>
       </div>
     </div>

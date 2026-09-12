@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button, IconButton, Tabs, TabsContent, TabsList, TabsTrigger } from '@guia-da-alma/ds'
+import { Button, IconButton, Tabs, TabsContent, TabsList, TabsTrigger, cn } from '@guia-da-alma/ds'
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -12,7 +12,7 @@ import { ProfissionalResumo } from '@/components/local/profissional-resumo'
 import { SESSAO } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
-import { lerOrigem } from '@/lib/origem'
+import { lerOrigem, veioDoApp } from '@/lib/origem'
 import { useScreenSurface } from '@/lib/use-screen-surface'
 
 /**
@@ -135,6 +135,8 @@ export function DetalhesScreen() {
     the onboarding behaviour for a cold deep-link. See `lib/origem.ts`.
   */
   const origem = lerOrigem(search, '/match/sessoes-recomendadas')
+  // Com a régua na tela (fluxo aberto de dentro do app) o conteúdo vem depois dela.
+  const comMenu = veioDoApp(search)
   const voltar = () => navigate(origem)
   const rotuloVoltar = ROTULO_VOLTAR[origem] ?? 'Voltar'
 
@@ -214,11 +216,18 @@ export function DetalhesScreen() {
 
       {/* Desktop */}
       <div className="bg-surface-base pt-safe px-safe hidden min-h-dvh flex-col lg:flex">
-        <header className="w-full px-8 py-8">
-          <GuiaLockup height={18} className="text-fg-default" />
-        </header>
-        {/* 1000 = 24 + 436 + 80 + 436 + 24, the measures of `profissionals` (1236:12522). */}
-        <div className="mx-auto flex w-full max-w-[1000px] flex-1 gap-20 px-6 pb-12">
+        {/* Com a régua na tela o lockup já está nela. */}
+        {comMenu ? null : (
+          <header className="w-full px-8 py-8">
+            <GuiaLockup height={18} className="text-fg-default" />
+          </header>
+        )}
+        {/*
+          1000 = 24 + 436 + 80 + 436 + 24, the measures of `profissionals` (1236:12522).
+          O recuo da régua fica neste contêiner, não na raiz: lá `.px-safe` ganharia dele.
+        */}
+        <div className={cn('flex flex-1 flex-col', comMenu && 'lg:pl-[280px]')}>
+          <div className="mx-auto flex w-full max-w-[1000px] flex-1 gap-20 px-6 pb-12">
           <div className="flex w-[436px] shrink-0 flex-col gap-12">
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
@@ -270,6 +279,7 @@ export function DetalhesScreen() {
                 <CardOutraSessao key={outra.titulo} {...outra} />
               ))}
             </section>
+            </div>
           </div>
         </div>
       </div>

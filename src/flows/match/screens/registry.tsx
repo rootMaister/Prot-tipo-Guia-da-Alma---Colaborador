@@ -2,7 +2,6 @@ import type { ComponentType } from 'react'
 
 import type { StepSlug } from '../steps'
 import { BuscandoScreen } from './buscando-screen'
-import { InformacoesAdicionaisScreen } from './informacoes-adicionais-screen'
 import { InicioScreen } from './inicio-screen'
 import { OQueTeTrazScreen } from './o-que-te-traz-screen'
 import { PreferenciaAbordagemScreen } from './preferencia-abordagem-screen'
@@ -13,7 +12,6 @@ import { SuasSessoesScreen } from './suas-sessoes-screen'
 export const screenComponents: Record<StepSlug, ComponentType> = {
   inicio: InicioScreen,
   'o-que-te-traz': OQueTeTrazScreen,
-  'informacoes-adicionais': InformacoesAdicionaisScreen,
   'preferencia-abordagem': PreferenciaAbordagemScreen,
   'suas-sessoes': SuasSessoesScreen,
   buscando: BuscandoScreen,

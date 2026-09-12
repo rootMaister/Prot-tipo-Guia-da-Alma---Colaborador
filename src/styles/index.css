@@ -94,12 +94,13 @@ html {
 
    On a device without insets every `env()` here resolves to 0, so nothing moves. */
 .pt-safe {
-  padding-top: env(safe-area-inset-top);
+  padding-top: max(var(--pt-safe, 0px), env(safe-area-inset-top));
 }
 
-/* `max()` here too, so an element that already has horizontal padding keeps it: these
-   utilities are defined after Tailwind's, so a plain `padding-left` would silently beat
-   `px-6`. Callers declare their own value with `[--px-safe:1.5rem]`. */
+/* `max()` in all three, so an element that already has padding keeps it: these utilities
+   are defined after Tailwind's, so a plain `padding-top`/`padding-left` silently beats
+   `pt-24`/`px-6` on the same element — sem erro, sem aviso, o padding some. Callers declare
+   their own value with `[--pt-safe:6rem]` / `[--px-safe:1.5rem]` em vez de `pt-*`/`px-*`. */
 .px-safe {
   padding-left: max(var(--px-safe, 0px), env(safe-area-inset-left));
   padding-right: max(var(--px-safe, 0px), env(safe-area-inset-right));

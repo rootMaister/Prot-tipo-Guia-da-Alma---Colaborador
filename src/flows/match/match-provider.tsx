@@ -3,8 +3,6 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 export type MatchData = {
   /** Step 2 — "Seu momento", multi-select. */
   temas: string[]
-  /** Step 3 — "Mais detalhes", free text. */
-  detalhes: string
   /** Step 4 — "Especialidade", multi-select despite the radio-ish layer name. */
   especialidades: string[]
   /** Step 5 — weekday chips. */
@@ -20,7 +18,6 @@ export type MatchData = {
  */
 const MOCK_DEFAULTS: MatchData = {
   temas: [],
-  detalhes: '',
   especialidades: [],
   dias: [],
   horarios: [],

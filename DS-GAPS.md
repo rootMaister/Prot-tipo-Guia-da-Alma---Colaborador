@@ -273,7 +273,7 @@ no componente do Figma, então é decisão de produto o que fazer com ele.
 
 ---
 
-## 12. Não existe variante de `Button` para fundo escuro — e aqui eu quebrei a regra
+## 12. Não existe variante de `Button` para fundo escuro — RESOLVIDO POR REDESENHO
 
 **Severidade:** alta (deixa a tela inutilizável se seguida à risca)
 
@@ -309,6 +309,13 @@ matriz de estados para fundo escuro continua sem resposta.
 `fg/on-action` já existe. Vale também para o `IconButton`, que tem o mesmo problema.
 
 ---
+
+
+**Atualização (11/09/2026):** o Welcome foi redesenhado no Figma e o painel escuro invertido
+do desktop não existe mais — as duas telas agora são claras, sobre `surface/subtle`
+(2028:647 e 2020:647). Com ele foi embora o único `className` de cor sobre componente do DS
+que havia no protótipo. **A lacuna do DS continua de pé** — não há variante de `Button` para
+fundo escuro —, mas não há mais nenhum consumidor a contornando aqui.
 
 ## 15. A Calma Serif só tem o peso Regular — negrito em display era sintetizado
 

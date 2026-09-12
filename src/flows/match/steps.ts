@@ -8,7 +8,6 @@
 export type StepSlug =
   | 'inicio'
   | 'o-que-te-traz'
-  | 'informacoes-adicionais'
   | 'preferencia-abordagem'
   | 'suas-sessoes'
   | 'buscando'
@@ -83,14 +82,6 @@ export const matchSteps: readonly Step[] = [
     stepLabel: 'Temas para a sessão',
   },
   {
-    slug: 'informacoes-adicionais',
-    title: '3. Informações adicionais',
-    nodeMobile: '1105:11342',
-    nodeDesktop: '1134:2179',
-    progress: 12,
-    stepLabel: 'Opcional',
-  },
-  {
     slug: 'preferencia-abordagem',
     title: '4. Preferência de abordagem',
     nodeMobile: '1105:11678',
@@ -145,3 +136,16 @@ export const getPreviousStep = (slug: StepSlug): Step | undefined => {
 
 export const figmaNodeUrl = (nodeId: string): string =>
   `https://www.figma.com/design/${MATCH_FILE_KEY}/Colaborador-UI?node-id=${nodeId.replace(':', '-')}`
+
+
+/**
+ * "Mais detalhes" (o passo 3, texto livre) foi **retirado do protótipo** a pedido da
+ * revisão de 11/09/2026 — "por enquanto". Nada mais foi mexido: os nodes ficam aqui e a
+ * tela volta recriando a entrada em `matchSteps` entre `o-que-te-traz` e
+ * `preferencia-abordagem`, com `progress: 12` e `stepLabel: 'Opcional'`.
+ */
+export const PASSO_REMOVIDO_MAIS_DETALHES = {
+  nodeMobile: '1105:11342',
+  nodeDesktop: '1134:2179',
+  nodePreenchido: '1105:11501',
+} as const
