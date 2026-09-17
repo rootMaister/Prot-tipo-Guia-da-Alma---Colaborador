@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 
-import { Avatar, cn } from '@guia-da-alma/ds'
+import { Avatar, Badge, cn } from '@guia-da-alma/ds'
 import { NavLink, useLocation } from 'react-router'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
 import { useScreenSurface } from '@/lib/use-screen-surface'
-import { destinos, type Destino } from '@/shell/destinos'
+import { destinosNoMenu, type Destino } from '@/shell/destinos'
 import { iniciais, useConta } from '@/state/conta-provider'
 
 /**
@@ -29,8 +29,14 @@ import { iniciais, useConta } from '@/state/conta-provider'
 export function NavShell({
   children,
   slugAtivo: slugFixo,
+  barraInferior = true,
 }: {
   children: ReactNode
+  /**
+   * Se a barra inferior do mobile aparece. As páginas de perfil (`peloPerfil` em
+   * `destinos.ts`) não a desenham: elas trazem um botão de voltar no lugar.
+   */
+  barraInferior?: boolean
   /**
    * The item to mark, when the URL is not a destination's — the Avaliação modal draws the
    * app behind it with the destination it was opened from still active.
@@ -59,18 +65,24 @@ export function NavShell({
         capped at the designed 1000, floored by staying 24px clear of the rail. At 1440 that
         is 832, at 1608 and up the full 1000. See SYNC-FIGMA.md.
       */}
-      <main className="flex w-full flex-1 flex-col pb-[108px] lg:mx-auto lg:w-[min(1000px,100%-608px)] lg:pb-0">
+      <main
+        className={cn(
+          'flex w-full flex-1 flex-col lg:mx-auto lg:w-[min(1000px,100%-608px)] lg:pb-0',
+          // O espaço embaixo é para a barra; sem ela, não há o que desviar.
+          barraInferior && 'pb-[108px]',
+        )}
+      >
         {children}
       </main>
 
-      <BarraInferior slugAtivo={slugAtivo} />
+      {barraInferior ? <BarraInferior slugAtivo={slugAtivo} /> : null}
     </div>
   )
 }
 
 const caminho = (destino: Destino) => `/app/${destino.slug}`
 
-const destinosMobile = destinos.filter((destino) => destino.noMobile)
+const destinosMobile = destinosNoMenu.filter((destino) => destino.noMobile)
 
 /**
  * `bottom-nav-bar` — a wrapper with 8px of side padding and 24px above and below, holding a
@@ -149,7 +161,7 @@ export function NavRail({ slugAtivo }: { slugAtivo: string }) {
       </div>
 
       <nav aria-label="Navegação principal" className="flex flex-1 flex-col gap-8 px-8 py-16">
-        {destinos.map((destino) => {
+        {destinosNoMenu.map((destino) => {
           const Icone = destino.icone
           const ativo = destino.slug === slugAtivo
 
@@ -192,23 +204,31 @@ export function NavRail({ slugAtivo }: { slugAtivo: string }) {
 }
 
 /**
- * Quem está logado, no pé da régua.
+ * Quem está logado, no pé da régua — e a porta de "Meus dados".
  *
- * Não existe no Figma: o `desktop-navigation` (1526:900) tem só o lockup e os cinco itens,
- * e nenhum outro frame mostra o usuário no menu. Entrou na revisão de 11/09/2026, que pediu
- * avatar com iniciais e nome "para indicar que está logado". O pé da régua é onde esse bloco
- * costuma ficar; precisa ser desenhado. Ver SYNC-FIGMA.md.
+ * O bloco entrou na revisão de 11/09/2026 (avatar com iniciais e nome, "para indicar que
+ * está logado"), quando o `desktop-navigation` de então (1526:900) tinha só o lockup e os
+ * cinco itens. O menu de "Meus dados" (2876:263) desenha o pé: avatar, nome e o nível — e a
+ * descrição do componente diz que é por aqui que se chega a ela ("acessada pelo perfil").
+ * Daí ser um link, e não um bloco morto. Pontos e Calma Coins também estão na descrição,
+ * mas o frame não os desenha; ficam para quando aparecerem. Ver SYNC-FIGMA.md.
  */
 function Usuario() {
   const { conta } = useConta()
 
   return (
-    <div className="flex items-center gap-3 px-8 pb-8">
+    <NavLink
+      to="/app/meus-dados"
+      className="hover:bg-surface-subtle mx-4 mb-8 flex items-center gap-3 rounded-full px-4 py-2 transition-colors duration-150 ease-out"
+    >
       {/* `Avatar` é redondo e sem imagem cai no `fallback` — que aqui é o que queremos. */}
       <Avatar fallback={iniciais(conta)} size="md" variant="primary" />
-      <p className="text-label-m text-fg-default min-w-0 truncate">
-        {conta.nome} {conta.sobrenome}
-      </p>
-    </div>
+      <div className="flex min-w-0 flex-col items-start gap-1">
+        <p className="text-label-m text-fg-default min-w-0 truncate">
+          {conta.nome} {conta.sobrenome}
+        </p>
+        <Badge variant="neutral">Nível {conta.nivel}</Badge>
+      </div>
+    </NavLink>
   )
 }

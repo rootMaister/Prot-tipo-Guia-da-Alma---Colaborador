@@ -1055,3 +1055,16 @@ múltiplo em cápsula com checkbox, reincidência do item 18. Mantidos os tamanh
 estados nativos do `Checkbox`, sem sobrescrever seus estilos. O modal reutiliza
 `FeedbackShell`, com rótulo e superfície configuráveis; os defaults da Avaliação
 continuam iguais.
+
+## 37. Meus dados — o `InputField` não expõe o contêiner
+
+**Severidade:** baixa
+
+O desktop de "Meus dados" (`2873:3`) põe Nome e Sobrenome numa linha, e Senha e Confirmar
+senha em outra, cada campo ocupando metade. `InputField` renderiza uma `div` própria em volta
+do rótulo, do campo e do texto de apoio, e o único `className` que ele aceita desce para o
+`<input>` — não há como dizer que o bloco inteiro é `flex-1`. As telas contornam com uma `div`
+de fora, o que funciona mas repete estrutura a cada linha de dois campos.
+
+**Correção sugerida:** um `containerClassName` (ou `asChild`) no `InputField`, como o
+`TextareaField` também vai precisar.

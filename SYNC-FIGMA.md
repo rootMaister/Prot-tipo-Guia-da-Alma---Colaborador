@@ -329,3 +329,32 @@ Levantado ao construir a página "Avaliação" (`1769:9713`), seção "Avaliaç�
 - Confirmação final local com resumo do humor e influências; sem backend ou persistência
   após recarregar. “Concluir”, “Deixar para depois” e Escape voltam à origem da query,
   ou ao índice (`/`) quando aberto diretamente.
+
+---
+
+# Sincronizar no Figma — Meus dados (17/09/2026)
+
+Levantado ao construir a página "Meus dados" (`2873:2`): `2874:109` no mobile, `2873:3` no
+desktop. É a primeira tela do app que **não** se abre pelo menu.
+
+## Decidido no protótipo, sem desenho no arquivo
+
+- **Para onde leva "Sair da conta".** Nenhum frame diz. O protótipo zera a conta e volta para
+  `/cadastro/welcome`, que é a única coisa parecida com uma porta de entrada — não há tela de
+  login no arquivo. **Sugerido:** desenhar o login, ou ao menos o destino do logout.
+- **Por onde se chega no mobile.** No desktop a descrição do `desktop-navigation` é explícita
+  ("acessada pelo perfil"), e o pé da régua vira o link. No mobile não há perfil desenhado em
+  frame nenhum, então a porta ficou na folha do botão de menu, separada dos destinos por uma
+  linha. **Sugerido:** desenhar o acesso no mobile.
+- **O que "Atualizar" faz.** Grava nome, sobrenome e telefone no estado da conta — é o que faz
+  o nome e as iniciais mudarem no menu na hora. A senha só é validada contra a confirmação
+  ("As senhas não conferem."), e não é guardada em lugar nenhum. Nada vai para backend.
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **"Meu progresso" virou "Meus pontos"** | `2876:263`, a régua desta página | A régua desenhada aqui lista Início, Buscar, Agendamentos, Diário e **Meus pontos**; a de 1526:900 ainda diz "Meu progresso". Os dois nomes convivem no arquivo. |
+| **Pé da régua sem pontos nem Calma Coins** | `2876:285` | A descrição do componente promete "identificação, nível, pontos e saldo de Calma Coins", e o frame desenha só avatar, nome e o nível. O protótipo segue o frame. |
+| **Olho nos campos de senha** | `2873:107` / `2873:120` | O componente `input` tem `Type=Password` com o ícone de olho, mas os dois campos aqui são desenhados sem ele. O `Input` do DS mostra o olho quando `type="password"`, e o protótipo não o esconde. |
+| **Campos obrigatórios com `*` invisível** | Nome, Sobrenome, N° telefone | O asterisco existe nos três, com opacidade 0. Se a obrigatoriedade é real, ele deveria aparecer; o protótipo não desenha marca nenhuma. |

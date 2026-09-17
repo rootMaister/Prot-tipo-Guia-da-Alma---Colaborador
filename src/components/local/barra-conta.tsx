@@ -14,7 +14,7 @@ import { Link } from 'react-router'
 
 import moeda from '@/assets/app/calma-coin.svg'
 import { useConta } from '@/state/conta-provider'
-import { destinos } from '@/shell/destinos'
+import { destinosNoMenu, findDestino } from '@/shell/destinos'
 
 /**
  * The status strip at the top of the Home — level, points and Calma coins (1429:6287 on
@@ -58,6 +58,8 @@ export function BarraConta({ className }: { className?: string }) {
  * place Diário and Meu progresso appear is the desktop rail — so it lists the same
  * destinations that rail does. See SYNC-FIGMA.md.
  */
+const PERFIL = findDestino('meus-dados')
+
 function MenuButton() {
   const [aberto, setAberto] = useState(false)
 
@@ -77,7 +79,7 @@ function MenuButton() {
           </DialogHeader>
 
           <nav className="flex flex-col gap-2">
-            {destinos.map((destino) => {
+            {destinosNoMenu.map((destino) => {
               const Icone = destino.icone
               const classe = 'text-label-m flex items-center gap-4 rounded-full px-4 py-3'
 
@@ -102,6 +104,26 @@ function MenuButton() {
                 </span>
               )
             })}
+
+            {/*
+              Meus dados não está no menu de nenhum dos dois desenhos: no desktop se chega a
+              ela pelo perfil, no pé da régua. No mobile não há perfil desenhado em lugar
+              nenhum, e esta folha é o que mais se parece com um — então a porta fica aqui,
+              separada dos destinos. Ver SYNC-FIGMA.md.
+            */}
+            {PERFIL ? (
+              <Link
+                to={`/app/${PERFIL.slug}`}
+                onClick={() => setAberto(false)}
+                className={cn(
+                  'text-label-m flex items-center gap-4 rounded-full px-4 py-3',
+                  'border-outline-subtle text-fg-default hover:bg-surface-subtle mt-2 border-t pt-5',
+                )}
+              >
+                <PERFIL.icone className="size-6" aria-hidden />
+                {PERFIL.rotulo}
+              </Link>
+            ) : null}
           </nav>
         </DialogContent>
       </Dialog>

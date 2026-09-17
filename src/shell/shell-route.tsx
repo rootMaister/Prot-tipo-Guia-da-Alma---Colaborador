@@ -29,12 +29,12 @@ export function ShellLayout() {
   const destino = findDestino(slug)
   const Screen = destino ? screenComponents[destino.slug] : undefined
 
-  if (!Screen) {
+  if (!destino || !Screen) {
     return <Navigate to="/app/inicio" replace />
   }
 
   return (
-    <NavShell>
+    <NavShell barraInferior={!destino.peloPerfil}>
       <StepTransition
         stepKey={slug}
         direction={direction}

@@ -4,6 +4,7 @@ import {
   NotebookPenIcon,
   SearchIcon,
   TargetIcon,
+  UserIcon,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -15,7 +16,13 @@ import {
  * the index page, the same way `steps.ts` is for the flows.
  */
 
-export type DestinoSlug = 'inicio' | 'busca' | 'agendamentos' | 'diario' | 'progresso'
+export type DestinoSlug =
+  | 'inicio'
+  | 'busca'
+  | 'agendamentos'
+  | 'diario'
+  | 'progresso'
+  | 'meus-dados'
 
 export type Destino = {
   slug: DestinoSlug
@@ -32,6 +39,17 @@ export type Destino = {
    * slice, so they render as they look in the design and simply do not navigate.
    */
   disponivel: boolean
+  /**
+   * Aberta pelo perfil, não pelo menu — "Meus dados" é a primeira dessas. O Figma diz as
+   * duas coisas: o `desktop-navigation` dela vem com `Item ativo=Nenhum`, descrito como
+   * "para telas abertas fora do menu (ex.: Meus dados, acessada pelo perfil)", e o frame
+   * mobile (2874:109) não desenha a barra inferior, e sim um botão de voltar.
+   *
+   * Então uma página de perfil fica fora das duas listas de menu, e no mobile troca a barra
+   * pelo voltar. Continua sendo um destino em tudo o mais: rota sob `/app/`, sem ordem, sem
+   * progresso e sem "próximo".
+   */
+  peloPerfil?: boolean
   /** Figma node for the mobile frame, for the index page. */
   nodeMobile: string | null
   nodeDesktop: string | null
@@ -103,9 +121,22 @@ export const destinos: readonly Destino[] = [
     nodeMobile: null,
     nodeDesktop: null,
   },
+  {
+    slug: 'meus-dados',
+    rotulo: 'Meus dados',
+    icone: UserIcon,
+    noMobile: false,
+    disponivel: true,
+    peloPerfil: true,
+    nodeMobile: '2874:109',
+    nodeDesktop: '2873:3',
+  },
 ]
 
 export const destinosDisponiveis = destinos.filter((d) => d.disponivel)
+
+/** O que as duas navegações listam — a régua do desktop e a folha do mobile. */
+export const destinosNoMenu = destinos.filter((d) => !d.peloPerfil)
 
 export const findDestino = (slug: string): Destino | undefined =>
   destinos.find((d) => d.slug === slug)

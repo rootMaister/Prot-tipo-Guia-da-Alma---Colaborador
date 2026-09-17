@@ -37,6 +37,12 @@ export type Conta = {
    * está registrado no SYNC-FIGMA.md.
    */
   sobrenome: string
+  /**
+   * Login e-mail and phone, as "Meus dados" (2873:3 / 2874:109) writes them. The e-mail is
+   * the only field that screen renders disabled: "O e-mail de acesso não pode ser alterado."
+   */
+  email: string
+  telefone: string
   nivel: number
   pontos: number
   moedas: number
@@ -60,6 +66,8 @@ export type Conta = {
 const CONTA_INICIAL: Conta = {
   nome: 'Lara',
   sobrenome: 'Duarte',
+  email: 'lara.duarte@empresa.com.br',
+  telefone: '+55 (11) 98765-4321',
   nivel: 1,
   pontos: 123,
   moedas: 232,
@@ -80,9 +88,13 @@ export const SESSAO_DEMO: Omit<SessaoAgendada, 'data' | 'horario'> = {
   avaliacoes: 67,
 }
 
+/** O que "Meus dados" edita — o e-mail fica de fora porque a tela o desenha desabilitado. */
+export type DadosEditaveis = Pick<Conta, 'nome' | 'sobrenome' | 'telefone'>
+
 type ContaContextValue = {
   conta: Conta
   agendar: (sessao: SessaoAgendada) => void
+  atualizarDados: (dados: DadosEditaveis) => void
   reset: () => void
 }
 
@@ -102,9 +114,21 @@ export function ContaProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  /**
+   * Nome, sobrenome e telefone de "Meus dados". Fica aqui, e não no estado da tela, porque o
+   * nome e as iniciais aparecem no menu e na saudação do Início: trocar o nome e ver o menu
+   * mudar é a única prova de que a tela salvou alguma coisa.
+   */
+  const atualizarDados = useCallback((dados: DadosEditaveis) => {
+    setConta((atual) => ({ ...atual, ...dados }))
+  }, [])
+
   const reset = useCallback(() => setConta(CONTA_INICIAL), [])
 
-  const value = useMemo(() => ({ conta, agendar, reset }), [conta, agendar, reset])
+  const value = useMemo(
+    () => ({ conta, agendar, atualizarDados, reset }),
+    [conta, agendar, atualizarDados, reset],
+  )
 
   return <ContaContext.Provider value={value}>{children}</ContaContext.Provider>
 }

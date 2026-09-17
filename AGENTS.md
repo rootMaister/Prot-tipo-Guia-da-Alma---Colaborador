@@ -73,7 +73,7 @@ src/
     <fluxo>-provider.tsx   estado mockado do formulário
     screens/               uma tela por passo + registry.tsx
   shell/                   o app depois do onboarding — destinos, não passos
-    destinos.ts            rótulos, ícones, nodes e o que ainda não existe
+    destinos.ts            rótulos, ícones, nodes, o que ainda não existe e o que é perfil
     catalogo.ts            o que a Busca procura
     shell-route.tsx        rota de layout com o nav-shell
     screens/               uma tela por destino + registry.tsx
@@ -109,6 +109,20 @@ estreitar uma `div` mostraria o layout **desktop** em largura de celular.
 fluxo novo (Login, Home…) é criar `src/flows/<nome>/` no mesmo formato, registrar a rota em
 `routes.tsx` e a entrada em `index-page.tsx` — nenhuma tela existente precisa mudar. Foi
 exatamente assim que o Match entrou.
+
+### Páginas de perfil: destino sem entrada de menu
+
+"Meus dados" (`2873:3` / `2874:109`) é um destino em tudo — rota sob `/app/`, sem ordem, sem
+progresso e sem "próximo" — menos na entrada: ela não está no menu. Quem diz isso é o próprio
+Figma, de duas formas: a régua dela vem com `Item ativo=Nenhum`, descrito como "para telas
+abertas fora do menu (ex.: Meus dados, acessada pelo perfil)", e o frame mobile não desenha a
+barra inferior, e sim um botão de voltar.
+
+Isso é `peloPerfil: true` em `destinos.ts`, e ele decide duas coisas: sair das duas listas de
+menu (`destinosNoMenu`) e desligar a barra inferior no mobile (`barraInferior` do `NavShell`).
+A porta de entrada é o rodapé da régua no desktop e a folha do botão de menu no mobile, onde
+não há perfil desenhado. Ao acrescentar outra página assim, use a mesma marca em vez de
+esconder a entrada em cada lista.
 
 ### Costuras: quem abre um fluxo diz para onde voltar
 

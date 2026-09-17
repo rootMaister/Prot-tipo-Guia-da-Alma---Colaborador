@@ -75,7 +75,8 @@ export function IndexPage() {
             <p className="text-body-s text-fg-subtle max-w-prose">
               O que existe depois do onboarding. Não são passos de um fluxo: são destinos, com
               navegação permanente e sem "próximo". Diário e Meu progresso aparecem no menu mas não
-              têm telas desenhadas.
+              têm telas desenhadas. Meus dados é o contrário: tem tela e não está no menu — abre
+              pelo perfil.
             </p>
           </div>
 
