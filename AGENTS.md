@@ -9,6 +9,8 @@ com estados mockados e sem backend:
   aprovado": questionário, busca e sessões recomendadas.
 - **Agendamento** — seção `1184:5843`. 5 telas, que continuam do "Ver agenda" nas sessões
   recomendadas: detalhe da sessão, data e horário, dados e confirmação.
+- **Avaliação** — página `1769:9713`, seção `2288:12017`. 8 telas, abertas por "Entrar na
+  sala" de uma sessão marcada: sessão realizada, quatro perguntas e um de três finais.
 
 Serve a dois propósitos: revisar os fluxos fora do Figma, e exercitar o design system
 `@guia-da-alma/ds` como seu primeiro consumidor real. Lacunas encontradas vão para
@@ -63,9 +65,10 @@ Três coisas que quebram silenciosamente se mexidas:
 ```
 src/
   components/
-    layout/    sign-up-shell · feature-shell · status-shell · step-shell · nav-shell
+    layout/    sign-up-shell · feature-shell · status-shell · step-shell · nav-shell ·
+               feedback-shell
     local/     componentes exclusivos deste projeto (ver abaixo)
-  flows/<fluxo>/           cadastro/, match/ e agendamento/, mesmo formato
+  flows/<fluxo>/           cadastro/, match/, agendamento/ e avaliacao/, mesmo formato
     steps.ts               ordem, slugs, progresso e nodes do Figma
     <fluxo>-provider.tsx   estado mockado do formulário
     screens/               uma tela por passo + registry.tsx
@@ -112,7 +115,10 @@ exatamente assim que o Match entrou.
 As costuras são explícitas: o CTA de `aprovado-screen` (Cadastro) navega para `/match/inicio`,
 o "Ver agenda" de `card-profissional` (Match **e** Busca) para `/agendamento/detalhes`, o
 "Reagendar" de `detalhes-sessao` para `/agendamento/horario`, e o "Continuar" de
-`agendada-screen` fecha o ciclo em `/app/inicio`.
+`agendada-screen` fecha o ciclo em `/app/agendamentos`. "Entrar na sala" de `detalhes-sessao` abre
+`/avaliacao/realizada` — não há sala, então o protótipo pula a sessão —, e os horários dos finais
+da Avaliação voltam para `/agendamento/horario` com o dia e a hora já escolhidos, por router state
+(`slot`), que o `agendamento-provider` lê no inicializador junto com `disponibilidade`.
 
 O mesmo fluxo é alcançável de mais de um lugar, e um deles é o app. Por isso quem abre passa a
 **origem** em `lib/origem.ts`, e o fluxo devolve a pessoa para lá: `comOrigem()` na saída,
@@ -184,6 +190,18 @@ sobreviva a isso.
 `step-shell` é o shell com barra de progresso, usado por **dois** fluxos — em Figma ele se
 chama `mobile-match`/`desktop-match`, mas o "match" ali é o nome do símbolo, não do fluxo.
 
+### Avaliação: página no mobile, modal no desktop
+
+O fluxo de Avaliação usa o `feedback-shell`, não o `step-shell`: no mobile é uma página inteira
+com "Pergunta N de 4" em segmentos; no desktop é um modal de 560px **sobre a tela do app de onde
+veio**, com a régua. Esse fundo é a tela de verdade (`shell/screens/registry.tsx`), montada só no
+desktop e `inert` — por isso o layout lê o breakpoint em JS. O rodapé é `flex-row-reverse` no
+desktop: as telas põem a ação primária primeiro e ela vai para a direita.
+
+O fim não é linear: `steps.ts` só dá a ordem da animação e do índice, e quem escolhe o final é
+`finalDaAvaliacao` no provider (nota ≤ 3 ou chamada com problema sério → `apoio`). Os pulos vão
+direto a `proxima`. Decisões sem desenho no arquivo estão no SYNC-FIGMA.md.
+
 ### Duas colunas no desktop do Agendamento
 
 O `StepShell` tem um prop `aside`: com ele, o desktop vira a grade de duas colunas em que o
@@ -219,6 +237,8 @@ no Figma entre a biblioteca compartilhada e os componentes locais do arquivo Col
   `card-sessao` (a sessão já agendada), `detalhes-sessao` (a tela/drawer de uma sessão
   marcada), `promo-match` (o banner escuro do Início sem sessão), `painel-filtro` (a folha de
   filtro da Busca).
+- Avaliação: `opcoes-resposta` (as respostas de escolha única), `nota-estrelas`,
+  `progresso-perguntas` (os quatro segmentos) e `proximos-horarios` (os três horários dos finais).
 - Transversais: `field-shake` (tremor do campo em erro), `password-strength`,
   `pular-match-button` (o botão com o modal de confirmação).
 

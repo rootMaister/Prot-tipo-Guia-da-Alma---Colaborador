@@ -26,10 +26,21 @@ import { iniciais, useConta } from '@/state/conta-provider'
  * destinations are hardcoded, and they are the *professional's* app (`atendimentos`,
  * `prontuarios`, `servicos`). The fix is for it to take its items as data. See DS-GAPS.md.
  */
-export function NavShell({ children }: { children: ReactNode }) {
+export function NavShell({
+  children,
+  slugAtivo: slugFixo,
+}: {
+  children: ReactNode
+  /**
+   * The item to mark, when the URL is not a destination's — the Avaliação modal draws the
+   * app behind it with the destination it was opened from still active.
+   */
+  slugAtivo?: string
+}) {
   useScreenSurface('surface-base')
 
-  const slugAtivo = useLocation().pathname.split('/')[2] ?? ''
+  const slugDaRota = useLocation().pathname.split('/')[2] ?? ''
+  const slugAtivo = slugFixo ?? slugDaRota
 
   return (
     <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col">

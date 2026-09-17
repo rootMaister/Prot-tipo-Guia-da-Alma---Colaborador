@@ -261,3 +261,50 @@ o que dá o mesmo resultado sem depender de opacidade.
 - **A régua lateral continua na tela ao agendar a partir da Busca** — é o que os frames "com
   menu" (1617:*) desenham no desktop. No mobile não há barra nenhuma nesses frames, então lá
   agendar segue em tela cheia.
+
+---
+
+# Sincronizar no Figma — fluxo de Avaliação (16/09/2026)
+
+Levantado ao construir a página "Avaliação" (`1769:9713`), seção "Avaliação pós-sessão"
+(`2288:12017`). Resolve o "estado pós-sessão" que a seção de 11/09 listava como não construído.
+
+## Decidido no protótipo, sem desenho no arquivo
+
+- **Por onde se chega.** Nenhum frame leva à "Sessão realizada". O protótipo usa "Entrar na
+  sala" de `Detalhes da sessão` (`1776:3` / `1784:30`), que até agora não navegava: como não
+  existe sala, a sessão é pulada e a pessoa cai direto no fim dela. É a única porta do app para
+  o fluxo. **Sugerido:** desenhar de onde a avaliação é aberta de verdade — notificação, banner
+  no Início, item em Meus agendamentos.
+- **Qual final vem depois da nota.** O arquivo desenha dois finais, 3a "Agradecimento" e 3b
+  "Acolhimento após dificuldades", e não diz quando cada um aparece. No protótipo: **3b** para
+  nota de 1 a 3 (a mesma faixa do comentário obrigatório) **ou** "Tive problemas sérios" na
+  pergunta da chamada; **3a** em qualquer outro caso. Precisa ser confirmado.
+- **Para onde vão os pulos.** "Agora não" (tela 1) e "Prefiro não avaliar" (nota) levam à tela
+  4, "Agendar próxima sessão". "Prefiro não responder" (perguntas 1 a 3) limpa a resposta e
+  segue para a próxima pergunta.
+- **Os horários sugeridos.** Os três botões abrem o Agendamento no passo de horário com aquele
+  dia e hora já escolhidos; "Ver outros horários" abre o mesmo passo sem escolha. "Decidir
+  depois" volta para a tela do app de onde o fluxo foi aberto; "Buscar outro profissional" vai
+  para a Busca.
+- **Fechar o modal no desktop.** O modal não desenha ✕. `Escape` fecha e volta para o app,
+  como "Decidir depois". Clicar no fundo **não** fecha, para não perder respostas por engano.
+- **"+ 40 Calmas"** é só texto: nada é creditado na conta.
+
+## Precisa ser desenhado no Figma (não existe hoje)
+
+- **Onde "Reportar um problema" leva.** Desenhado na tela da nota, sem destino. No protótipo
+  aparece e não navega, como "Ver perfil do psicólogo".
+- **Voltar no desktop.** Os modais das perguntas não têm botão de voltar — só o mobile tem. O
+  protótipo segue o desenho; a pessoa só volta pelo navegador.
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **Numeração dos frames** | Toda a seção | "02 · Acolhimento" é a pergunta 1 e "2a. Avaliação" é a pergunta 4. Os nomes misturam duas numerações; os nodes estão em `flows/avaliacao/steps.ts`. |
+| **Cabeçalho da nota preenchida** | 2d, `2288:17020` (mobile) e `2296:12081` (desktop) | É o único estado da pergunta 4 sem "Pergunta 4 de 4" e, no mobile, sem o botão de voltar. O protótipo mantém os dois, como em 2a–2c. |
+| **Gênero na cópia** | Pergunta 1, `2775:18010` | "Você se sentiu **acolhido**?" no masculino, num fluxo que agradece com "Obrigada". Reproduzido como está. **Sugerido:** "Você se sentiu acolhida/o?" ou reescrever sem gênero ("Você sentiu acolhimento?"). |
+| **Espaço entre voltar e progresso** | Pergunta 4, `2288:16960` | 24px, contra 12px nas perguntas 1 a 3. O protótipo usa 12 em todas. |
+| **"Buscar outro profissional" em 3b** | `2288:17077` / `2296:12290` | Botão com contorno no mobile e texto no desktop. O protótipo reproduz os dois; vale confirmar se a ênfase deveria ser a mesma. |
+| **"Ver outros horários"** | Finais, desktop | Botão com contorno de 44px, altura que não existe no `Button` do DS (36 ou 52). Renderizado com 52. |

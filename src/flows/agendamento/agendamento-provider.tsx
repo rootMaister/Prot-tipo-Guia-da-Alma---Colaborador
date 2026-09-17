@@ -73,15 +73,21 @@ export function AgendamentoProvider({ children }: AgendamentoProviderProps) {
   const location = useLocation()
 
   /*
-    The card that opened this flow passes its availability line through router state, so
-    the scheduling step arrives with that exact slot already picked. Read once, in the
+    Whoever opened this flow can pass the slot through router state, so the scheduling step
+    arrives with it already picked: a card passes its availability line, and the endings of
+    the Avaliação pass the exact date of the slot button that was pressed. Read once, in the
     initialiser: navigating between steps creates history entries without state, and the
     provider outlives them all.
   */
   const [data, setData] = useState<AgendamentoData>(() => {
-    const disponibilidade = (location.state as { disponibilidade?: string } | null)
-      ?.disponibilidade
-    const slot = (disponibilidade && lerDisponibilidade(disponibilidade, HOJE)) || SLOT_PADRAO
+    const estado = location.state as {
+      disponibilidade?: string
+      slot?: { data: Date; horario: string }
+    } | null
+    const disponibilidade = estado?.disponibilidade
+    const slot =
+      estado?.slot ??
+      ((disponibilidade && lerDisponibilidade(disponibilidade, HOJE)) || SLOT_PADRAO)
 
     return { ...MOCK_DEFAULTS, data: slot.data, horario: slot.horario }
   })

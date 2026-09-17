@@ -2,6 +2,7 @@ import { Link } from 'react-router'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
 import { agendamentoSteps } from '@/flows/agendamento/steps'
+import { avaliacaoSteps } from '@/flows/avaliacao/steps'
 import { cadastroSteps, figmaNodeUrl } from '@/flows/cadastro/steps'
 import { matchSteps } from '@/flows/match/steps'
 import { destinos } from '@/shell/destinos'
@@ -35,6 +36,14 @@ const flows = [
     description:
       'Continua de "Ver agenda" nas sessões recomendadas: detalhe, data e horário, dados e confirmação.',
   },
+  {
+    name: 'Avaliação',
+    basePath: '/avaliacao',
+    firstStep: 'realizada',
+    steps: avaliacaoSteps,
+    description:
+      'Depois da sessão — aberto por "Entrar na sala" em Detalhes da sessão: quatro perguntas, a nota e um dos três finais. No desktop, é um modal sobre Meus agendamentos.',
+  },
 ]
 
 export function IndexPage() {
@@ -53,7 +62,7 @@ export function IndexPage() {
             Protótipo — Colaborador UI
           </h1>
           <p className="text-body-s text-fg-subtle max-w-prose">
-            {flows.length} fluxos de onboarding, {totalScreens} telas, mais os{' '}
+            {flows.length} fluxos, {totalScreens} telas, mais os{' '}
             {destinosDisponiveis.length} destinos do app. Cada tela tem URL própria: dá para abrir e
             compartilhar uma tela específica sem percorrer o fluxo. Os links de node abrem o frame
             correspondente no Figma.

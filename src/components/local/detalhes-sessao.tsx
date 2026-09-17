@@ -49,11 +49,15 @@ export function DetalhesSessao({ sessao, onFechar, origem }: DetalhesSessaoProps
   const acoes = (
     <>
       {/*
-        The session is online via Google Meet and there is no room to enter, and no profile
-        page exists anywhere in the file. Both are drawn as they are drawn and simply do not
-        navigate — the same choice made for Diário and Meu progresso in the menu.
+        The session is online via Google Meet and there is no room to enter, so the
+        prototype skips the call and lands where it ends: "Sessão realizada", the start of
+        the Avaliação flow. It is the only door into that flow the app has. See SYNC-FIGMA.md.
       */}
-      <Button variant="contained" className="w-full" aria-disabled="true">
+      <Button
+        variant="contained"
+        className="w-full"
+        onClick={() => navigate(comOrigem('/avaliacao/realizada', origem))}
+      >
         Entrar na sala
       </Button>
       <Button
@@ -124,6 +128,10 @@ export function DetalhesSessao({ sessao, onFechar, origem }: DetalhesSessaoProps
               </div>
             </div>
 
+            {/*
+              No profile page exists anywhere in the file: drawn as it is drawn, and does not
+              navigate — the same choice made for Diário and Meu progresso in the menu.
+            */}
             <Button variant="outlined" className="w-full" aria-disabled="true">
               Ver perfil do psicólogo
             </Button>

@@ -1018,3 +1018,21 @@ ancoragem por prop, e tornar o botão de fechar embutido opcional.
 
 Nada aqui foi mascarado com `className`: onde o DS renderiza diferente, ele renderiza
 diferente e está anotado no código.
+
+## 36. Avaliação pós-sessão — controles no tamanho errado e sem forma segmentada
+
+**Severidade:** baixa, em bloco
+
+Achados do fluxo de Avaliação (`src/flows/avaliacao/`).
+
+| onde | Figma | DS | decisão |
+|---|---|---|---|
+| `radio` das respostas (`2112:14269`) | 24px | `RadioGroupItem` fixo em 16px, sem prop de tamanho | 16px, como o DS renderiza — mesma lacuna do `Checkbox` no `option-card` |
+| cartão de resposta de escolha única | cartão de largura total, borda 2px `action/accent-hover` quando marcado | `RadioGroupItem` é só o círculo; `RadioField` é controle-depois-rótulo sem contêiner | `components/local/opcoes-resposta.tsx` — reincidência do item 16, agora em escolha única |
+| "Pergunta 1 de 4" (`2775:18022`) | quatro segmentos de 4px, um por pergunta | `ProgressBar` é uma trilha contínua, sem forma segmentada | `components/local/progresso-perguntas.tsx` |
+| `text-area` (`2429:26811`) | rótulo Label M em `text/default`, campo em `surface/faint`, texto Body S | `TextareaField` escreve o rótulo em Label S `fg/muted`, pinta o campo de `surface/base` e digita em Body M | `TextareaField` como está |
+| modal da avaliação (`2294:3502`) | 560px, raio 24, sem ✕ | `DialogContent` é `max-w-lg` (512px), `rounded-lg`, com ✕ embutido | `components/layout/feedback-shell.tsx`, com fundo e `Escape` próprios — reincidência do item 34 |
+| estrelas da nota (`2288:16974`) | ★/☆ em Calma Serif 24/36, `accent/rating` | não há componente de avaliação | `components/local/nota-estrelas.tsx`, em `text-heading-s` |
+
+**Correção sugerida:** prop `size` no `RadioGroupItem` e no `Checkbox`; um `RadioCard` (e o
+`CheckboxCard` do item 16) no DS; variante `steps` no `ProgressBar`; e um `Rating`.
