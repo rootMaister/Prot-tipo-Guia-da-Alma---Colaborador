@@ -1,0 +1,77 @@
+{
+  "name": "Untitled blend",
+  "type": "flow",
+  "profile": "sRGB",
+  "dividers": [
+    0.3285254826567006,
+    0.5987593319618008
+  ],
+  "soften": 0,
+  "noise": 13,
+  "speed": 30,
+  "stops": [
+    {
+      "name": "GARDEN MOSS",
+      "hex": "#BFEF4D",
+      "rgb": [
+        191,
+        239,
+        77
+      ],
+      "oklch": [
+        0.889,
+        0.1914,
+        124.5
+      ],
+      "cmyk": [
+        20,
+        0,
+        68,
+        6
+      ],
+      "position": 0.164
+    },
+    {
+      "name": "RICE GOLD",
+      "hex": "#FFF3C1",
+      "rgb": [
+        255,
+        243,
+        193
+      ],
+      "oklch": [
+        0.9614,
+        0.0655,
+        96.1
+      ],
+      "cmyk": [
+        0,
+        5,
+        24,
+        0
+      ],
+      "position": 0.464
+    },
+    {
+      "name": "PALE FUJI",
+      "hex": "#F6E1FA",
+      "rgb": [
+        246,
+        225,
+        250
+      ],
+      "oklch": [
+        0.934,
+        0.0401,
+        320.8
+      ],
+      "cmyk": [
+        2,
+        10,
+        0,
+        2
+      ],
+      "position": 0.799
+    }
+  ]
+}

@@ -1036,3 +1036,22 @@ Achados do fluxo de Avaliação (`src/flows/avaliacao/`).
 
 **Correção sugerida:** prop `size` no `RadioGroupItem` e no `Checkbox`; um `RadioCard` (e o
 `CheckboxCard` do item 16) no DS; variante `steps` no `ProgressBar`; e um `Rating`.
+
+## Experimento isolado — Diário de humor
+
+O DS não oferece slider contínuo com cinco pontos e snap ao terminar o arrasto.
+`src/experiments/diario-humor/mood-screen.tsx` usa input range nativo acessível,
+com interface em tokens do DS. As paletas do orb são dados da referência fornecida;
+não são cores semânticas da interface. A receita JSON original foi preservada.
+
+Atualização do experimento (seção `2815:20708`): o orb usa um único canvas circular
+com animação contínua baseada no novo `Untitled blend.json` fornecido pelo usuário,
+copiado integralmente para `blend.json`. A receita controla o fluxo e o ruído;
+a luminosidade é remapeada à paleta verde e à escala de humor do Figma.
+Não há imagem exportada: o orb é só o canvas. A animação pausa em abas ocultas e respeita
+`prefers-reduced-motion`, mantendo a atualização do humor mesmo sem movimento.
+As influências usam `Checkbox` do DS dentro de cápsulas locais: falta um seletor
+múltiplo em cápsula com checkbox, reincidência do item 18. Mantidos os tamanhos e
+estados nativos do `Checkbox`, sem sobrescrever seus estilos. O modal reutiliza
+`FeedbackShell`, com rótulo e superfície configuráveis; os defaults da Avaliação
+continuam iguais.

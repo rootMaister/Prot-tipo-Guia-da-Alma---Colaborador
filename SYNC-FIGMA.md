@@ -308,3 +308,24 @@ Levantado ao construir a página "Avaliação" (`1769:9713`), seção "Avaliaç�
 | **Espaço entre voltar e progresso** | Pergunta 4, `2288:16960` | 24px, contra 12px nas perguntas 1 a 3. O protótipo usa 12 em todas. |
 | **"Buscar outro profissional" em 3b** | `2288:17077` / `2296:12290` | Botão com contorno no mobile e texto no desktop. O protótipo reproduz os dois; vale confirmar se a ênfase deveria ser a mesma. |
 | **"Ver outros horários"** | Finais, desktop | Botão com contorno de 44px, altura que não existe no `Button` do DS (36 ou 52). Renderizado com 52. |
+
+## Experimento de diário — ajustes de registro (2815:20708)
+
+- Escala: Difícil, Pesado, Estável, Um bom dia e Fluindo. Corrigida a grafia
+  “Díficil” do frame `2815:20562`. Textos de apoio reproduzidos dos cinco frames.
+- Um único orb de 260px, animado continuamente pela receita `blend.json` fornecida
+  pelo usuário. Velocidade, ruído, posições e divisores alimentam o campo fluido; a
+  luminosidade das cores da receita é remapeada aos verdes do Figma e ao humor.
+  As imagens exportadas do Figma não entram no projeto: o orb é só o canvas. Sem a aura nem a textura de fundo do experimento anterior.
+- Mobile sem barra iOS, conforme decisão geral do projeto; desktop em `FeedbackShell`
+  de 560px, conforme a anotação `2815:20709`, sobre o Início do app.
+- Etapa de influências baseada na imagem `2815:20712`: as 13 opções, com seleção
+  múltipla. A imagem define as opções, mas não uma tela mobile nem ações de conclusão.
+  Adotados cápsulas responsivas com checkbox, “Voltar ao humor”, “Salvar registro”
+  (habilitado com pelo menos uma influência) e “Deixar para depois”.
+- A primeira etapa começa em Estável e pode avançar sem arrastar. Voltar preserva o
+  humor e as influências nesta montagem; a etapa está em `?etapa=influencias`.
+  Deep-link frio na etapa 2 inicia o rascunho em Estável, sem influências.
+- Confirmação final local com resumo do humor e influências; sem backend ou persistência
+  após recarregar. “Concluir”, “Deixar para depois” e Escape voltam à origem da query,
+  ou ao índice (`/`) quando aberto diretamente.

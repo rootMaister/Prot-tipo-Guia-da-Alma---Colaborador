@@ -4,11 +4,13 @@ import { AgendamentoLayout } from '@/flows/agendamento/agendamento-route'
 import { AvaliacaoLayout } from '@/flows/avaliacao/avaliacao-route'
 import { CadastroLayout } from '@/flows/cadastro/cadastro-route'
 import { MatchLayout } from '@/flows/match/match-route'
+import { MoodScreen } from '@/experiments/diario-humor/mood-screen'
 import { IndexPage } from '@/pages/index-page'
 import { ShellLayout } from '@/shell/shell-route'
 
 export const router = createBrowserRouter([
   { path: '/', element: <IndexPage /> },
+  { path: '/experimentos/diario-humor', element: <MoodScreen /> },
   { path: '/cadastro', element: <Navigate to="/cadastro/splash" replace /> },
   {
     // O layout casa o passo direto, sem rota filha: ele mantém o estado do fluxo e o chrome
