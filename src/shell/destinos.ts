@@ -21,7 +21,7 @@ export type DestinoSlug =
   | 'busca'
   | 'agendamentos'
   | 'diario'
-  | 'progresso'
+  | 'pontos'
   | 'meus-dados'
 
 export type Destino = {
@@ -35,8 +35,8 @@ export type Destino = {
    */
   noMobile: boolean
   /**
-   * Built yet. Diário and Meu progresso are drawn in the menu but have no screens in this
-   * slice, so they render as they look in the design and simply do not navigate.
+   * Built yet. Diário is drawn in the menu and has no screens yet, então aparece como o
+   * desenho o mostra e simplesmente não navega.
    */
   disponivel: boolean
   /**
@@ -113,13 +113,16 @@ export const destinos: readonly Destino[] = [
     nodeDesktop: null,
   },
   {
-    slug: 'progresso',
-    rotulo: 'Meu progresso',
+    // Era "Meu progresso" na régua de 1526:900, e virou "Meus pontos" na de 2876:263, que é
+    // a desenhada junto com estas telas. Os dois nomes ainda convivem no arquivo — ver
+    // SYNC-FIGMA.md.
+    slug: 'pontos',
+    rotulo: 'Meus pontos',
     icone: TargetIcon,
     noMobile: false,
-    disponivel: false,
-    nodeMobile: null,
-    nodeDesktop: null,
+    disponivel: true,
+    nodeMobile: '2563:262',
+    nodeDesktop: '2552:4',
   },
   {
     slug: 'meus-dados',

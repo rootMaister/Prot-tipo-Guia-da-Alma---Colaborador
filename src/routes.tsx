@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router'
 import { AgendamentoLayout } from '@/flows/agendamento/agendamento-route'
 import { AvaliacaoLayout } from '@/flows/avaliacao/avaliacao-route'
 import { CadastroLayout } from '@/flows/cadastro/cadastro-route'
+import { IntroducaoLayout } from '@/flows/introducao/introducao-route'
 import { MatchLayout } from '@/flows/match/match-route'
 import { MoodScreen } from '@/experiments/diario-humor/mood-screen'
 import { IndexPage } from '@/pages/index-page'
@@ -38,6 +39,13 @@ export const router = createBrowserRouter([
     // montados entre os passos, e resolve a tela pelo registry. Ver `avaliacao-route.tsx`.
     path: '/avaliacao/:step',
     element: <AvaliacaoLayout />,
+  },
+  { path: '/introducao', element: <Navigate to="/introducao/pontos" replace /> },
+  {
+    // O layout casa o passo direto, sem rota filha: ele mantém o chrome montado entre os
+    // passos e resolve a tela pelo registry. Ver `introducao-route.tsx`.
+    path: '/introducao/:step',
+    element: <IntroducaoLayout />,
   },
   // `/app` prefixa os destinos para `/agendamento` (o fluxo, uma tarefa) e `/agendamentos`
   // (o destino, uma lista) não colidirem.

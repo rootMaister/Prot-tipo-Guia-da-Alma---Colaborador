@@ -87,7 +87,7 @@ Um **fluxo** (`src/flows/<nome>/`) é linear: tem ordem, progresso e um "próxim
 **destino** (`src/shell/`) não tem nenhum dos três — tem entrada de menu. Por isso
 `destinos.ts` é para o shell o que `steps.ts` é para um fluxo: a fonte única de rótulo,
 ícone, node do Figma e de quais destinos já existem. O que está no menu e não foi desenhado
-(Diário, Meu progresso) fica lá com `disponivel: false`, aparece com a cara do desenho e não
+(o Diário) fica lá com `disponivel: false`, aparece com a cara do desenho e não
 navega — esconder seria dar uma informação errada sobre o menu.
 
 As rotas dos destinos vivem sob `/app/`, o que evita a colisão entre `/agendamento` (o

@@ -150,8 +150,8 @@ function BarraInferior({ slugAtivo }: { slugAtivo: string }) {
  * — os frames "com menu" (1617:4660 e irmãos). Lá ela não é margem: o conteúdo vem depois
  * dela, e quem abre espaço é o `comMenu` do `StepShell`.
  *
- * Diário and Meu progresso are in the design but have no screens in this prototype, so they
- * render exactly as drawn and simply do not navigate — hiding them would misreport the menu.
+ * Diário ainda não tem telas neste protótipo, então aparece exatamente como é desenhado e
+ * simplesmente não navega — escondê-lo daria uma informação errada sobre o menu.
  */
 export function NavRail({ slugAtivo }: { slugAtivo: string }) {
   return (

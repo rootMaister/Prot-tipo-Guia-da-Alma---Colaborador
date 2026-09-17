@@ -46,6 +46,16 @@ export type Conta = {
   nivel: number
   pontos: number
   moedas: number
+  /**
+   * Quantos pontos o nível seguinte pede. Guardado, e não derivado de uma régua, porque o
+   * arquivo dá três réguas incompatíveis: "Meus pontos" tem 905 pontos no nível 5 com 196
+   * para o 6 (≈220 por nível), a Introdução tem 75 pontos no nível 1 com 25 para o 2 (100
+   * por nível), e o Início desenha 123 pontos com 232 Calmas. Ver SYNC-FIGMA.md.
+   */
+  pontosProximoNivel: number
+  /** Dias seguidos de acesso e quantos fecham o bônus — o "3/5" do Resumo. */
+  diasSeguidos: number
+  diasParaBonus: number
   /** Plan allowance, as the "Seu plano" card states it. */
   agendamentosPorMes: number
   sessoes: SessaoAgendada[]
@@ -71,6 +81,9 @@ const CONTA_INICIAL: Conta = {
   nivel: 1,
   pontos: 123,
   moedas: 232,
+  pontosProximoNivel: 200,
+  diasSeguidos: 3,
+  diasParaBonus: 5,
   agendamentosPorMes: 4,
   sessoes: [],
 }
@@ -150,6 +163,10 @@ export const iniciais = (conta: Conta): string =>
 /** A session is its slot: same day and same time is the same booking. */
 export const chaveSessao = (sessao: SessaoAgendada): string =>
   `${sessao.data.toDateString()} ${sessao.horario}`
+
+/** Quantos pontos faltam para o próximo nível, como a barra de "Seus pontos" escreve. */
+export const pontosParaProximoNivel = (conta: Conta): number =>
+  Math.max(0, conta.pontosProximoNivel - conta.pontos)
 
 /** Sessions left this month, for the "Seu plano" card. */
 export const agendamentosRestantes = (conta: Conta): number =>

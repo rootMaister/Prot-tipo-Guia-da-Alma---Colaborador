@@ -1068,3 +1068,18 @@ de fora, o que funciona mas repete estrutura a cada linha de dois campos.
 
 **Correção sugerida:** um `containerClassName` (ou `asChild`) no `InputField`, como o
 `TextareaField` também vai precisar.
+
+## 38. Meus pontos — abas, barra de progresso e a paleta de gamificação
+
+**Severidade:** média, em bloco
+
+| onde | Figma | DS | decisão |
+|---|---|---|---|
+| abas (`2563:326`) | pílulas soltas com 4px entre elas; ativa em `tab/background-item/active` (#466700) e texto `navigation/text/default` | `TabsList` embrulha os gatilhos numa caixa com borda e `surface/subtle`; o ativo é `action/primary` (#1C2E17) e não existe token `tab/*` no DS | botões próprios em `shell/screens/pontos-screen.tsx` e `components/local/ranking-pontos.tsx`, com a cor do DS |
+| barra de nível e de prêmio (`2853:1303`) | trilho de 8px, raio 4, `surface/muted` sob `accent/brand`, sem rótulo | `ProgressBar` é 4px com rótulo próprio e não tem prop de espessura | barra local de 8px |
+| "905 pontos" (`2853:1300`) | Heading L em `fg/muted` dentro de cartão | — | igual, sem componente de métrica no DS |
+| ícone da Calma Coin | ilustração própria, 40×29 | o DS não traz a moeda | `assets/app/calma-coin.svg`, o mesmo que a `barra-conta` usa |
+| acordeão de dúvidas (`2566:364`) | pergunta + chevron que gira, divisor entre as linhas | o DS não tem `Accordion` | `Pergunta` local, dentro da tela |
+
+**Correção sugerida:** um `ProgressBar` com `size`, um `Accordion`, e os tokens `tab/*` no
+tema — hoje qualquer aba fiel ao Figma precisa reescrever a cor.

@@ -130,7 +130,7 @@ export function DetalhesSessao({ sessao, onFechar, origem }: DetalhesSessaoProps
 
             {/*
               No profile page exists anywhere in the file: drawn as it is drawn, and does not
-              navigate — the same choice made for Diário and Meu progresso in the menu.
+              navigate — the same choice made for Diário in the menu.
             */}
             <Button variant="outlined" className="w-full" aria-disabled="true">
               Ver perfil do psicólogo

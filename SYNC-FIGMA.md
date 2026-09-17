@@ -358,3 +358,61 @@ desktop. É a primeira tela do app que **não** se abre pelo menu.
 | **Pé da régua sem pontos nem Calma Coins** | `2876:285` | A descrição do componente promete "identificação, nível, pontos e saldo de Calma Coins", e o frame desenha só avatar, nome e o nível. O protótipo segue o frame. |
 | **Olho nos campos de senha** | `2873:107` / `2873:120` | O componente `input` tem `Type=Password` com o ícone de olho, mas os dois campos aqui são desenhados sem ele. O `Input` do DS mostra o olho quando `type="password"`, e o protótipo não o esconde. |
 | **Campos obrigatórios com `*` invisível** | Nome, Sobrenome, N° telefone | O asterisco existe nos três, com opacidade 0. Se a obrigatoriedade é real, ele deveria aparecer; o protótipo não desenha marca nenhuma. |
+
+---
+
+# Sincronizar no Figma — Meus pontos (17/09/2026)
+
+Levantado ao construir a página "Meus pontos" (`2552:2`): a tela de três abas (`2563:262`,
+`2565:301` e `2566:364` no mobile; `2552:4`, `2559:89` e `2560:191` no desktop) e a seção
+"Introdução à gamificação" (`2856:384`).
+
+## Números que não fecham entre os frames
+
+Três frames dizem três coisas diferentes sobre a mesma conta, e não há como reproduzir as
+três ao mesmo tempo:
+
+| Onde | O que diz | Régua implícita |
+|---|---|---|
+| Meus pontos (`2853:1295`) | 905 pontos, nível 5, faltam 196 para o 6, 905 Calmas | ≈220 pontos por nível; pontos = Calmas |
+| Introdução (`2856:385` e `2856:468`) | 75 pontos, nível 1, faltam 25 para o 2, 75 Calmas | 100 pontos por nível; pontos = Calmas |
+| Início (`1429:6287`) | 123 pontos, 232 Calmas, nível 1 | pontos ≠ Calmas |
+
+**Decidido:** pontos e Calmas são contadores diferentes, e a conta segue a do Início — 123
+pontos, 232 Calmas, nível 1. Como nenhuma régua de nível sobrevive a isso, o protótipo guarda
+o limiar do próximo nível (`pontosProximoNivel`, 200) em vez de calcular por uma fórmula.
+**Precisa ser definido:** quantos pontos cada nível pede, e se Calmas são ganhas junto com os
+pontos ou em outra conta.
+
+Os status da aba "Como pontuar?" ("2 terapias agendadas", "5 avaliações pendentes") são do
+frame e não da conta desta sessão: descrevem alguém mais adiantado. Ficaram como texto fixo.
+
+## Decidido no protótipo, sem desenho no arquivo
+
+- **Onde "Saber mais" leva.** Sete cartões em "Como pontuar?" e dois em "Prêmios" têm o botão,
+  e nenhum tem destino. Os de "Como pontuar?" abrem a Introdução à gamificação, que é
+  exatamente o que eles prometem explicar; os de "Prêmios" aparecem e não navegam, como
+  "Ver ranking completo", que também não tem tela.
+- **A aba "Acumulado" do ranking.** Só a lista de "Este mês" é desenhada. As duas abas
+  funcionam e mostram a mesma lista.
+- **Por onde se abre a Introdução.** Nenhum frame diz. Além do "Saber mais", ela tem URL
+  própria (`/introducao/pontos`) e está no índice.
+- **A introdução no mobile.** O arquivo anota "Criar essas telas em modal no desktop" para o
+  registro de humor, e os frames da Introdução seguem o mesmo padrão: página inteira no
+  mobile, modal de 560px sobre a tela do app no desktop. Reaproveita o `feedback-shell` da
+  Avaliação.
+
+## Precisa ser desenhado no Figma (não existe hoje)
+
+- **Cinco das seis respostas de "Como funciona?"** (`2566:364`). Só "Como faço para ganhar
+  pontos e Calmas?" tem texto; as outras cinco abrem vazias, e o protótipo diz isso na tela.
+- **Tela de ranking completo** e **detalhe de cada prêmio**.
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **Dois nomes para o mesmo item de menu** | `1526:900` × `2876:263` | A régua antiga diz "Meu progresso" e a nova, "Meus pontos". O protótipo adotou "Meus pontos". |
+| **Camada com um nome e texto com outro** | `2565:301` | O cartão se chama "Anote seu humor diariamente" e escreve "Faça um registro no seu diário". |
+| **Barra de "Seus pontos" não bate com o próprio texto** | `2853:1302` | O preenchimento é ~46% da largura, mas 905 pontos com 196 faltando para o próximo nível dariam ~88%. |
+| **"Nível" por extenso só no mobile** | Ranking | O mobile escreve "Nível 4" e o desktop só "4", com cabeçalho de coluna. Reproduzido como está. |
