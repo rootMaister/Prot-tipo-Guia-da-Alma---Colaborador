@@ -1039,6 +1039,10 @@ Achados do fluxo de Avaliação (`src/flows/avaliacao/`).
 
 ## Experimento isolado — Diário de humor
 
+> Histórico: este experimento virou o fluxo de Registro de humor em 17/09/2026, quando os
+> frames chegaram ao arquivo. A rota `/experimentos/diario-humor` não existe mais; o que
+> sobreviveu dele está em `components/local/orbe-humor.tsx`. As lacunas atuais estão no item 39.
+
 O DS não oferece slider contínuo com cinco pontos e snap ao terminar o arrasto.
 `src/experiments/diario-humor/mood-screen.tsx` usa input range nativo acessível,
 com interface em tokens do DS. As paletas do orb são dados da referência fornecida;
@@ -1083,3 +1087,18 @@ de fora, o que funciona mas repete estrutura a cada linha de dois campos.
 
 **Correção sugerida:** um `ProgressBar` com `size`, um `Accordion`, e os tokens `tab/*` no
 tema — hoje qualquer aba fiel ao Figma precisa reescrever a cor.
+
+## 39. Meu diário — slider, gráfico e cápsulas de seleção múltipla
+
+**Severidade:** média, em bloco
+
+| onde | Figma | DS | decisão |
+|---|---|---|---|
+| slider de humor (`2823:20823`) | trilha com cinco pontos e um polegar escuro de 34px, com encaixe | o DS não tem slider | `input[type=range]` nativo, com o polegar trocado em `styles/index.css` (`.slider-humor`) — teclado e leitor de tela saem de graça |
+| cápsulas de motivo (`2831:1296`) | cápsula com borda, marcada em `action/primary` sobre `surface/subtle` | `Chip` é rótulo, sem estado marcado nem semântica de controle | `label` com checkbox escondido, dentro da tela — reincidência do item 18 |
+| gráfico do mês (`2809:613`) | linha com pontos sobre cinco linhas de grade | o DS não tem gráfico | SVG à mão em `diario-mes-screen.tsx` |
+| barras de distribuição (`2809:613`) | trilho de 8px com preenchimento proporcional | `ProgressBar` é 4px e traz rótulo | barra local, a mesma do item 38 |
+| orbe do humor | arte animada, 260px | não existe no DS, e nem deveria — é arte do produto, não componente | `components/local/orbe-humor.tsx`, sobre `assets/diario/blend.json` |
+
+**Correção sugerida:** um `Slider` e um `ChipGroup` com seleção múltipla resolvem os dois
+primeiros, que são os que mais se repetem. Gráfico e orbe podem continuar fora da biblioteca.

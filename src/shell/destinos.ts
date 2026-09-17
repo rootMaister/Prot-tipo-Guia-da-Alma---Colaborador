@@ -1,5 +1,6 @@
 import {
   CalendarIcon,
+  ChartLineIcon,
   HouseIcon,
   NotebookPenIcon,
   SearchIcon,
@@ -21,6 +22,8 @@ export type DestinoSlug =
   | 'busca'
   | 'agendamentos'
   | 'diario'
+  | 'diario-mes'
+  | 'diario-aviso'
   | 'pontos'
   | 'meus-dados'
 
@@ -40,16 +43,18 @@ export type Destino = {
    */
   disponivel: boolean
   /**
-   * Aberta pelo perfil, não pelo menu — "Meus dados" é a primeira dessas. O Figma diz as
-   * duas coisas: o `desktop-navigation` dela vem com `Item ativo=Nenhum`, descrito como
-   * "para telas abertas fora do menu (ex.: Meus dados, acessada pelo perfil)", e o frame
-   * mobile (2874:109) não desenha a barra inferior, e sim um botão de voltar.
+   * Tela do app que não tem entrada de menu: ou se chega a ela pelo perfil ("Meus dados"), ou
+   * ela é sub-página de outro destino ("Seu mês em detalhes" e o aviso da escala, ambos do
+   * Diário). O Figma diz isso de duas formas: o `desktop-navigation` dessas telas vem com
+   * `Item ativo=Nenhum`, descrito como "para telas abertas fora do menu (ex.: Meus dados,
+   * acessada pelo perfil)", e os frames mobile não desenham a barra inferior, e sim um botão
+   * de voltar ou um breadcrumb.
    *
-   * Então uma página de perfil fica fora das duas listas de menu, e no mobile troca a barra
-   * pelo voltar. Continua sendo um destino em tudo o mais: rota sob `/app/`, sem ordem, sem
-   * progresso e sem "próximo".
+   * Então ela fica fora das duas listas de menu, e no mobile troca a barra pelo voltar.
+   * Continua sendo um destino em tudo o mais: rota sob `/app/`, sem ordem, sem progresso e
+   * sem "próximo".
    */
-  peloPerfil?: boolean
+  foraDoMenu?: boolean
   /** Figma node for the mobile frame, for the index page. */
   nodeMobile: string | null
   nodeDesktop: string | null
@@ -108,9 +113,30 @@ export const destinos: readonly Destino[] = [
     rotulo: 'Diário',
     icone: NotebookPenIcon,
     noMobile: false,
-    disponivel: false,
-    nodeMobile: null,
-    nodeDesktop: null,
+    disponivel: true,
+    nodeMobile: '2813:19777',
+    nodeDesktop: '2484:3',
+  },
+  {
+    // Sub-páginas do Diário: têm tela e URL, e não entram no menu.
+    slug: 'diario-mes',
+    rotulo: 'Seu mês em detalhes',
+    icone: ChartLineIcon,
+    noMobile: false,
+    disponivel: true,
+    foraDoMenu: true,
+    nodeMobile: '2809:613',
+    nodeDesktop: '2809:457',
+  },
+  {
+    slug: 'diario-aviso',
+    rotulo: 'Aviso da nova escala',
+    icone: NotebookPenIcon,
+    noMobile: false,
+    disponivel: true,
+    foraDoMenu: true,
+    nodeMobile: '2862:2246',
+    nodeDesktop: '2862:2349',
   },
   {
     // Era "Meu progresso" na régua de 1526:900, e virou "Meus pontos" na de 2876:263, que é
@@ -130,7 +156,7 @@ export const destinos: readonly Destino[] = [
     icone: UserIcon,
     noMobile: false,
     disponivel: true,
-    peloPerfil: true,
+    foraDoMenu: true,
     nodeMobile: '2874:109',
     nodeDesktop: '2873:3',
   },
@@ -139,7 +165,7 @@ export const destinos: readonly Destino[] = [
 export const destinosDisponiveis = destinos.filter((d) => d.disponivel)
 
 /** O que as duas navegações listam — a régua do desktop e a folha do mobile. */
-export const destinosNoMenu = destinos.filter((d) => !d.peloPerfil)
+export const destinosNoMenu = destinos.filter((d) => !d.foraDoMenu)
 
 export const findDestino = (slug: string): Destino | undefined =>
   destinos.find((d) => d.slug === slug)

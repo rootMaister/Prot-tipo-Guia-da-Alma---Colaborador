@@ -29,6 +29,18 @@ export type SessaoAgendada = {
   avaliacoes: number
 }
 
+/** Um registro do diário — o que o fluxo de Registro de humor grava (2834:2098). */
+export type RegistroHumor = {
+  /** Quando foi feito. A lista escreve "14/09/26 - 09:12"; os detalhes, por extenso. */
+  data: Date
+  /** Índice na escala de `flows/diario/humores.ts`, de 0 (Difícil) a 4 (Fluindo). */
+  humor: number
+  /** Os pontos de influência marcados no passo 2. */
+  motivos: string[]
+  /** O texto do passo 3, opcional — a tela diz "Opcional. Este é um espaço seguro e privado.". */
+  complemento: string
+}
+
 export type Conta = {
   nome: string
   /**
@@ -59,6 +71,13 @@ export type Conta = {
   /** Plan allowance, as the "Seu plano" card states it. */
   agendamentosPorMes: number
   sessoes: SessaoAgendada[]
+  /**
+   * Os registros do diário. Começa vazio, pelo mesmo motivo que `sessoes`: é assim que o
+   * protótipo abre no estado vazio que o arquivo desenha (2845:2287), e fazer um registro é o
+   * que preenche a lista, o insight do mês e "Seu mês em detalhes". Os cinco registros de
+   * 14/09 que o frame mostra são demonstrativos e não são semeados. Ver SYNC-FIGMA.md.
+   */
+  registros: RegistroHumor[]
 }
 
 /**
@@ -86,6 +105,7 @@ const CONTA_INICIAL: Conta = {
   diasParaBonus: 5,
   agendamentosPorMes: 4,
   sessoes: [],
+  registros: [],
 }
 
 /** What the Agendamento flow books, matching the session that flow is drawn around. */
@@ -108,6 +128,7 @@ type ContaContextValue = {
   conta: Conta
   agendar: (sessao: SessaoAgendada) => void
   atualizarDados: (dados: DadosEditaveis) => void
+  registrarHumor: (registro: RegistroHumor) => void
   reset: () => void
 }
 
@@ -136,11 +157,16 @@ export function ContaProvider({ children }: { children: ReactNode }) {
     setConta((atual) => ({ ...atual, ...dados }))
   }, [])
 
+  /** O registro mais novo entra na frente: as duas telas listam do mais recente para o mais antigo. */
+  const registrarHumor = useCallback((registro: RegistroHumor) => {
+    setConta((atual) => ({ ...atual, registros: [registro, ...atual.registros] }))
+  }, [])
+
   const reset = useCallback(() => setConta(CONTA_INICIAL), [])
 
   const value = useMemo(
-    () => ({ conta, agendar, atualizarDados, reset }),
-    [conta, agendar, atualizarDados, reset],
+    () => ({ conta, agendar, atualizarDados, registrarHumor, reset }),
+    [conta, agendar, atualizarDados, registrarHumor, reset],
   )
 
   return <ContaContext.Provider value={value}>{children}</ContaContext.Provider>

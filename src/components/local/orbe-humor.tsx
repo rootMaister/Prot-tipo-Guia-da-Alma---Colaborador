@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import blend from './blend.json'
+import blend from '@/assets/diario/blend.json'
 
 const SIZE = 260
 const clamp = (value: number) => Math.max(0, Math.min(1, value))
@@ -12,7 +12,7 @@ const levels = blend.stops.map(stop => luminance(stop.rgb))
 const minimum = Math.min(...levels)
 const span = Math.max(...levels) - minimum || 1
 
-/** The JSON is a flow recipe, not executable animation code. Interpret its stops,
+/** O JSON é uma receita de fluxo, não código de animação. Interpret its stops,
  * dividers, soften, noise and speed as a moving field. Remap its luminance to the
  * Figma green palette so mood still progresses from dark to light. */
 function MoodFlow({ value, speed = 1, className }: { value: number; speed?: number; className?: string }) {
@@ -116,13 +116,18 @@ function MoodFlow({ value, speed = 1, className }: { value: number; speed?: numb
   return <canvas ref={canvas} width={SIZE} height={SIZE} className={className} aria-hidden="true" />
 }
 
-/** Constant light tone, independent of the selected mood. */
-export function MoodBackground() {
-  return <MoodFlow value={2} speed={0.35} className="mood-background" />
-}
-
-export function MoodOrb({ value }: { value: number }) {
-  return <div className="mood-orb" aria-hidden="true">
-    <MoodFlow value={value} />
-  </div>
+/**
+ * O orbe do Registro de humor, nos tamanhos em que os frames o desenham: 260px na tela do
+ * humor, e pequeno (56px) quando ele vira o resumo do humor escolhido nos passos seguintes.
+ */
+export function OrbeHumor({ valor, tamanho = 260 }: { valor: number; tamanho?: number }) {
+  return (
+    <div
+      aria-hidden
+      className="relative shrink-0 overflow-hidden rounded-full"
+      style={{ width: tamanho, height: tamanho }}
+    >
+      <MoodFlow value={valor} className="absolute inset-0 h-full w-full object-cover" />
+    </div>
+  )
 }

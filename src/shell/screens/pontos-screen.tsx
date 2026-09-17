@@ -1,18 +1,19 @@
 import { useState } from 'react'
 
-import { Badge, Button, FeaturedIcon, cn } from '@guia-da-alma/ds'
+import { Badge, Button, FeaturedIcon, IconButton, cn } from '@guia-da-alma/ds'
 import {
+  ArrowLeftIcon,
   ChevronDownIcon,
   CircleHelpIcon,
   FlameIcon,
   SparklesIcon,
   TargetIcon,
 } from 'lucide-react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import moeda from '@/assets/app/calma-coin.svg'
 import { RankingPontos } from '@/components/local/ranking-pontos'
-import { comOrigem } from '@/lib/origem'
+import { comOrigem, lerOrigem } from '@/lib/origem'
 import {
   duvidas,
   formasDePontuar,
@@ -44,9 +45,19 @@ const ABAS: readonly { id: Aba; rotulo: string; icone: typeof TargetIcon }[] = [
  */
 export function PontosScreen() {
   const [aba, setAba] = useState<Aba>('premios')
+  const navigate = useNavigate()
+  const { search } = useLocation()
 
   return (
     <div className="flex flex-col gap-6 px-6 pt-2 pb-12 lg:px-0 lg:pt-20">
+      {/* O frame mobile (2563:262) abre com o voltar; no desktop a régua já dá a saída. */}
+      <IconButton
+        icon={<ArrowLeftIcon className="size-[18px]" />}
+        aria-label="Voltar"
+        className="lg:hidden"
+        onClick={() => navigate(lerOrigem(search, '/app/inicio'))}
+      />
+
       <header className="flex flex-col gap-2">
         {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
         <h1 className="font-display text-heading-l text-fg-muted">Meus pontos</h1>

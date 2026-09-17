@@ -34,7 +34,10 @@ export function ShellLayout() {
   }
 
   return (
-    <NavShell barraInferior={!destino.peloPerfil}>
+    // A barra inferior do mobile só aparece nos três destinos que ela lista: os frames dos
+    // outros (Diário, Meus pontos, Meus dados) não a desenham, e trazem no lugar um botão de
+    // menu ou de voltar, que cada tela põe no seu topo.
+    <NavShell barraInferior={destino.noMobile}>
       <StepTransition
         stepKey={slug}
         direction={direction}

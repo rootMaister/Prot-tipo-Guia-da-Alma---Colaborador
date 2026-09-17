@@ -115,3 +115,33 @@ html {
 }
 
 
+
+/* O slider do Registro de humor (2823:20823). É um `input[type=range]` de verdade — para
+   teclado, leitor de tela e arrasto funcionarem sem reimplementar nada —, e o que estas
+   regras fazem é só trocar o polegar do navegador pelo círculo escuro de 34px que o frame
+   desenha. A trilha e os cinco pontos ficam num elemento por baixo, no componente.
+
+   Precisa ser CSS: `::-webkit-slider-thumb` e `::-moz-range-thumb` não têm utility no
+   Tailwind, e os dois navegadores descartam a regra inteira se os seletores forem agrupados
+   numa lista só. Daí os dois blocos repetidos. DS-GAP: o design system não tem slider. */
+.slider-humor::-webkit-slider-thumb {
+  appearance: none;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-action-primary);
+}
+
+.slider-humor::-moz-range-thumb {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-action-primary);
+}
+
+.slider-humor:focus-visible {
+  outline: 2px solid var(--color-fg-default);
+  outline-offset: 5px;
+}

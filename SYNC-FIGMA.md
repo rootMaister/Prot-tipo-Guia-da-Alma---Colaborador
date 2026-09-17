@@ -311,6 +311,9 @@ Levantado ao construir a página "Avaliação" (`1769:9713`), seção "Avaliaç�
 
 ## Experimento de diário — ajustes de registro (2815:20708)
 
+> Histórico: virou o fluxo de Registro de humor em 17/09/2026 — ver a seção "Meu diário" no
+> fim deste arquivo. A rota do experimento não existe mais.
+
 - Escala: Difícil, Pesado, Estável, Um bom dia e Fluindo. Corrigida a grafia
   “Díficil” do frame `2815:20562`. Textos de apoio reproduzidos dos cinco frames.
 - Um único orb de 260px, animado continuamente pela receita `blend.json` fornecida
@@ -416,3 +419,46 @@ frame e não da conta desta sessão: descrevem alguém mais adiantado. Ficaram c
 | **Camada com um nome e texto com outro** | `2565:301` | O cartão se chama "Anote seu humor diariamente" e escreve "Faça um registro no seu diário". |
 | **Barra de "Seus pontos" não bate com o próprio texto** | `2853:1302` | O preenchimento é ~46% da largura, mas 905 pontos com 196 faltando para o próximo nível dariam ~88%. |
 | **"Nível" por extenso só no mobile** | Ranking | O mobile escreve "Nível 4" e o desktop só "4", com cabeçalho de coluna. Reproduzido como está. |
+
+---
+
+# Sincronizar no Figma — Meu diário (17/09/2026)
+
+Levantado ao construir a página "Meu diário" (`2481:586`): o destino e o estado vazio, o fluxo
+de Registro de humor (`2823:20978`), "Seu mês em detalhes" (`2823:20977`) e o aviso da nova
+escala (`2865:28192`).
+
+## Decidido no protótipo, sem desenho no arquivo
+
+- **Qual insight do mês aparece.** São cinco cartões (`2815:20079` e irmãos), um por clima do
+  mês, e nada diz quando cada um entra. No protótipo é a **média** dos humores registrados no
+  mês, arredondada — e os dois pontos de influência são os dois motivos mais marcados.
+  "Mês difícil" e "Mês pesado" têm o mesmo texto no arquivo, então as duas faixas mais baixas
+  mostram o mesmo. **Precisa ser confirmado.**
+- **De onde se chega ao aviso da escala.** Ele é para quem já usava as carinhas, e nenhum
+  frame diz quando aparece. O protótipo o pendura na nota "Seus registros antigos foram
+  renomeados para a escala nova", com um "Ver o que mudou". **Sugerido:** decidir se é uma vez
+  só, na primeira visita depois da troca.
+- **Quantos registros a lista mostra.** Cinco, como o frame, com "Ver todos os registros"
+  aparecendo só quando há mais — e esse botão não navega, porque não há tela de lista completa.
+- **O padrão do passo 5.** "Trabalho também esteve presente em outros 2 registros deste mês" é
+  calculado: o motivo do registro que mais se repete nos outros registros do mês. Se não se
+  repete, o bloco não aparece.
+- **Os dados demonstrativos não são semeados.** O frame mostra cinco registros de 14/09 e oito
+  no mês; a conta começa sem nenhum, como já acontece com as sessões. Quem percorre o fluxo vê
+  as telas encherem.
+
+## Precisa ser desenhado no Figma (não existe hoje)
+
+- **Lista completa de registros** e **a tela de um registro antigo** — o "Ver" de cada linha
+  da lista não tem destino.
+- **O estado vazio de "Seu mês em detalhes"**, que hoje só existe cheio.
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **Dois nomes para o mesmo humor** | Passo 1 × lista de registros | O passo 1 escreve "Difícil" e "Um bom dia"; a lista escreve "Dia difícil" e "Um dia bom". O protótipo reproduz os dois, cada um na sua tela. |
+| **Grafia** | `2815:20562` | "Díficil" no nome do frame; o texto renderizado está certo. |
+| **Barra de humor do mês sem escala** | `2809:613` | As barras de "Como você se sentiu" não são proporcionais aos números que elas mesmas escrevem (3 dias, 2 dias, 1 dia). No protótipo são. |
+| **Eixo do gráfico com 30 dias fixos** | `2809:613` | O eixo escreve 01, 10, 20 e 30; o protótipo usa o último dia do mês corrente, que nem sempre é 30. |

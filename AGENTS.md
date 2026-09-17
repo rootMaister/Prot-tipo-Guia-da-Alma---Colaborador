@@ -68,7 +68,8 @@ src/
     layout/    sign-up-shell · feature-shell · status-shell · step-shell · nav-shell ·
                feedback-shell
     local/     componentes exclusivos deste projeto (ver abaixo)
-  flows/<fluxo>/           cadastro/, match/, agendamento/ e avaliacao/, mesmo formato
+  flows/<fluxo>/           cadastro/, match/, agendamento/, avaliacao/, diario/ e
+                           introducao/, todos no mesmo formato
     steps.ts               ordem, slugs, progresso e nodes do Figma
     <fluxo>-provider.tsx   estado mockado do formulário
     screens/               uma tela por passo + registry.tsx
@@ -110,19 +111,37 @@ fluxo novo (Login, Home…) é criar `src/flows/<nome>/` no mesmo formato, regis
 `routes.tsx` e a entrada em `index-page.tsx` — nenhuma tela existente precisa mudar. Foi
 exatamente assim que o Match entrou.
 
-### Páginas de perfil: destino sem entrada de menu
+### Destino fora do menu, e o topo de cada tela no mobile
 
-"Meus dados" (`2873:3` / `2874:109`) é um destino em tudo — rota sob `/app/`, sem ordem, sem
-progresso e sem "próximo" — menos na entrada: ela não está no menu. Quem diz isso é o próprio
-Figma, de duas formas: a régua dela vem com `Item ativo=Nenhum`, descrito como "para telas
-abertas fora do menu (ex.: Meus dados, acessada pelo perfil)", e o frame mobile não desenha a
-barra inferior, e sim um botão de voltar.
+Nem todo destino tem entrada de menu. "Meus dados" (`2873:3`) se abre pelo perfil, e "Seu mês
+em detalhes" (`2809:613`) e o aviso da escala (`2862:2246`) são sub-páginas do Diário. Quem
+diz isso é o Figma: a régua dessas telas vem com `Item ativo=Nenhum`, descrito como "para
+telas abertas fora do menu (ex.: Meus dados, acessada pelo perfil)". Elas são destinos em tudo
+o mais — rota sob `/app/`, sem ordem, sem progresso e sem "próximo" — e ficam marcadas com
+`foraDoMenu: true` em `destinos.ts`, que as tira das duas listas de menu (`destinosNoMenu`).
 
-Isso é `peloPerfil: true` em `destinos.ts`, e ele decide duas coisas: sair das duas listas de
-menu (`destinosNoMenu`) e desligar a barra inferior no mobile (`barraInferior` do `NavShell`).
-A porta de entrada é o rodapé da régua no desktop e a folha do botão de menu no mobile, onde
-não há perfil desenhado. Ao acrescentar outra página assim, use a mesma marca em vez de
-esconder a entrada em cada lista.
+Separado disso, no mobile **a barra inferior só aparece nos três destinos que ela lista**
+(`noMobile`), porque é só neles que os frames a desenham. Os outros trazem no topo o que o
+frame deles traz: o botão de menu no Meu diário, o de voltar em Meus pontos e em Meus dados.
+Quem decide é o `barraInferior` do `NavShell`, no `shell-route`. As portas de "Meus dados" são
+o rodapé da régua no desktop e a folha do menu no mobile, onde não há perfil desenhado.
+
+### O Diário: um destino, duas sub-páginas e um fluxo
+
+"Meu diário" é um destino com dois estados no arquivo — vazio (`2845:2287`) e com registros
+(`2813:19777`) —, e aqui é um só, escolhido pela quantidade de registros na conta, do mesmo
+jeito que o Início troca de cara quando há sessão marcada. Como `sessoes`, `registros` começa
+vazio: o protótipo abre no estado vazio e é registrar que enche a lista, o insight do mês e
+"Seu mês em detalhes".
+
+O **Registro de humor** (`src/flows/diario/`) é o fluxo de cinco passos que grava um registro,
+e o que ele grava só chega à conta no passo 3, em "Registrar" — sair antes não deixa nada, que
+é o que "Deixar para depois" promete. O primeiro passo é o único do protótipo desenhado sobre
+`surface/muted`, e isso vem do `steps.ts` (`superficie`), não da tela.
+
+O orbe animado é `components/local/orbe-humor.tsx`, alimentado pela receita
+`assets/diario/blend.json`. Ele nasceu como experimento em `/experimentos/diario-humor`, que
+deixou de existir quando o desenho chegou: a rota e a pasta `src/experiments/` foram removidas.
 
 ### Costuras: quem abre um fluxo diz para onde voltar
 

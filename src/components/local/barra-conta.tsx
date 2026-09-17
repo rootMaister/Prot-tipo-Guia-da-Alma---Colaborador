@@ -56,11 +56,12 @@ export function BarraConta({ className }: { className?: string }) {
 const PERFIL = findDestino('meus-dados')
 
 /**
- * The mobile-only menu button. What it opens is not drawn anywhere in the file — the only
+ * The mobile-only menu button, também usado pelo Meu diário, cujo frame o desenha sozinho no
+ * topo. What it opens is not drawn anywhere in the file — the only
  * place Diário appears is the desktop rail — so it lists the same destinations that rail
  * does, mais "Meus dados" no pé. See SYNC-FIGMA.md.
  */
-function MenuButton() {
+export function MenuButton() {
   const [aberto, setAberto] = useState(false)
 
   return (

@@ -4,6 +4,7 @@ import { GuiaLockup } from '@/components/local/guia-lockup'
 import { agendamentoSteps } from '@/flows/agendamento/steps'
 import { avaliacaoSteps } from '@/flows/avaliacao/steps'
 import { cadastroSteps, figmaNodeUrl } from '@/flows/cadastro/steps'
+import { diarioSteps } from '@/flows/diario/steps'
 import { introducaoSteps } from '@/flows/introducao/steps'
 import { matchSteps } from '@/flows/match/steps'
 import { destinos } from '@/shell/destinos'
@@ -46,6 +47,14 @@ const flows = [
       'Depois da sessão — aberto por "Entrar na sala" em Detalhes da sessão: quatro perguntas, a nota e um dos três finais. No desktop, é um modal sobre Meus agendamentos.',
   },
   {
+    name: 'Registro de humor',
+    basePath: '/diario',
+    firstStep: 'humor',
+    steps: diarioSteps,
+    description:
+      'O registro do dia, aberto por "Registrar meu dia" no Meu diário: a escala de humor, os motivos, um complemento e os detalhes do registro. No desktop, um modal sobre a tela de onde veio.',
+  },
+  {
     name: 'Introdução à gamificação',
     basePath: '/introducao',
     firstStep: 'pontos',
@@ -83,8 +92,8 @@ export function IndexPage() {
             <h2 className="font-display text-heading-s text-fg-default">App</h2>
             <p className="text-body-s text-fg-subtle max-w-prose">
               O que existe depois do onboarding. Não são passos de um fluxo: são destinos, com
-              navegação permanente e sem "próximo". O Diário aparece no menu mas ainda não tem
-              telas. Meus dados é o contrário: tem tela e não está no menu — abre
+              navegação permanente e sem "próximo". Todos os destinos do menu já têm tela; Meus dados e as duas
+              sub-páginas do Diário têm tela e não estão no menu. Meus dados é o contrário: tem tela e não está no menu — abre
               pelo perfil.
             </p>
           </div>
