@@ -52,7 +52,8 @@ export function ProfissionalResumo({
               {'★ '.repeat(estrelas).trim()}
               {estrelas < MAX_ESTRELAS ? ` ${'☆ '.repeat(MAX_ESTRELAS - estrelas).trim()}` : ''}
             </span>
-            <span className="font-normal">({avaliacoes})</span>
+            {/* O contador é Body S no arquivo, não Label S: mesmos 14/20, peso 400. */}
+            <span className="text-body-s">({avaliacoes})</span>
             <span className="sr-only">
               {estrelas} de {MAX_ESTRELAS} estrelas, {avaliacoes} avaliações
             </span>

@@ -42,6 +42,100 @@ html {
   background-color: var(--color-surface-subtle);
 }
 
+/* Os estilos "Label" do Figma são SemiBold — e o token do DS não carrega o peso.
+
+   `@guia-da-alma/ds/tokens` declara `--text-label-s`, `--text-label-s--line-height` e
+   `--text-label-s--letter-spacing`, mas **nenhum** `--text-*--font-weight`, em escala
+   nenhuma. Como `--text-label-s` e `--text-body-s` têm exatamente o mesmo tamanho e a mesma
+   altura de linha (14px/20px), a única coisa que separa "Label S" de "Body S" no arquivo é
+   o peso 600 — justamente o que o token não diz. Resultado: `text-label-s` herdava 400 e
+   todo Label do protótipo saía com o peso de um Body, sem erro e sem aviso.
+
+   Medido no card do profissional antes desta regra: o título da sessão, "Psi.", o nome e as
+   estrelas renderizavam em 400 onde o arquivo pede 600. Os chips escapavam só porque o
+   `Chip` do DS embute `font-semibold` por conta própria.
+
+   Redefinir aqui, em vez de espalhar `font-semibold` por ~68 `className`, é o que mantém
+   uma fonte só: a classe volta a significar o estilo de texto inteiro, como no Figma. O
+   lugar certo disto é o token do DS — ver DS-GAPS.md.
+
+   `@utility`, e não uma regra solta depois do Tailwind, porque é o que põe a declaração na
+   camada de utilities substituindo a versão gerada pelo tema, em vez de disputar
+   especificidade com ela — a mesma armadilha que `pt-safe` documenta mais abaixo. */
+@utility text-label-l {
+  font-size: var(--text-label-l);
+  line-height: var(--text-label-l--line-height);
+  letter-spacing: var(--text-label-l--letter-spacing);
+  font-weight: 600;
+}
+
+@utility text-label-m {
+  font-size: var(--text-label-m);
+  line-height: var(--text-label-m--line-height);
+  letter-spacing: var(--text-label-m--letter-spacing);
+  font-weight: 600;
+}
+
+@utility text-label-s {
+  font-size: var(--text-label-s);
+  line-height: var(--text-label-s--line-height);
+  letter-spacing: var(--text-label-s--letter-spacing);
+  font-weight: 600;
+}
+
+/* Esconde a barra de rolagem sem tirar a rolagem.
+
+   Só faz sentido onde existe outra indicação de que há mais conteúdo — no protótipo, o
+   esmaecido do `ListaRolavel`, que é exatamente o papel que a barra cumpriria. Com os dois,
+   a barra é ruído sobre o desenho. Rolar por roda, arrasto, teclado e leitor de tela
+   continua igual.
+
+   Os três seletores são o mesmo pedido em três motores: `scrollbar-width` no Firefox,
+   `-ms-overflow-style` no Edge antigo e o pseudo-elemento no WebKit/Blink. Faltando
+   qualquer um, a barra reaparece só naquele navegador. */
+@utility sem-barra-de-rolagem {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* E os "Body"/"Caption" precisam declarar o 400 pelo mesmo motivo, ao contrário.
+
+   Sem isto, um Body dentro de um Label herda o 600 do pai e some a diferença: foi o que
+   aconteceu com o contador "(67)" do card, que é Body S dentro de um bloco Label S. Pares
+   como `body-s`/`label-s` (14/20) e `body-m`/`label-m` (16/24) são idênticos no token, e só
+   o peso os distingue — então cada um tem de afirmar o seu. */
+@utility text-body-l {
+  font-size: var(--text-body-l);
+  line-height: var(--text-body-l--line-height);
+  letter-spacing: var(--text-body-l--letter-spacing);
+  font-weight: 400;
+}
+
+@utility text-body-m {
+  font-size: var(--text-body-m);
+  line-height: var(--text-body-m--line-height);
+  letter-spacing: var(--text-body-m--letter-spacing);
+  font-weight: 400;
+}
+
+@utility text-body-s {
+  font-size: var(--text-body-s);
+  line-height: var(--text-body-s--line-height);
+  letter-spacing: var(--text-body-s--letter-spacing);
+  font-weight: 400;
+}
+
+@utility text-caption {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  letter-spacing: var(--text-caption--letter-spacing);
+  font-weight: 400;
+}
+
 /* Calma Serif ships only the Regular (400) weight — there is no SemiBold file in the
    design system. A weight utility on display text would therefore not fail visibly; the
    browser would synthesise a fake bold instead. Turning synthesis off makes that
