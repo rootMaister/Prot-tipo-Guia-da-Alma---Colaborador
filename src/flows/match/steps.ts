@@ -10,7 +10,6 @@ export type StepSlug =
   | 'o-que-te-traz'
   | 'preferencia-abordagem'
   | 'suas-sessoes'
-  | 'buscando'
   | 'sessoes-recomendadas'
 
 export type Step = {
@@ -42,6 +41,17 @@ export type Step = {
    */
   wide?: boolean
   /**
+   * Prende a tela à altura da viewport e deixa só a lista rolar, com esmaecido nas bordas.
+   * Decisão da revisão de 21/09/2026, estendida a **todos** os passos de lista longa deste
+   * fluxo: além dos passos 2 e 4, os passos 5 e 7, para o "Pular match" ficar colado embaixo
+   * em vez de rolar junto com o conteúdo. O frame do passo 7 desenha o esmaecido como um nó
+   * próprio (`scroll-fade`), o que confirma a intenção. Ver `StepShell`.
+   *
+   * Nenhum dos quatro tem campo de texto, então a exceção ao `h-dvh overflow-hidden` que o
+   * CLAUDE.md abre por causa do teclado do iOS continua valendo aqui.
+   */
+  alturaFixa?: boolean
+  /**
    * Label beside the progress bar, taken from the rendered text — never the layer name,
    * which is "Progress Bar - Etapa 1 de 4: Empresa" on every screen here too.
    *
@@ -55,14 +65,11 @@ export type Step = {
 export const MATCH_FILE_KEY = 'mHWlzkeyvbLscICaXIjkcG'
 
 /**
- * The "Buscando profissionais" variant of step 6 (mobile 805:2472, desktop 861:3898).
- * Same screen as `buscando`, differing only in copy — Figma numbers both "6.", so they
- * are alternates rather than consecutive steps. Kept here so the node is not lost.
+ * A tela "6. Buscando sessões" e as suas variantes "Buscando profissionais" (805:2472 /
+ * 861:3898) foram **removidas do arquivo** na revisão de 21/09/2026 — o bilhete ao lado da
+ * seção resume o porquê: "Redução de etapas e simplificação de perguntas". Com isso
+ * "Buscar sessões" leva direto ao resultado, sem a espera no meio. Ver SYNC-FIGMA.md.
  */
-export const BUSCANDO_PROFISSIONAIS_NODES = {
-  mobile: '805:2472',
-  desktop: '861:3898',
-} as const
 
 export const matchSteps: readonly Step[] = [
   {
@@ -80,6 +87,7 @@ export const matchSteps: readonly Step[] = [
     nodeDesktop: '1133:1393',
     progress: 6,
     stepLabel: 'Temas para a sessão',
+    alturaFixa: true,
   },
   {
     slug: 'preferencia-abordagem',
@@ -89,6 +97,7 @@ export const matchSteps: readonly Step[] = [
     // Interpolated: the badge in Figma still reads 6%, copied from step 2.
     progress: 33,
     stepLabel: 'Escolha uma especialidade',
+    alturaFixa: true,
   },
   {
     slug: 'suas-sessoes',
@@ -97,15 +106,10 @@ export const matchSteps: readonly Step[] = [
     nodeDesktop: '1134:2636',
     // Interpolated: the badge in Figma reads 98%, which lands before step 7's 76%.
     progress: 55,
-    stepLabel: 'Temas para a sessão',
-  },
-  {
-    slug: 'buscando',
-    title: '6. Buscando sessões',
-    nodeMobile: '861:4096',
-    nodeDesktop: '861:4072',
-    progress: null,
-    stepLabel: null,
+    // O rótulo era "Temas para a sessão", sobra do passo 2; o arquivo agora escreve
+    // "sua disponibilidade", em minúscula, e é reproduzido assim. O desktop diz "Opcional".
+    stepLabel: 'sua disponibilidade',
+    alturaFixa: true,
   },
   {
     slug: 'sessoes-recomendadas',
@@ -113,6 +117,7 @@ export const matchSteps: readonly Step[] = [
     nodeMobile: '1119:12688',
     nodeDesktop: '1134:2891',
     progress: 76,
+    alturaFixa: true,
     wide: true,
     stepLabel: 'Temas para a sessão',
   },

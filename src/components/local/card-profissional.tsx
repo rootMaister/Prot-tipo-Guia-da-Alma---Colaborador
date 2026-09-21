@@ -12,16 +12,20 @@ export type SessaoRecomendada = Profissional & {
   /** The indigo "Mais recomendada" pill, on the first card only. */
   destaque?: string
   /**
-   * Especialidade e tipo de abordagem, nessa ordem. Não existem no desenho do card
-   * (1124:13061) — entraram na revisão de 11/09/2026, que pediu que o card dissesse o que o
-   * profissional atende e por qual escola. Os valores saem do próprio título da sessão que o
-   * arquivo já escreve, não de invenção. Ver SYNC-FIGMA.md.
+   * Abordagem e tema, nessa ordem — o bloco "Correspondência / especialidade e temas"
+   * (2199:1610), que na revisão de 21/09/2026 desceu para **abaixo** do profissional e
+   * ganhou descrição própria no componente: são os mesmos rótulos dos filtros e do
+   * cadastro, informativos (sem seleção), até três visíveis.
    */
   tags?: string[]
 }
 
 /**
- * `card-profissional` (1124:13061) — one recommended session on Match step 7.
+ * `card-profissional` (1124:13106) — one recommended session on Match step 7.
+ *
+ * Redesenhado em 21/09/2026: o título passou a ficar sobre uma caixa de degradê radial, o
+ * retrato subiu para dentro dela — ele encosta na borda de baixo e transborda —, e os chips
+ * de abordagem e tema desceram para depois do profissional, antes do rodapé.
  *
  * DS-GAP: the card is `radius/xxl` (24px), which the design system's radius scale tops
  * out below — `rounded-2xl` is 16px and there is nothing above it. See item 9 of
@@ -49,19 +53,45 @@ export function CardProfissional({
   const { pathname, search } = useLocation()
 
   return (
-    <div className="bg-surface-faint border-outline-subtle relative flex w-full flex-col gap-4 rounded-2xl border p-3">
+    <div className="bg-surface-faint border-outline-subtle relative flex w-full flex-col gap-4 rounded-2xl border p-2">
       {destaque ? (
         <span className="absolute -top-[15px] -left-px">
           <Badge variant="info">{destaque}</Badge>
         </span>
       ) : null}
 
-      <div className="flex w-full flex-col gap-2">
-        <p className="text-label-s text-fg-default px-1 py-2">{sessao}</p>
+      <div className="flex w-full flex-col gap-3">
+        {/*
+          O degradê fica atrás do título e termina no meio do retrato, que o atravessa. Por
+          isso ele é uma camada própria, com altura fixa, e não o fundo do parágrafo.
+
+          DS-GAP: as duas cores do degradê (#F7FBF6 e #ECEFED) existem no DS só como
+          primitivas — `brand-dark-25` e `brand-dark-medium-50`, declaradas em
+          `primitives.css` fora de um bloco `@theme`, sem utility para alcançá-las. Daí as
+          variáveis pelo nome; o token continua sendo a fonte. Mesma situação da barra de
+          navegação. Ver DS-GAPS.md.
+        */}
+        <div className="relative isolate flex flex-col">
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 -z-10 h-[129px] rounded-2xl"
+            style={{
+              background:
+                'radial-gradient(164px 129px at 50% 100%, var(--color-brand-dark-25) 27%, var(--color-brand-dark-medium-50) 100%)',
+            }}
+          />
+
+          <p className="text-label-s text-fg-default px-4 py-3">{sessao}</p>
+
+          <div className="px-3">
+            <ProfissionalResumo {...profissional} />
+          </div>
+        </div>
 
         {tags && tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2 px-1">
-            {tags.map((tag) => (
+          <div className="flex flex-wrap gap-1.5 px-3">
+            {/* Até três, como a descrição do componente pede. */}
+            {tags.slice(0, 3).map((tag) => (
               // DS-GAP: `Chip` é o mais próximo de uma etiqueta só de leitura; `Tag` carrega
               // estado de seleção que aqui não existe. Ver item 18 do DS-GAPS.md.
               <Chip key={tag} color="neutral">
@@ -71,10 +101,14 @@ export function CardProfissional({
           </div>
         ) : null}
 
-        <ProfissionalResumo {...profissional} />
-
-        <div className="flex w-full items-center justify-between pl-3">
-          <p className="text-caption text-fg-brand-accent">{disponibilidade}</p>
+        <div className="flex w-full items-center justify-between pt-1 pl-3">
+          {/*
+            DS-GAP: a disponibilidade é Inter Tight **Bold** 12/18 no arquivo — um peso
+            avulso, não um estilo de texto nomeado (os estilos do card são Label S, Body S
+            e Body Caption). `text-caption` traz o tamanho e a altura; o 700 vai explícito
+            porque não há token que o carregue. Ver DS-GAPS.md.
+          */}
+          <p className="text-caption text-fg-brand-accent font-bold">{disponibilidade}</p>
 
           <Button
             variant="contained"

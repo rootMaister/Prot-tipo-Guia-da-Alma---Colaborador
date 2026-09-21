@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { useLocation } from 'react-router'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
+import { ListaRolavel } from '@/components/local/lista-rolavel'
 import { useAdvancingProgress } from '@/lib/use-advancing-progress'
 
 import { StepFooter, useChromeProgress, useFooterSlot, usePublishProgress } from './step-chrome'
@@ -39,6 +40,16 @@ type StepShellProps = {
    * que a 1440 dá exatamente os 80/1000/80 do frame 1617:4660.
    */
   comMenu?: boolean
+  /**
+   * Prende a tela à altura da viewport: o cabeçalho e o rodapé ficam parados e só o corpo
+   * rola, com o esmaecido do `ListaRolavel`. Vale nos dois breakpoints.
+   *
+   * **Só para passos sem campo de texto.** A rolagem solta do documento, que é o padrão
+   * aqui, existe porque travar a altura em `dvh` briga com o teclado do iOS — a nota em
+   * CLAUDE.md conta as tentativas. Os passos que usam isto (temas e especialidade) só têm
+   * cartões de escolha: sem campo, não há teclado, e a objeção não se aplica.
+   */
+  alturaFixa?: boolean
   /** The part that transitions between steps. */
   children?: ReactNode
 }
@@ -70,6 +81,7 @@ export function StepShell({
   wide = false,
   aside,
   comMenu = false,
+  alturaFixa,
   children,
 }: StepShellProps) {
   useScreenSurface('surface-base')
@@ -83,7 +95,27 @@ export function StepShell({
   const setFooterNode = useFooterSlot()
 
   return (
-    <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col gap-3 lg:gap-0">
+    <div
+      className={cn(
+        'bg-surface-base pt-safe px-safe flex flex-col gap-3 lg:gap-0',
+        alturaFixa ? 'h-dvh overflow-hidden' : 'min-h-dvh',
+        /*
+          Nos passos de duas colunas, o desktop também trava a altura — e só a coluna da
+          direita rola. A esquerda (título, profissional e o resumo que vai se preenchendo)
+          fica parada, e a barra de progresso e a ação continuam à vista.
+
+          Medido em "Escolher data e horário": o conteúdo tem 984px, contra os 900 de uma
+          tela de 1440x900 e os 800 de um laptop mais baixo — a página ganhava barra de
+          rolagem e o CTA saía de vista. O próprio frame é desenhado em 960px de altura, que
+          já não cabe na viewport útil da maioria dos laptops.
+
+          Só no `lg:`: no mobile a página rola normalmente, que é a decisão do CLAUDE.md por
+          causa do teclado do iOS — e aqui ela importa, porque "Suas informações" tem campo
+          de texto.
+        */
+        aside && 'lg:h-dvh lg:overflow-hidden',
+      )}
+    >
       {/* Com a régua na tela o lockup já está nela, no topo. */}
       <header className={cn('hidden w-full px-8 py-8 lg:block', comMenu && 'lg:hidden')}>
         <GuiaLockup height={18} className="text-fg-default" />
@@ -97,6 +129,8 @@ export function StepShell({
       <div
         className={cn(
           'flex flex-1 flex-col lg:items-center',
+          alturaFixa && 'min-h-0',
+          aside && 'lg:min-h-0',
           // Com a régua, o respiro é a própria centralização no que sobra: 1440 = 280 +
           // 80 + 1000 + 80, exatamente o frame 1617:4660. Sem ela, os 36px de sempre.
           comMenu ? 'lg:pl-[280px]' : 'lg:px-9',
@@ -105,6 +139,8 @@ export function StepShell({
         <div
           className={cn(
             'flex w-full flex-1 flex-col',
+            alturaFixa && 'min-h-0',
+            aside && 'lg:min-h-0',
             // 1000 = 24 + 436 + 80 + 436 + 24, the measures of `profissionals` (1279:14636).
             aside
               ? 'lg:max-w-[1000px] lg:flex-row lg:gap-20 lg:px-6 lg:pt-6'
@@ -124,7 +160,13 @@ export function StepShell({
             </aside>
           ) : null}
 
-          <div className={cn('flex w-full flex-1 flex-col', aside && 'lg:w-[436px] lg:min-w-0')}>
+          <div
+            className={cn(
+              'flex w-full flex-1 flex-col',
+              alturaFixa && 'min-h-0',
+              aside && 'lg:w-[436px] lg:min-w-0 lg:min-h-0',
+            )}
+          >
             <div
               className={cn(
                 'bg-surface-base sticky top-0 z-10 flex items-center gap-6 px-6 py-4',
@@ -151,7 +193,22 @@ export function StepShell({
               </div>
             </div>
 
-            {children}
+            {/*
+              Nos passos de duas colunas, este é o trecho que rola no desktop: fica entre a
+              barra de progresso (acima) e a ação (abaixo), que assim não saem de vista.
+
+              O embrulho não muda o layout — o `StepFooter` que o `StepBody` declara vai por
+              portal para a barra de baixo, então o que sobra aqui dentro é só o título e o
+              corpo do passo. A barra de rolagem fica escondida porque a coluna já é estreita
+              e o desenho não a prevê; rodar, arrastar e navegar por teclado seguem iguais.
+            */}
+            {aside ? (
+              <div className="flex w-full flex-1 flex-col lg:min-h-0 lg:overflow-y-auto lg:sem-barra-de-rolagem">
+                {children}
+              </div>
+            ) : (
+              children
+            )}
 
             {/*
               `min-h-[76px]` holds the bar's height through the single frame between the
@@ -181,6 +238,8 @@ type StepBodyProps = {
   footer?: ReactNode
   /** Only where the bar moves with the answer; otherwise the step's own value stands. */
   progress?: number
+  /** Põe o conteúdo num `ListaRolavel`. Pede o `alturaFixa` do `StepShell` para ter contra o que medir. */
+  rolavel?: boolean
   children?: ReactNode
 }
 
@@ -189,20 +248,29 @@ type StepBodyProps = {
  * inside the layout's transition. The footer it declares is portalled into the fixed bar,
  * so the buttons keep the screen's own state while the bar itself never moves.
  */
-export function StepBody({ title, subtitle, footer, progress, children }: StepBodyProps) {
+export function StepBody({
+  title,
+  subtitle,
+  footer,
+  progress,
+  rolavel,
+  children,
+}: StepBodyProps) {
   usePublishProgress(progress ?? null)
+
+  const corpo = <div className="flex flex-1 flex-col px-6 lg:px-0">{children}</div>
 
   return (
     <>
       {title ? (
-        <div className="flex flex-col gap-4 p-6 lg:px-0 lg:py-6">
+        <div className="flex shrink-0 flex-col gap-4 p-6 lg:px-0 lg:py-6">
           {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
           <h1 className="font-display text-heading-l text-fg-default">{title}</h1>
           {subtitle ? <p className="text-body-s text-fg-subtle">{subtitle}</p> : null}
         </div>
       ) : null}
 
-      <div className="flex flex-1 flex-col px-6 lg:px-0">{children}</div>
+      {rolavel ? <ListaRolavel className="px-6 lg:px-0">{children}</ListaRolavel> : corpo}
 
       <StepFooter>{footer}</StepFooter>
     </>

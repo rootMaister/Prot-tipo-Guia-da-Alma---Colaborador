@@ -35,12 +35,19 @@ export function MatchLayout() {
 
   const Screen = step ? screenComponents[step.slug] : undefined
 
+  /*
+    Com `alturaFixa`, a cadeia inteira precisa poder encolher: um `flex-1` só rola se todos
+    os pais entre ele e a viewport aceitarem ficar menores que o conteúdo (`min-h-0`). Sem
+    isto nos dois contêineres da transição, a lista cresce e a tela corta.
+  */
+  const encolhivel = step?.alturaFixa ? ' min-h-0' : ''
+
   const conteudo = (
     <StepTransition
       stepKey={slug}
       direction={direction}
-      wrapperClassName="flex flex-1 flex-col"
-      className="flex flex-1 flex-col"
+      wrapperClassName={`flex flex-1 flex-col${encolhivel}`}
+      className={`flex flex-1 flex-col${encolhivel}`}
     >
       {Screen ? <Screen /> : null}
     </StepTransition>
@@ -61,6 +68,7 @@ export function MatchLayout() {
             progress={step.progress}
             onBack={goBack}
             wide={step.wide}
+            alturaFixa={step.alturaFixa}
           >
             {conteudo}
           </StepShell>

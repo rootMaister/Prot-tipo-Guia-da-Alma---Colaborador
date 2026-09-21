@@ -24,7 +24,7 @@ const SESSOES: SessaoRecomendada[] = [
       'Sessão de Psicoterapia Analítica/Junguiana | atendimento exclusivo para mulheres e pessoas LGBT+',
     titulo: 'Psi.',
     nome: 'Daniele Tramontina',
-    tags: ['Mulheres e LGBT+', 'Junguiana'],
+    tags: ['Junguiana', 'Autoconhecimento'],
     avatar: avatar1,
     estrelas: 4,
     avaliacoes: 67,
@@ -36,7 +36,7 @@ const SESSOES: SessaoRecomendada[] = [
     sessao: 'Sessão de Terapia Cognitivo-Comportamental | foco na ansiedade e depressão',
     titulo: 'Psic.',
     nome: 'Lucas Mendes',
-    tags: ['Ansiedade e depressão', 'Cognitivo-comportamental'],
+    tags: ['Cognitivo-comportamental', 'Ansiedade'],
     avatar: avatar2,
     estrelas: 5,
     avaliacoes: 21,
@@ -47,7 +47,7 @@ const SESSOES: SessaoRecomendada[] = [
     sessao: 'Sessão de Psicoterapia Humanista | abordagem centrada na pessoa',
     titulo: 'Psic.',
     nome: 'Mariana Souza',
-    tags: ['Autoconhecimento', 'Humanista'],
+    tags: ['Humanista', 'Autoconhecimento'],
     avatar: avatar1,
     estrelas: 4,
     avaliacoes: 31,
@@ -58,7 +58,7 @@ const SESSOES: SessaoRecomendada[] = [
     sessao: 'Sessão de Terapia Familiar | trabalho com dinâmicas familiares',
     titulo: 'Psi.',
     nome: 'Roberto Lima',
-    tags: ['Dinâmicas familiares', 'Terapia familiar'],
+    tags: ['Terapia familiar', 'Família'],
     avatar: avatar1,
     estrelas: 5,
     avaliacoes: 11,
@@ -81,6 +81,7 @@ export function SessoesRecomendadasScreen() {
         </>
       }
       subtitle="Sessões recomendadas para o seu perfil com os horários mais próximos de atendimento"
+      rolavel
       footer={
         <PularMatchButton />
       }

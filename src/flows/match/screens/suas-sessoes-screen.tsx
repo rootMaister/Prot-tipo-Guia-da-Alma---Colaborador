@@ -6,6 +6,7 @@ import { ChoiceChip } from '@/components/local/choice-chip'
 import { OptionCard } from '@/components/local/option-card'
 
 import { useMatch } from '../match-provider'
+import { DIAS_SEMANA, HORARIOS } from '../opcoes'
 import { useStepNavigation } from '../use-step-navigation'
 
 /**
@@ -15,9 +16,6 @@ import { useStepNavigation } from '../use-step-navigation'
  * The step label reads "Temas para a sessão" in the file — step 2's label, left behind on
  * a screen about schedules. Reproduced as drawn; see the note in `steps.ts`.
  */
-const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
-
-const HORARIOS = ['Manhã (6h – 12h)', 'Tarde (12h – 18h)', 'Noite (18h – 23h59)']
 
 /**
  * Master toggles, added in review. Each one selects or clears every option in its group,
@@ -41,6 +39,7 @@ export function SuasSessoesScreen() {
     <StepBody
       title="Suas sessões"
       subtitle="Selecione os melhores horários para as suas sessões"
+      rolavel
       footer={
         <>
           {/*
@@ -84,7 +83,8 @@ export function SuasSessoesScreen() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-label-s text-fg-muted">Melhores horários</p>
+          {/* O mobile escreve "para você"; o desktop para em "Melhores horários". */}
+          <p className="text-label-s text-fg-muted">Melhores horários para você</p>
           <OptionCard
             id="horario-qualquer"
             label={QUALQUER_HORARIO}

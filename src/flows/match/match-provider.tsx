@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 
+import { DIAS_UTEIS, ESPECIALIDADES, HORARIOS } from './opcoes'
+
 export type MatchData = {
   /** Step 2 — "Seu momento", multi-select. */
   temas: string[]
@@ -12,15 +14,19 @@ export type MatchData = {
 }
 
 /**
- * Empty defaults, so a cold deep-link into any step opens the screen as the design draws
- * it: every Figma frame for this flow shows the unfilled state. The "- filled" variants
- * (1105:11501, 1119:12542) are what walking the flow and picking options produces.
+ * O fluxo abre com escolhas já feitas, por decisão da revisão de 21/09/2026: o questionário
+ * deixa de ser um formulário em branco e passa a ser uma sugestão para ajustar — dá para
+ * seguir direto até o resultado, e quem quiser desmarca.
+ *
+ * Antes eram listas vazias, porque os frames do arquivo desenham o estado não preenchido.
+ * As variantes "- filled" (1105:11501, 1119:12542) mostram o preenchido, e é delas que o
+ * desenho da seleção sai.
  */
 const MOCK_DEFAULTS: MatchData = {
-  temas: [],
-  especialidades: [],
-  dias: [],
-  horarios: [],
+  temas: ['Autoconhecimento'],
+  especialidades: [...ESPECIALIDADES],
+  dias: [...DIAS_UTEIS],
+  horarios: [...HORARIOS],
 }
 
 type MatchContextValue = {

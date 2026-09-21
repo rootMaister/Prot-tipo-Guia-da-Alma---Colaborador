@@ -5,6 +5,7 @@ import { PularMatchButton } from '@/components/local/pular-match-button'
 import { OptionCard } from '@/components/local/option-card'
 
 import { useMatch } from '../match-provider'
+import { TEMAS } from '../opcoes'
 import { useStepNavigation } from '../use-step-navigation'
 
 /**
@@ -16,15 +17,6 @@ import { useStepNavigation } from '../use-step-navigation'
  * on resize, so the mobile list is used, per the rule agreed for this flow. The desktop
  * list is logged in the DS-GAPS annex.
  */
-const TEMAS = [
-  'Autoconhecimento',
-  'Equilíbrio',
-  'Família',
-  'Saúde mental',
-  'Ansiedade',
-  'Estresse',
-  'Vícios',
-]
 
 export function OQueTeTrazScreen() {
   const { goNext } = useStepNavigation('o-que-te-traz')
@@ -36,6 +28,7 @@ export function OQueTeTrazScreen() {
     <StepBody
       title="Seu momento"
       subtitle="Marque os temas que você gostaria de levar para a sessão. Tudo bem se não souber agora"
+      rolavel
       footer={
         <>
           {/*

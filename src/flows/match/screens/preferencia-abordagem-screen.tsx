@@ -6,23 +6,13 @@ import { PularMatchButton } from '@/components/local/pular-match-button'
 import { OptionCard } from '@/components/local/option-card'
 
 import { useMatch } from '../match-provider'
+import { ESPECIALIDADES } from '../opcoes'
 import { useStepNavigation } from '../use-step-navigation'
 
 /**
  * Step 4 — nodes 1105:11678 (mobile) and 1134:2358 (desktop). 1105:11680 is the same
  * mobile screen scrolled and filled, and is where the primary action's copy comes from.
  */
-const ESPECIALIDADES = [
-  'Psicologia tradicional',
-  'Psicanálise',
-  'EFT (técnica de liberação emocional)',
-  'Hipnose',
-  'Meditação',
-  'PNL (programação neurolinguística)',
-  'Reiki',
-  'ThetaHealing',
-  'Yoga',
-]
 
 export function PreferenciaAbordagemScreen() {
   const { goNext } = useStepNavigation('preferencia-abordagem')
@@ -36,6 +26,7 @@ export function PreferenciaAbordagemScreen() {
       // "preferencia" is unaccented in the file. Copy is the designer's call, so the
       // rendered text is reproduced as drawn and logged instead of corrected.
       subtitle="Sua preferencia por especialidade"
+      rolavel
       footer={
         <>
           {hasSelection ? (
