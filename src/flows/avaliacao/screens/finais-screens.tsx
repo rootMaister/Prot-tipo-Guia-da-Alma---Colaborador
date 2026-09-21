@@ -44,7 +44,15 @@ function Final({
     <>
       <div className="flex flex-1 flex-col gap-4 px-6 pt-6 pb-6 lg:gap-6 lg:p-0">
         <div className="flex flex-col items-start gap-6 lg:gap-4">
-          <FeaturedIcon icon={icone} size="xl" color={corIcone} />
+          {/*
+            O ícone é centralizado na tela, e não alinhado à esquerda junto do texto —
+            decisão da revisão de 21/09/2026, válida para toda tela de feedback. É o mesmo
+            arranjo que o `StatusShell` ("Em análise") e a Introdução já usam: ilustração
+            centrada, cópia alinhada à esquerda embaixo dela.
+          */}
+          <div className="flex w-full justify-center">
+            <FeaturedIcon icon={icone} size="xl" color={corIcone} />
+          </div>
 
           <div className="flex flex-col gap-4">
             {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
