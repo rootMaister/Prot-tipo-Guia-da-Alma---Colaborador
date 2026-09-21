@@ -27,7 +27,9 @@ export function ResumoAgendamento() {
   const { data } = useAgendamento()
 
   const temHorario = data.data !== null && data.horario !== null
-  const temDados = data.cpf.trim().length > 0
+  // Era o CPF que revelava este bloco; com o campo fora do fluxo, quem o revela é o
+  // WhatsApp, o único dado que a tela de informações ainda pede. Ver `informacoes-screen`.
+  const temDados = data.whatsapp.trim().length > 0
 
   return (
     <>
@@ -50,7 +52,6 @@ export function ResumoAgendamento() {
           {temDados ? (
             <div className="flex flex-col gap-6">
               <p className="text-caption text-fg-subtle">Seus dados</p>
-              <Campo rotulo="CPF" valor={data.cpf} />
               <Campo rotulo="WhatsApp" valor={data.whatsapp} />
             </div>
           ) : null}

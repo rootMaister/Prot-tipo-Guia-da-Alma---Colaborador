@@ -35,7 +35,7 @@ export function ConfirmarScreen() {
 
         <p className="text-caption text-fg-subtle">Seus dados</p>
 
-        <Campo rotulo="CPF" valor={data.cpf || '123.123.123-12'} />
+        {/* O CPF saiu do fluxo na revisão de 21/09/2026 — ver `informacoes-screen`. */}
         <Campo rotulo="WhatsApp" valor={data.whatsapp} />
       </div>
     </StepBody>

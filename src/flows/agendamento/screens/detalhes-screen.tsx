@@ -5,6 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
+import { ListaRolavel } from '@/components/local/lista-rolavel'
 import { CardOutraSessao, type OutraSessao } from '@/components/local/card-outra-sessao'
 import { CardReview, type Review } from '@/components/local/card-review'
 import { ProfissionalResumo } from '@/components/local/profissional-resumo'
@@ -119,6 +120,17 @@ const ROTULO_VOLTAR: Record<string, string> = {
 const AVALIACOES_TOTAL = 38
 const AVALIACOES_MEDIA = '4,5'
 
+/**
+ * As abas do mobile (1635:3042). Eram quatro; "Certificações" **saiu do arquivo** na
+ * atualização de 21/09/2026 — e era justamente a única sem conteúdo desenhado, que o
+ * protótipo preenchia com um aviso. Ver SYNC-FIGMA.md.
+ */
+const ABAS = [
+  { valor: 'descricao', rotulo: 'Descrição' },
+  { valor: 'avaliacoes', rotulo: 'Avaliações' },
+  { valor: 'sessoes', rotulo: 'Mais sessões' },
+] as const
+
 export function DetalhesScreen() {
 
   useScreenSurface('surface-base')
@@ -169,53 +181,79 @@ export function DetalhesScreen() {
   return (
     <>
       {/* Mobile */}
-      <div className="bg-surface-base pt-safe px-safe flex min-h-dvh flex-col lg:hidden">
-        <div className="flex flex-1 flex-col gap-6 px-6 py-6">
-          <p className="text-label-l text-fg-default">{SESSAO.titulo}</p>
-          <ProfissionalResumo {...SESSAO.profissional} />
-          <Tabs value={aba} onValueChange={setAba} className="flex flex-col gap-4">
-            {/*
-              DS-GAP: Figma draws these as free pills on white with the row scrolling
-              sideways, and paints the active one `category/green/icon` (#466700) with
-              `navigation/text/active` text. `TabsList` wraps them in a bordered
-              `surface-subtle` container the design does not have, and `TabsTrigger` paints
-              the active tab `action-primary` (#1c2e17). Left as the DS renders them.
-              See DS-GAPS.md.
-            */}
-            <TabsList className="overflow-x-auto">
-              <TabsTrigger value="descricao">Descrição</TabsTrigger>
-              <TabsTrigger value="avaliacoes">Avaliações</TabsTrigger>
-              <TabsTrigger value="sessoes">Mais sessões</TabsTrigger>
-              <TabsTrigger value="certificacoes">Certificações</TabsTrigger>
-            </TabsList>
-            <TabsContent value="descricao">{descricao}</TabsContent>
-            <TabsContent value="avaliacoes">
-              <div className="flex flex-col">
-                {REVIEWS.map((review) => (
-                  <CardReview key={review.nome} {...review} />
+      {/*
+        O frame (1635:3027) prende as ações embaixo e rola só o conteúdo acima — ele desenha
+        o esmaecido como um nó próprio, `scroll-fade` (2421:24399), a 85px do rodapé. Mesmo
+        recurso dos passos de lista do Match. Não há campo de texto aqui, então a exceção ao
+        `h-dvh overflow-hidden` que o CLAUDE.md abre por causa do teclado do iOS se aplica.
+      */}
+      <div className="bg-surface-base pt-safe px-safe flex h-dvh flex-col overflow-hidden lg:hidden">
+        <ListaRolavel semBarra className="px-6">
+          <div className="flex flex-col gap-6 py-6">
+            <p className="text-label-l text-fg-default">{SESSAO.titulo}</p>
+            <ProfissionalResumo {...SESSAO.profissional} />
+            <Tabs value={aba} onValueChange={setAba} className="flex flex-col gap-4">
+              {/*
+                O `segmented-tab` (1635:3043) é uma pílula solta sobre o fundo da tela: sem
+                contêiner, sem borda, 8px entre elas, `radius/xl` — que **aqui** são 12px,
+                contra os 16 do mesmo nome no card do Match. Só o `cornerRadius` do nó vale;
+                ver a regra no CLAUDE.md.
+
+                Vem do DS pelo comportamento (Radix: teclado, roles, painel ligado à aba) e
+                é repintado por `className`, que o `cn` do DS deixa vencer. O que o DS traz
+                e o arquivo não tem é o contêiner com borda em `surface/subtle` e o ativo em
+                `action/primary`.
+
+                DS-GAP: as duas cores de texto do componente — `navigation/text/active`
+                (#F0FCDD) e `tab/fg/default` (#121E0F) — não existem como token semântico no
+                DS; só como primitivas (`brand-lime-medium-25` e `brand-dark-900`), fora de
+                `@theme` e portanto sem utility. Ficam nas semânticas mais próximas,
+                `fg/on-action` (#ECFACA) e `fg/default` (#1C2E17). Ver DS-GAPS.md.
+              */}
+              <TabsList className="gap-2 rounded-none border-0 bg-transparent px-0 py-1">
+                {ABAS.map(({ valor, rotulo }) => (
+                  <TabsTrigger
+                    key={valor}
+                    value={valor}
+                    className="text-fg-default rounded-xl px-3 py-2 data-[state=active]:bg-category-green-icon"
+                  >
+                    {rotulo}
+                  </TabsTrigger>
                 ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="sessoes">
-              <div className="flex flex-col gap-4">
-                {OUTRAS_SESSOES.map((outra) => (
-                  <CardOutraSessao key={outra.titulo} {...outra} />
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="certificacoes">
-              {/* The tab is drawn on all three frames, but no frame defines its content. */}
-              <p className="text-body-s text-fg-subtle">
-                Sem conteúdo desenhado para esta aba no Figma.
-              </p>
-            </TabsContent>
-          </Tabs>
-        </div>
+              </TabsList>
+              <TabsContent value="descricao">{descricao}</TabsContent>
+              <TabsContent value="avaliacoes">
+                <div className="flex flex-col">
+                  {REVIEWS.map((review) => (
+                    <CardReview key={review.nome} {...review} />
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="sessoes">
+                <div className="flex flex-col gap-4">
+                  {OUTRAS_SESSOES.map((outra) => (
+                    <CardOutraSessao key={outra.titulo} {...outra} />
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </ListaRolavel>
+
         <div className="pb-safe flex w-full flex-col gap-4 px-6 pt-3 [--pb-safe:0.75rem]">{acoes}</div>
       </div>
 
       {/* Desktop */}
-      <div className="bg-surface-base pt-safe px-safe hidden min-h-dvh flex-col lg:flex">
+      {/*
+        A tela não rola: rola **só a coluna da direita**, onde ficam a descrição, as
+        avaliações e as outras sessões. A esquerda — título, profissional e o "Agendar com
+        Daniele" — fica parada, para a ação não sumir enquanto se lê o conteúdo.
+
+        Isso exige a altura travada aqui e `min-h-0` em cada elo até a coluna: sem isso o
+        `flex-1` não tem contra o que se medir e o contêiner cresce em vez de rolar — o
+        mesmo encadeamento que os passos de lista do Match precisaram.
+      */}
+      <div className="bg-surface-base pt-safe px-safe hidden flex-col lg:flex lg:h-dvh lg:overflow-hidden">
         {/* Com a régua na tela o lockup já está nela. */}
         {comMenu ? null : (
           <header className="w-full px-8 py-8">
@@ -226,9 +264,9 @@ export function DetalhesScreen() {
           1000 = 24 + 436 + 80 + 436 + 24, the measures of `profissionals` (1236:12522).
           O recuo da régua fica neste contêiner, não na raiz: lá `.px-safe` ganharia dele.
         */}
-        <div className={cn('flex flex-1 flex-col', comMenu && 'lg:pl-[280px]')}>
-          <div className="mx-auto flex w-full max-w-[1000px] flex-1 gap-20 px-6 pb-12">
-          <div className="flex w-[436px] shrink-0 flex-col gap-12">
+        <div className={cn('flex min-h-0 flex-1 flex-col', comMenu && 'lg:pl-[280px]')}>
+          <div className="mx-auto flex min-h-0 w-full max-w-[1000px] flex-1 gap-20 px-6">
+          <div className="flex w-[436px] shrink-0 flex-col gap-12 pb-12">
             <IconButton
               icon={<ArrowLeftIcon className="size-[18px]" />}
               aria-label={rotuloVoltar}
@@ -246,7 +284,9 @@ export function DetalhesScreen() {
               <p className="text-label-s text-fg-subtle w-full text-center">{SESSAO.duracao}</p>
             </div>
           </div>
-          <div className="flex w-[436px] min-w-0 flex-col gap-12">
+          <div className="flex w-[436px] min-w-0 flex-col">
+            <ListaRolavel semBarra>
+              <div className="flex flex-col gap-12 pb-12">
             <section className="flex flex-col gap-4">
               <h2 className="text-label-m text-fg-default">Sobre a sessão</h2>
               {descricao}
@@ -279,6 +319,8 @@ export function DetalhesScreen() {
                 <CardOutraSessao key={outra.titulo} {...outra} />
               ))}
             </section>
+              </div>
+            </ListaRolavel>
             </div>
           </div>
         </div>

@@ -35,7 +35,6 @@ export const HOJE = new Date(2026, 7, 4)
 export type AgendamentoData = {
   data: Date | null
   horario: string | null
-  cpf: string
   whatsapp: string
   nascimento: string
   observacoes: string
@@ -48,7 +47,6 @@ export type AgendamentoData = {
 const MOCK_DEFAULTS: AgendamentoData = {
   data: null,
   horario: null,
-  cpf: '',
   whatsapp: '(11) 99999-9999',
   nascimento: '',
   observacoes: '',

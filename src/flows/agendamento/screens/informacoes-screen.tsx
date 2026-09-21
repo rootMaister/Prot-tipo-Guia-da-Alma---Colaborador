@@ -2,7 +2,7 @@ import { Button, InputField, Textarea } from '@guia-da-alma/ds'
 import { ArrowRightIcon } from 'lucide-react'
 
 import { StepBody } from '@/components/layout/step-shell'
-import { maskCpf, maskDate, maskPhone } from '@/lib/masks'
+import { maskDate, maskPhone } from '@/lib/masks'
 
 import { useAgendamento } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
@@ -11,55 +11,45 @@ import { useStepNavigation } from '../use-step-navigation'
  * Step 3 — nodes 1204:997 (mobile, empty) and 1236:10602 (filled); desktop 1279:14976 and
  * 1279:15398.
  *
- * Filling in the CPF changes three things, all drawn in the file: the badge moves 75% →
- * 85%, the required asterisk beside the label disappears, and the footer button flips from
- * a disabled "Insira o seu CPF" — the label doubling as the validation message — to an
- * enabled "Confirmar informações".
+ * **O campo de CPF saiu** na revisão de 21/09/2026. Ele era o eixo desta tela: era o que
+ * segurava o progresso em 75% até ser preenchido, o que mantinha o botão desabilitado com o
+ * rótulo "Insira o seu CPF" fazendo as vezes de mensagem de validação, e o que reaparecia
+ * na confirmação e no resumo da coluna esquerda. Sem ele não sobra campo obrigatório algum,
+ * então:
  *
- * The WhatsApp helper text also only appears once the form is filled, which reads more
- * like an oversight in the empty frame than an intent; reproduced as drawn either way.
+ * - o progresso fica nos 85% do estado preenchido, que é onde a tela sempre está agora;
+ * - o botão nasce habilitado e já com o rótulo final, "Confirmar informações";
+ * - a linha de CPF sai da confirmação e do resumo.
+ *
+ * O texto de apoio do WhatsApp também só aparecia no estado preenchido, o que lia mais como
+ * descuido do frame vazio do que como intenção; agora aparece sempre.
+ *
+ * O CPF do **Cadastro** é outro, e continua: ele foi *adicionado* ao arquivo na mesma
+ * revisão. Ver SYNC-FIGMA.md.
  */
 export function InformacoesScreen() {
   const { goNext } = useStepNavigation('informacoes')
   const { data, update } = useAgendamento()
 
-  const temCpf = data.cpf.trim().length > 0
-
   return (
     <StepBody
-      progress={temCpf ? 85 : 75}
+      progress={85}
       footer={
         <Button
           variant="contained"
           className="w-full"
-          disabled={!temCpf}
           onClick={goNext}
-          trailingIcon={temCpf ? <ArrowRightIcon className="size-[18px]" /> : undefined}
+          trailingIcon={<ArrowRightIcon className="size-[18px]" />}
         >
-          {temCpf ? 'Confirmar informações' : 'Insira o seu CPF'}
+          Confirmar informações
         </Button>
       }
     >
       <div className="flex flex-col gap-6 pt-6 pb-6">
-        {/*
-          DS-GAP: `InputField` has no `required`, so the asterisk is typed into the label
-          and inherits the label colour instead of `fg/required` (#c1442e). See item 10 of
-          DS-GAPS.md.
-        */}
-        <InputField
-          id="cpf"
-          label={temCpf ? 'CPF' : 'CPF *'}
-          helperText="Usado apenas para emitir a nota fiscal da sua sessão."
-          placeholder="000.000.000-00"
-          inputMode="numeric"
-          value={data.cpf}
-          onChange={(event) => update({ cpf: maskCpf(event.target.value) })}
-        />
-
         <InputField
           id="whatsapp"
           label="Confirme o seu Whatsapp"
-          helperText={temCpf ? 'Usado para o profissional entrar em contato' : undefined}
+          helperText="Usado para o profissional entrar em contato"
           inputMode="tel"
           value={data.whatsapp}
           onChange={(event) => update({ whatsapp: maskPhone(event.target.value) })}
