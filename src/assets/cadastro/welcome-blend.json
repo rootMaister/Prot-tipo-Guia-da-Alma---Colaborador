@@ -1,0 +1,15 @@
+{
+  "name": "Untitled blend",
+  "type": "flow",
+  "profile": "sRGB",
+  "dividers": [0.25, 0.5, 0.75],
+  "soften": 0,
+  "noise": 6,
+  "speed": 30,
+  "stops": [
+    { "name": "FOREST TEA", "hex": "#77A017", "rgb": [119, 160, 23], "position": 0.125 },
+    { "name": "GARDEN MOSS", "hex": "#ADCC81", "rgb": [173, 204, 129], "position": 0.375 },
+    { "name": "DUSK PINE", "hex": "#5B8348", "rgb": [91, 131, 72], "position": 0.625 },
+    { "name": "NIGHT PINE", "hex": "#1D3018", "rgb": [29, 48, 24], "position": 0.875 }
+  ]
+}

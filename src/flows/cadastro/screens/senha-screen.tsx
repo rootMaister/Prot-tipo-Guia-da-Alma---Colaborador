@@ -64,7 +64,8 @@ export function SenhaScreen() {
           onClick={handleSubmit}
           trailingIcon={<ArrowRightIcon className="size-[18px]" />}
         >
-          Continuar
+          {/* O arquivo escreve "Solicitar acesso" — é o passo que manda o cadastro ao RH. */}
+          Solicitar acesso
         </Button>
       }
     >

@@ -10,6 +10,8 @@ type StatusShellProps = {
   illustration: ReactNode
   title: string
   body: string
+  /** Ação dentro do conteúdo, abaixo do texto — o "Voltar para a tela de acesso" do passo 7. */
+  acao?: ReactNode
   footer: ReactNode
 }
 
@@ -21,7 +23,7 @@ type StatusShellProps = {
  * at the top and left-aligns the copy, while desktop puts the full *lockup* in the corner
  * and centres everything.
  */
-export function StatusShell({ illustration, title, body, footer }: StatusShellProps) {
+export function StatusShell({ illustration, title, body, acao, footer }: StatusShellProps) {
   useScreenSurface('surface-base')
 
   return (
@@ -40,6 +42,7 @@ export function StatusShell({ illustration, title, body, footer }: StatusShellPr
           <div className="flex w-full flex-1 items-center justify-center">{illustration}</div>
           <h1 className="font-display text-display-m text-fg-muted">{title}</h1>
           <p className="text-body-m text-fg-subtle">{body}</p>
+          {acao ? <div className="w-full pt-6">{acao}</div> : null}
         </div>
       </div>
       <div className="border-outline-subtle pb-safe flex w-full items-center justify-between border-t p-6 [--pb-safe:1rem] lg:justify-center lg:gap-4">

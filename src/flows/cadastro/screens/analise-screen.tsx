@@ -1,17 +1,26 @@
 import { useEffect } from 'react'
 
-import { Button } from '@guia-da-alma/ds'
+import { Button, FeaturedIcon } from '@guia-da-alma/ds'
+import { EyeIcon } from 'lucide-react'
+import { useNavigate } from 'react-router'
 
 import { StatusShell } from '@/components/layout/status-shell'
-import { AssinaturaConsciente } from '@/components/local/assinatura-consciente'
 
 import { useStepNavigation } from '../use-step-navigation'
 
 /** Mocked HR review. Long enough to read the screen, short enough to keep a walkthrough moving. */
 const REVIEW_DELAY_MS = 4000
 
+/**
+ * "Em análise" — `1078:9292` / `1089:10400`.
+ *
+ * O frame foi redesenhado: no lugar da ilustração "assinatura consciente" entrou um
+ * `featured-icon` com o olho do lucide, e o rodapé ganhou "Voltar para a tela de acesso"
+ * acima da linha de ajuda.
+ */
 export function AnaliseScreen() {
   const { goNext } = useStepNavigation('analise')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = window.setTimeout(goNext, REVIEW_DELAY_MS)
@@ -23,9 +32,24 @@ export function AnaliseScreen() {
 
   return (
     <StatusShell
-      illustration={<AssinaturaConsciente />}
+      /*
+        80×80, como o frame desenha — `size="xxl"` é exatamente isso. Mesma lacuna anotada
+        no `feature-shell`: o contêiner bate, mas o glifo do DS sai em 40px, maior do que o
+        do arquivo. Ver DS-GAPS.md.
+      */
+      illustration={<FeaturedIcon icon={EyeIcon} size="xxl" color="neutral" />}
       title="Em análise"
       body="Sua empresa está identificando seu cadastro, vamos te notificar quando você for aprovado. Contate o responsável da sua empresa para mais informações."
+      /* O frame põe este botão acima da linha de ajuda, dentro do conteúdo. */
+      acao={
+        <Button
+          variant="text"
+          className="w-full"
+          onClick={() => navigate('/cadastro/welcome')}
+        >
+          Voltar para a tela de acesso
+        </Button>
+      }
       footer={
         <>
           <p className="text-body-m text-fg-subtle">Precisa de ajuda?</p>

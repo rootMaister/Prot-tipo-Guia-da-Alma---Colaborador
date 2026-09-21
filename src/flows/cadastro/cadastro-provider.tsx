@@ -4,6 +4,7 @@ export type CadastroData = {
   companyCode: string
   companyName: string
   fullName: string
+  cpf: string
   email: string
   whatsapp: string
   password: string
@@ -18,6 +19,7 @@ const MOCK_DEFAULTS: CadastroData = {
   companyCode: '',
   companyName: 'Imobiliária Novo Lar',
   fullName: '',
+  cpf: '',
   email: '',
   whatsapp: '',
   password: '',

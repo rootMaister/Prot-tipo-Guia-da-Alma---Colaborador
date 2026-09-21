@@ -29,19 +29,20 @@ export function ConsentimentoScreen() {
           estão seguros
         </>
       }
-      subtitle="Seus dados, respostas e informações sobre agendamentos e não serão acessados por terceiros"
+      subtitle="Suas informações com profissionais são sigilosas. O RH não tem dados sobre seu caso terapêutico; tudo é anônimo."
       footer={
         <div className="flex flex-col gap-5">
           {/*
-            The design has no checkbox here: consent is given by the button itself, whose
-            label reads "Eu concordo, continuar". Keeping it that way rather than adding
-            a control the design does not have.
+            Continua sem checkbox: o consentimento é o próprio botão, "Eu concordo,
+            continuar". Nenhum dos dois frames desenha um controle.
+
+            Os dois breakpoints escrevem esta linha diferente — o mobile para em "Termo de
+            Uso." e o desktop acrescenta "e Politica de Privacidade.", sem o acento. Fica a
+            versão longa, com o acento corrigido. Ver SYNC-FIGMA.md.
           */}
           <p className="text-caption text-fg-subtle">
-            Li e concordo com o <ConsentLink>Termo de Consentimento</ConsentLink>,{' '}
-            <ConsentLink>Política de Dados Pessoais</ConsentLink> e{' '}
-            <ConsentLink>Termos de Uso</ConsentLink>, autorizando a coleta e tratamento de meus
-            dados pela Guia da Alma.
+            Li e concordo com o <ConsentLink>Termo de Uso</ConsentLink> e{' '}
+            <ConsentLink>Política de Privacidade</ConsentLink>.
           </p>
 
           <Button

@@ -5,13 +5,14 @@ import { ArrowRightIcon } from 'lucide-react'
 
 import { SignUpBody } from '@/components/layout/sign-up-shell'
 import { FieldShake, useSubmitAttempts } from '@/components/local/field-shake'
-import { maskPhone, onlyDigits } from '@/lib/masks'
+import { maskCpf, maskPhone, onlyDigits } from '@/lib/masks'
 
 import { useCadastro } from '../cadastro-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
 type Errors = {
   fullName?: string
+  cpf?: string
   email?: string
   whatsapp?: string
 }
@@ -19,6 +20,8 @@ type Errors = {
 /** Deliberately loose — this is a prototype, not a validation library. */
 const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)
 const isWhatsapp = (value: string) => onlyDigits(value).length >= 10
+/** Só o comprimento: o protótipo não confere dígito verificador. */
+const isCpf = (value: string) => onlyDigits(value).length === 11
 
 export function DadosPessoaisScreen() {
   const { data, update } = useCadastro()
@@ -31,6 +34,12 @@ export function DadosPessoaisScreen() {
 
     if (!data.fullName.trim()) {
       nextErrors.fullName = 'Informe seu nome completo.'
+    }
+
+    if (!data.cpf.trim()) {
+      nextErrors.cpf = 'Informe seu CPF.'
+    } else if (!isCpf(data.cpf)) {
+      nextErrors.cpf = 'CPF incompleto.'
     }
 
     if (!data.email.trim()) {
@@ -88,6 +97,19 @@ export function DadosPessoaisScreen() {
             error={errors.fullName}
             autoComplete="name"
             onChange={(event) => update({ fullName: event.target.value })}
+          />
+        </FieldShake>
+
+        <FieldShake trigger={errors.cpf ? attempt : 0}>
+          <InputField
+            id="cpf"
+            label="CPF *"
+            inputMode="numeric"
+            placeholder="000.000.000-00"
+            value={data.cpf}
+            error={errors.cpf}
+            autoComplete="off"
+            onChange={(event) => update({ cpf: maskCpf(event.target.value) })}
           />
         </FieldShake>
 
