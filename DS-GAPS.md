@@ -1102,3 +1102,111 @@ tema — hoje qualquer aba fiel ao Figma precisa reescrever a cor.
 
 **Correção sugerida:** um `Slider` e um `ChipGroup` com seleção múltipla resolvem os dois
 primeiros, que são os que mais se repetem. Gráfico e orbe podem continuar fora da biblioteca.
+
+## 40. Botão de texto pesado demais para a linha de "Não é a sua empresa?"
+
+**Severidade:** baixa
+
+O passo 3 do Cadastro desenha, abaixo do botão primário, uma linha com a pergunta e um botão
+de texto ao lado (`2395:23976`): 134px de texto + 8 de intervalo + 190 de botão, somando 332
+nos 345 disponíveis do mobile. Renderizado com o DS, o mesmo par ocupa 355: o rótulo do
+botão é `font-bold` e o do Figma é SemiBold, o que engorda o botão de 190 para 205, e o texto
+sai em 142 contra 134.
+
+Não cabe em uma linha, então a linha quebra em duas, centradas, no mobile; no desktop, onde a
+coluna tem 450px, ela fica em uma só. A alternativa seria forçar `font-semibold` por
+`className` no botão, que é exatamente o que este arquivo existe para evitar.
+
+**Correção sugerida:** um peso `semibold` no botão de texto, ou um prop de peso — o mesmo
+descompasso já aparece no item da central de ajuda, na tela "Em análise".
+
+## 41. `FeaturedIcon` — o glifo não acompanha o contêiner
+
+**Severidade:** baixa, reincidente
+
+Anotado no `feature-shell` e agora também na tela "Em análise": `size="xxl"` dá os 80×80 que
+os frames desenham, mas o glifo sai em 40px, onde o arquivo usa 36 (passos 3 e 8) e um olho
+menor ainda no passo 7. `xxl` é o maior tamanho que o componente oferece, e o tamanho do
+glifo é derivado do contêiner, sem prop própria.
+
+**Correção sugerida:** separar o tamanho do glifo do tamanho do contêiner.
+
+## 42. Match — área de rolagem e chips do card de resultado
+
+**Severidade:** baixa, em bloco
+
+| onde | Figma | DS | decisão |
+|---|---|---|---|
+| lista rolável dos passos 2 e 4 | lista com cabeçalho e ações parados, e esmaecido indicando que há mais | o DS não tem `ScrollArea` nem equivalente | `components/local/lista-rolavel.tsx`, com o esmaecido aparecendo só quando há o que revelar |
+| chips do card (`2199:1613`) | cápsula **contornada**: borda `outline/subtle`, fundo transparente, texto `category/neutral/text` | `Chip color="neutral"` é preenchido de cinza, sem variante contornada | `Chip` como o DS o desenha — a alternativa seria refazer a cápsula à mão |
+| degradê do card (`2646:5662`) | radial de `#F7FBF6` a `#ECEFED` | as duas cores existem só como primitivas (`brand-dark-25`, `brand-dark-medium-50`), declaradas fora de um bloco `@theme` | variáveis pelo nome, como já é feito na barra de navegação |
+
+**Correção sugerida:** uma variante contornada no `Chip`, e promover as duas primitivas do
+degradê a tokens semânticos — hoje qualquer superfície com esse degradê precisa citá-las cruas.
+
+## 43. Nenhum token de tipografia carrega o peso — todo "Label" renderizava como "Body"
+
+O mais caro dos itens desta lista, porque falhava em silêncio no protótipo inteiro.
+
+`@guia-da-alma/ds/tokens` declara, para cada estilo, o tamanho, a altura de linha e o
+espaçamento entre letras — e **nada** de `font-weight`. Não há um `--text-*--font-weight`
+em escala nenhuma:
+
+```
+--text-label-s: 0.875rem;
+--text-label-s--line-height: 1.25rem;
+--text-label-s--letter-spacing: 0em;
+```
+
+No Figma, porém, é o peso que define metade dos estilos. "Label/Label S" é
+`font-weight/semibold`, peso 600; "Body/Body S" é Regular, 400. E os dois têm **exatamente**
+o mesmo tamanho e a mesma altura de linha, 14px/20px — assim como `label-m` e `body-m`, em
+16px/24px. Ou seja: o peso é a *única* coisa que separa um Label de um Body, e é justamente
+a que o token não diz.
+
+Consequência: `text-label-s` herdava o peso do pai, quase sempre 400, e todo Label do
+protótipo saía com a aparência de um Body. Sem erro, sem aviso, e invisível na revisão de
+código — a classe *parecia* certa. Medido no `card-profissional` antes da correção, contra
+o que o arquivo pede:
+
+| Texto | Figma | Renderizado |
+| --- | --- | --- |
+| Título da sessão | 600 | **400** |
+| "Psi." | 600 | **400** |
+| "Daniele Tramontina" | 600 | **400** |
+| ★ ★ ★ ★ ☆ | 600 | **400** |
+| Chips | 600 | 600 |
+
+Os chips escapavam só porque o `Chip` do DS embute `font-semibold` por conta própria — o
+que confirma o diagnóstico: onde um componente do DS declara o peso, ele aparece; onde se
+depende do token, some. Havia 77 usos de `text-label-*` no projeto e só 9 com peso
+explícito.
+
+O protótipo corrige redefinindo as seis utilities em `styles/index.css`, via `@utility`, com
+o peso incluído — `label-l/m/s` em 600 e `body-l/m/s` mais `caption` em 400. Os Body também
+precisam afirmar o 400: um Body dentro de um Label herdava 600 e sumia a diferença, que foi
+o que aconteceu com o contador "(67)" do card.
+
+**O lugar certo disto é o token.** Enquanto o DS não publicar o peso junto do tamanho, todo
+consumidor novo vai repetir o bug — e não vai perceber, porque a tela continua renderizando.
+
+## 44. `segmented-tab` — o `TabsList` traz um contêiner que o design não desenha
+
+O `segmented-tab` (1635:3043) do "Detalhes da sessão" no mobile é uma pílula solta sobre o
+fundo da tela: sem contêiner, sem borda, 8px entre elas, `radius/xl` (12px **aqui** — o
+mesmo nome vale 16px no card do Match; ver itens 9 e 26).
+
+O que o DS entrega é outra coisa: `TabsList` embrulha as abas num contêiner com borda em
+`surface/subtle` e `rounded-2xl`, e `TabsTrigger` pinta a aba ativa de `action/primary`
+(#1C2E17) quando o arquivo pede `category/green/icon` (#466700). O `Tab` exportado não
+ajuda — ele é literalmente `var Tab = TabsTrigger`, o mesmo componente com outro nome.
+
+Dá para chegar no desenho por `className`, porque os dois usam `cn` e deixam o chamador
+vencer, e foi o que o protótipo fez: mantém o Radix por baixo (teclado, `role`, painel
+ligado à aba) e repinta. Mas as duas cores de texto do componente não existem como token
+semântico — `navigation/text/active` (#F0FCDD) e `tab/fg/default` (#121E0F) só existem como
+primitivas, `brand-lime-medium-25` e `brand-dark-900`, e portanto sem utility (item 33).
+Ficam nas semânticas mais próximas, `fg/on-action` (#ECFACA) e `fg/default` (#1C2E17).
+
+Uma variante `segmented` do `Tabs`, sem contêiner e com as cores de navegação, resolveria —
+é o mesmo pedido do item 31 para o `nav-shell`.

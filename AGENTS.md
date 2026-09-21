@@ -5,8 +5,9 @@ App React navegável que reproduz os fluxos do Figma
 com estados mockados e sem backend:
 
 - **Cadastro** — seção `266:4`, página `266:3`. 9 telas, do splash ao perfil aprovado.
-- **Match de terapia** — seção `791:1078`. 7 telas, que continuam direto do "Perfil
-  aprovado": questionário, busca e sessões recomendadas.
+- **Match de terapia** — seção `791:1078`. 5 telas, que continuam direto do "Perfil
+  aprovado": questionário e sessões recomendadas. Eram 7 até a revisão de 21/09/2026, que
+  tirou a espera "Buscando sessões" do arquivo.
 - **Agendamento** — seção `1184:5843`. 5 telas, que continuam do "Ver agenda" nas sessões
   recomendadas: detalhe da sessão, data e horário, dados e confirmação.
 - **Avaliação** — página `1769:9713`, seção `2288:12017`. 8 telas, abertas por "Entrar na
@@ -189,7 +190,8 @@ tela decide mas que aparecem no chrome viajam por `step-chrome.tsx`:
 - **rodapé** — por portal, para os botões continuarem no mesmo subtree React do estado que
   eles leem;
 - **progresso dinâmico** — `progress` no `StepBody`, só onde a barra depende da resposta
-  (50→60 ao escolher horário, 75→85 ao preencher o CPF).
+  (50→60 ao escolher horário). O 75→85 do Agendamento morreu junto com o campo de CPF, que
+  saiu do fluxo em 21/09/2026 — ver SYNC-FIGMA.md.
 
 ### Rolagem e cabeçalho
 
@@ -292,6 +294,14 @@ Mandar um botão do app para o primeiro é o bug que essa distinção existe par
 
 ## Regras ao construir uma tela
 
+- **`text-label-*` e `text-body-*` não são intercambiáveis, e o token não te protege.**
+  Nenhum token de tipografia do DS carrega `font-weight`. Como `label-s` e `body-s` têm o
+  mesmo tamanho e a mesma altura de linha (14/20), e o mesmo vale para `label-m`/`body-m`
+  (16/24), o **peso é a única diferença** — e era justamente o que faltava: `text-label-s`
+  herdava 400 e todo Label do protótipo renderizava com cara de Body, sem erro e sem aviso.
+  O `styles/index.css` redefine as seis utilities via `@utility` com o peso dentro (Label
+  600, Body e Caption 400). Não acrescente `font-semibold` avulso para compensar, e ao pegar
+  um estilo no Figma leia o peso junto do tamanho. Item 43 do [DS-GAPS.md](DS-GAPS.md).
 - **Nunca traduza raio pelo nome do token — nem pelo fallback da exportação.** As escalas
   estão deslocadas (`radius/lg` do Figma é 12px, `rounded-lg` do DS é 8px), e o mesmo nome
   aparece ligado a valores diferentes dentro do arquivo: `radius/xl` é 16px no card de opção

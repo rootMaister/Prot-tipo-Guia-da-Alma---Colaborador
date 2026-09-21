@@ -462,3 +462,153 @@ escala (`2865:28192`).
 | **Grafia** | `2815:20562` | "Díficil" no nome do frame; o texto renderizado está certo. |
 | **Barra de humor do mês sem escala** | `2809:613` | As barras de "Como você se sentiu" não são proporcionais aos números que elas mesmas escrevem (3 dias, 2 dias, 1 dia). No protótipo são. |
 | **Eixo do gráfico com 30 dias fixos** | `2809:613` | O eixo escreve 01, 10, 20 e 30; o protótipo usa o último dia do mês corrente, que nem sempre é 30. |
+
+---
+
+# Sincronizar no Figma — atualizações do Cadastro (21/09/2026)
+
+Três mudanças que você fez no arquivo e que agora estão no protótipo, mais o que elas
+deixaram em aberto.
+
+## Aplicado
+
+| Tela | Mudança |
+|---|---|
+| 4. Contrato de confiança | Subtítulo novo: "Suas informações com profissionais são sigilosas. O RH não tem dados sobre seu caso terapêutico; tudo é anônimo." A linha fina deixou de listar três documentos e virou "Li e concordo com o Termo de Uso…". Continua sem checkbox — o consentimento é o próprio botão. |
+| 5. Dados pessoais | Campo **CPF** entre Nome completo e E-mail, obrigatório, com máscara `000.000.000-00`. O protótipo só confere o comprimento: não valida dígito verificador. |
+| 7. Aguardando aprovação | O `featured-icon` com o olho, em 80×80, entrou no lugar da ilustração "assinatura consciente", que saiu do projeto junto com seus cinco SVGs. O botão "Voltar para a tela de acesso" entrou abaixo do texto, e leva ao Welcome. |
+| 3. Empresa encontrada | A saída deixou de ser um botão só: agora é a pergunta "Não é a sua empresa?" com o botão de texto "Insira o código novamente" ao lado, os dois voltando ao passo do código. No mobile a linha quebra em duas — ver o item 40 do DS-GAPS.md. |
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **A linha do consentimento diverge entre os breakpoints** | `1078:8886` × `1089:10088` | O mobile escreve "Li e concordo com o Termo de Uso." e o desktop "Li e concordo com o Termo de Uso e Politica de Privacidade." — sem acento em "Política". O protótipo usa a versão longa, com o acento corrigido. |
+| **Nome da camada não acompanhou a cópia** | `1078:8886` | A camada ainda se chama "Li e concordo com o Termo de Consentimento, Políti", da versão anterior. |
+| **O asterisco de obrigatório segue invisível** | Passo 5 | Os cinco campos trazem o `*` com opacidade 0, agora incluindo o CPF. O protótipo escreve o asterisco no rótulo. Se a obrigatoriedade é real, ele deveria aparecer no desenho. |
+
+---
+
+# Sincronizar no Figma — atualizações do Match (21/09/2026)
+
+O bilhete ao lado da seção resume a intenção: "Match de terapia enquanto processo contínuo a
+partir do cadastro. Redução de etapas e simplificação de perguntas. Nudges para facilitar as
+escolhas."
+
+## Saiu do arquivo
+
+- **"6. Buscando sessões"** (`861:4096` / `861:4072`) e as variantes **"Buscando
+  profissionais"** (`805:2472` / `861:3898`). O fluxo perdeu a espera do meio: "Buscar
+  sessões" leva direto às recomendações. As telas e a rota `/match/buscando` saíram do
+  protótipo — um deep-link antigo cai no início do fluxo.
+
+## Mudou nas telas que ficaram
+
+| Tela | Mudança |
+|---|---|
+| 1. Início | Título "Vamos encontrar o profissional ideal" (era "…o melhor profissional para você"). Subtítulo "Com base nas suas respostas, vamos indicar as sessões mais recomendadas" — saiu a menção à IA do Guia. A ação secundária virou "Agora não" no mobile. |
+| 2. O que te traz aqui | Dois temas novos, **Espiritualidade** e **Físico**, que só aparecem no frame rolado (`1105:10969`). |
+| 5. Suas sessões | O rótulo da barra deixou de ser "Temas para a sessão" e virou **"sua disponibilidade"**. O subtítulo da segunda seção agora é "Melhores horários para você". |
+
+## Aplicado depois, na mesma revisão
+
+| O quê | Como ficou |
+|---|---|
+| **Ilustração do passo 1** | "Guia da Alma_Escuta ativa" (`2395:24096`) no lugar do orbe animado. O orbe continua no projeto, no banner do Match dentro do Início. |
+| **Cabeçalho e ações fixos** | Os passos 2 e 4 prendem a tela à altura da viewport: cabeçalho parado em cima, ações coladas embaixo e só a lista rolando, com esmaecido nas bordas quando há mais conteúdo. Vale nos dois breakpoints, e está em `steps.ts` (`alturaFixa`), não na tela. |
+| **Escolhas já marcadas** | O fluxo abre com Autoconhecimento marcado, todas as especialidades marcadas, e Seg–Sex com os três períodos. O questionário deixa de ser um formulário em branco e vira uma sugestão para ajustar. |
+| **Card de resultado** | Redesenhado conforme `1124:13106`: título sobre uma caixa de degradê radial, retrato atravessando a borda dela, e os chips de abordagem e tema **abaixo** do profissional. Os valores dos chips passaram a ser abordagem + tema (Junguiana / Autoconhecimento), como o arquivo escreve. |
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **"Vícios" aparece duas vezes** | `1105:10969` | Entre "Estresse" e "Espiritualidade", e de novo no fim da lista. O protótipo mostra uma vez. |
+| **Ação secundária diverge** | Início, mobile × desktop | O mobile diz "Agora não" e o desktop "Quero explorar a plataforma". O protótipo usa a do mobile nos dois. |
+| **Rótulo da barra diverge** | Passo 5 | "sua disponibilidade" (minúscula) no mobile, "Opcional" no desktop; e os badges seguem 98% no mobile contra 6% no desktop. |
+| **Rótulos herdados do Cadastro** | Passo 2 desktop | A barra ainda diz "Termos de uso e privacidade". |
+| **"Sessões recomendas"** | Passo 7 mobile | Continua sem o "da" no título, enquanto o subtítulo logo abaixo escreve "recomendadas". Reproduzido como está. |
+| **CTA do passo 5 no desktop** | `1134:2636` | Diz "Escolher horário das sessões", cópia do passo 4; o mobile diz "Buscar sessões". |
+
+## Revisão de 21/09/2026 — Welcome, feedback, Match e Agendamento
+
+Segunda rodada da revisão do mesmo dia. O que segue é o que **diverge do arquivo** ou o que
+o arquivo deixou pela metade.
+
+### Welcome — véu de contraste no mobile
+
+O texto do mobile fica sobre a animação, que é um campo de cor *em movimento*: a mesma linha
+da manchete passa por uma parada clara e por uma escura ao longo do loop. Foram acrescentados
+dois véus escuros — um no topo, sob o lockup, outro nos três quintos de baixo, sob a manchete,
+o subtítulo e as ações —, que o arquivo não desenha. Medido em 24 quadros do loop, o pior
+contraste do fundo sob cada texto: manchete 3,82:1 (passa AA para texto grande), subtítulo
+4,95:1 e "Já tem uma conta?" 9,45:1 (passam AA). Sem os véus a manchete caía abaixo de 3:1
+em parte do loop.
+
+Os arquivos de vídeo `welcome-atmosfera.{webm,mp4}` e o poster foram **apagados** — a receita
+`blend` em JSON ocupou o lugar em definitivo. O histórico do git guarda, se o vídeo voltar.
+
+### Telas de feedback — ilustração centralizada
+
+Decisão transversal: toda tela de feedback centraliza o ícone/ilustração, com a cópia
+alinhada à esquerda embaixo. "Em análise", a Introdução e o fim do Registro de humor já
+faziam isso; os três finais da Avaliação alinhavam o ícone à esquerda e foram alinhados ao
+resto.
+
+### Match
+
+- **Início, desktop.** O título e a descrição desceram para junto das ações, e a ilustração
+  passou a se centralizar no espaço acima delas. O filete que separava o rodapé some no
+  desktop — o frame não o desenha.
+- **Passos 5 e 7.** Ganharam `alturaFixa`, como os passos 2 e 4 já tinham: a lista rola e o
+  "Pular match" fica colado no rodapé. O frame do passo 7 desenha o esmaecido como um nó
+  próprio (`scroll-fade`, 2421:24380), o que confirma a intenção.
+- **Tipografia do card.** Ver o item 43 do DS-GAPS.md: não era divergência de escolha, era o
+  peso que o token não carregava. Os oito textos do `card-profissional` agora batem com o
+  arquivo, incluindo a disponibilidade, que é Bold 12/18 — um peso avulso, não um estilo
+  nomeado.
+
+### Agendamento
+
+- **Detalhes, mobile.** As abas passaram a reproduzir o `segmented-tab` do arquivo (ver item
+  44 do DS-GAPS.md). **"Certificações" saiu do arquivo** — eram quatro abas, agora são três —
+  e era justamente a única sem conteúdo desenhado, que o protótipo preenchia com um aviso.
+  A tela também ganhou o `scroll-fade` (2421:24399) e as ações fixas no rodapé, como o frame
+  desenha.
+- **Detalhes, desktop.** Só a coluna da direita rola. A esquerda — título, profissional e
+  "Agendar com Daniele" — fica parada, para a ação não sair de vista.
+- **CPF retirado.** O campo saiu da tela de informações, e com ele a linha na confirmação, a
+  linha no resumo da coluna esquerda e o campo no provider.
+
+  **O arquivo ficou pela metade nisto, em dois pontos.** No frame vazio (1204:997) o campo
+  sumiu mas o botão continua desabilitado com o rótulo "Insira o seu CPF" — que, sem campo,
+  é um beco sem saída: não há o que preencher para habilitá-lo. E a tela de confirmação
+  (1236:10804) ainda lista "CPF 123.123.123-12", um dado que ninguém mais informa.
+
+  O protótipo segue o frame preenchido (1236:10602): 85%, botão habilitado com "Confirmar
+  informações", e sem CPF em lugar nenhum. Na prática o frame de 75% ficou inalcançável, já
+  que o WhatsApp vem preenchido nos dois e não sobrou campo obrigatório.
+
+### Agendamento — a tela de data e horário não cabia no desktop
+
+O frame de "Escolher data e horário" (1279:14636) é desenhado em **1536×960**, e o conteúdo
+implementado dá 984px de altura. Numa janela de 1440×900 isso transbordava 84px, e em
+1440×800, 184px — a página ganhava barra de rolagem e o botão "Confirmar informações" saía
+de vista. Mesmo em 1512×982 (MacBook Pro 14") sobravam 2px: barra de rolagem para nada.
+
+Não é desvio de implementação: os 960px do próprio frame já não cabem na viewport útil da
+maioria dos laptops, uma vez descontada a barra do navegador.
+
+A saída foi a mesma do "Detalhes da sessão": no desktop a altura é travada e **só a coluna
+da direita rola** — a esquerda, com o título, o profissional e o resumo que vai se
+preenchendo, fica parada, e tanto a barra de progresso quanto a ação seguem à vista. Vale
+para os três passos de duas colunas (`split`), não só para este, para o problema não voltar
+noutro. No mobile nada muda: a página rola solta, como o CLAUDE.md exige por causa do
+teclado do iOS — e ali importa, porque "Suas informações" tem campo de texto.
+
+Medido depois, em 1440×900, 1440×800, 1512×982 e 1920×1080: a página nunca rola e o CTA está
+sempre visível nas quatro. A coluna rola por dentro só nas duas primeiras.
+
+**Divergência que sobra:** o frame desenha **4 horários numa linha** e o mock do protótipo
+gera de 5 a 7 por dia útil, que quebram em duas linhas (+50px). Mantido o mock, que existe
+para os dias não parecerem todos iguais — ver `disponibilidade.ts`.
