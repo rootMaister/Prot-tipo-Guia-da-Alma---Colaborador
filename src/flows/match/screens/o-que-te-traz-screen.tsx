@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Button } from '@guia-da-alma/ds'
 
 import { StepBody } from '@/components/layout/step-shell'
@@ -41,7 +43,10 @@ export function OQueTeTrazScreen() {
               Continuar
             </Button>
           ) : (
-            <Button variant="outlined" className="w-full" onClick={goNext}>
+            <Button variant="outlined" className="w-full" onClick={() => {
+              onboarding.stepCompleted('/match/o-que-te-traz', 'skip_optional')
+              goNext()
+            }}>
               Não sei ainda
             </Button>
           )}

@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Button } from '@guia-da-alma/ds'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -31,7 +33,10 @@ export function InicioScreen() {
   const { search } = useLocation()
 
   // Where the app is, for someone who opened the Match from it; the Home otherwise.
-  const explorar = () => navigate(lerOrigem(search, '/app/inicio'))
+  const explorar = () => {
+    onboarding.exit('explore_app')
+    navigate(lerOrigem(search, '/app/inicio'))
+  }
 
   return (
     <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh flex-col lg:items-center lg:[--px-safe:2.25rem]">

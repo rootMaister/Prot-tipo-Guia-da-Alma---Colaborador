@@ -1,4 +1,5 @@
 # pnpm 11 reads settings from here rather than the "pnpm" field in package.json.
 # esbuild ships a platform binary via a postinstall script, which pnpm blocks by default.
 allowBuilds:
+  core-js: false
   esbuild: true

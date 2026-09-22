@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -16,6 +18,7 @@ export function useStepNavigation(slug: StepSlug) {
   )
 
   const goNext = useCallback(() => {
+    onboarding.stepCompleted(`/cadastro/${slug}`, ['splash', 'analise'].includes(slug) ? 'automatic' : ['empresa', 'dados-pessoais', 'senha'].includes(slug) ? 'validated' : 'advance')
     goTo(getNextStep(slug)?.slug ?? null)
   }, [goTo, slug])
 

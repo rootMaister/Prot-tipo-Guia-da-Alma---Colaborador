@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useEffect } from 'react'
 
 import { Button } from '@guia-da-alma/ds'
@@ -34,6 +36,7 @@ export function AgendadaScreen() {
 
   useEffect(() => {
     agendar({ ...SESSAO_DEMO, data: dia, horario })
+    onboarding.bookingRegistered()
   }, [agendar, dia, horario])
 
   return (
@@ -52,7 +55,10 @@ export function AgendadaScreen() {
           className="w-full"
           // Ends on Meus agendamentos, where the session it just booked is now listed —
           // review decision of 11/09/2026, whichever door the booking came in through.
-          onClick={() => navigate('/app/agendamentos')}
+          onClick={() => {
+            onboarding.stepCompleted('/agendamento/agendada')
+            navigate('/app/agendamentos')
+          }}
         >
           Continuar
         </Button>

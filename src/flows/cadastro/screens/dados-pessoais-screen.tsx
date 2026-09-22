@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useState } from 'react'
 
 import { Button, InputField } from '@guia-da-alma/ds'
@@ -59,6 +61,8 @@ export function DadosPessoaisScreen() {
 
     if (Object.keys(nextErrors).length === 0) {
       goNext()
+    } else {
+      onboarding.blocked()
     }
   }
 

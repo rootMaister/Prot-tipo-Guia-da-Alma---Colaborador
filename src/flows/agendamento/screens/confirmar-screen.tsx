@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Button } from '@guia-da-alma/ds'
 
 import { StepBody } from '@/components/layout/step-shell'
@@ -21,7 +23,7 @@ export function ConfirmarScreen() {
   return (
     <StepBody
       footer={
-        <Button variant="contained" className="w-full" onClick={goNext}>
+        <Button variant="contained" className="w-full" onClick={() => { onboarding.requestBooking(); goNext() }}>
           Agendar
         </Button>
       }

@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Button } from '@guia-da-alma/ds'
 import { ArrowRightIcon } from 'lucide-react'
 
@@ -39,7 +41,10 @@ export function PreferenciaAbordagemScreen() {
               Escolher horário das sessões
             </Button>
           ) : (
-            <Button variant="outlined" className="w-full" onClick={goNext}>
+            <Button variant="outlined" className="w-full" onClick={() => {
+              onboarding.stepCompleted('/match/preferencia-abordagem', 'skip_optional')
+              goNext()
+            }}>
               Não tenho preferência
             </Button>
           )}

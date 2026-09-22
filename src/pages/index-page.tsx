@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Link } from 'react-router'
 
 import { GuiaLockup } from '@/components/local/guia-lockup'
@@ -70,6 +72,9 @@ export function IndexPage() {
 
           <Link
             to={COMECO}
+            onClick={(event) => {
+              if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) onboarding.start()
+            }}
             className="bg-action-primary text-fg-on-action text-label-s hover:bg-action-primary-hover w-fit rounded-full px-5 py-4 font-semibold transition-colors duration-150 ease-out"
           >
             Começar do início →

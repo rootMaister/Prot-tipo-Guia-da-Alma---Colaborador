@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Button } from '@guia-da-alma/ds'
 import { ArrowRightIcon, CheckIcon } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
@@ -10,7 +12,10 @@ export function AprovadoScreen() {
 
   // Last step of Cadastro, and the seam with the next flow: the Match de terapia section
   // opens straight off this screen's call to action.
-  const goToMatch = () => navigate(`/match/inicio${search}`)
+  const goToMatch = () => {
+    onboarding.stepCompleted('/cadastro/aprovado')
+    navigate(`/match/inicio${search}`)
+  }
 
   return (
     <FeatureShell

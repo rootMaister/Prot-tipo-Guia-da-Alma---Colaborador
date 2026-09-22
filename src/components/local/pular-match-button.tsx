@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useState } from 'react'
 
 import {
@@ -44,7 +46,7 @@ export function PularMatchButton() {
             <Button variant="outlined" onClick={() => setAberto(false)}>
               Voltar
             </Button>
-            <Button variant="contained" onClick={() => navigate(lerOrigem(search, '/app/inicio'))}>
+            <Button variant="contained" onClick={() => { onboarding.exit('skip_match'); navigate(lerOrigem(search, '/app/inicio')) }}>
               Pular match
             </Button>
           </DialogFooter>

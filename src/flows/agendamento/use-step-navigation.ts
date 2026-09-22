@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -22,6 +24,7 @@ export function useStepNavigation(slug: StepSlug) {
   )
 
   const goNext = useCallback(() => {
+    onboarding.stepCompleted(`/agendamento/${slug}`, 'advance')
     goTo(getNextStep(slug)?.slug ?? null)
   }, [goTo, slug])
 

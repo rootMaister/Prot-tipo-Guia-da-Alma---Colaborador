@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { Badge, Button, Chip } from '@guia-da-alma/ds'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -112,11 +114,12 @@ export function CardProfissional({
 
           <Button
             variant="contained"
-            onClick={() =>
+            onClick={() => {
+              if (pathname === '/match/sessoes-recomendadas') onboarding.stepCompleted(pathname)
               navigate(comOrigem('/agendamento/detalhes', pathname, search), {
                 state: { disponibilidade },
               })
-            }
+            }}
           >
             Ver agenda
           </Button>

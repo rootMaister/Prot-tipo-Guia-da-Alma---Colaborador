@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useEffect, useState } from 'react'
 
 import { Button } from '@guia-da-alma/ds'
@@ -43,6 +45,7 @@ export function EmpresaScreen() {
     }
 
     if (code === INVALID_CODE) {
+      onboarding.blocked()
       setHasError(true)
       registerAttempt()
       return
