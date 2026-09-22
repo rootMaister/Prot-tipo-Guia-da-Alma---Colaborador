@@ -1,11 +1,11 @@
-# Coleta do onboarding — teste interno
+# Coleta e replay do onboarding
 
 Implementação local na branch `codex/posthog-onboarding`, a partir de `9d3ef48`.
 SDK oficial `posthog-js`, instalado diretamente; não foi executado um instalador interativo.
 Não houve deploy nem criação de dashboard. Em 22/09/2026, o token público foi configurado
 somente em `.env.local` e o recebimento de eventos locais foi confirmado no projeto 621293.
 
-## Ativação local
+## Ativação local e na Vercel
 
 1. Copie `.env.example` para `.env.local` (ignorado pelo Git).
 2. Defina `VITE_POSTHOG_ENABLED=true` e preencha `VITE_POSTHOG_KEY` com o **token público
@@ -16,9 +16,10 @@ somente em `.env.local` e o recebimento de eventos locais foi confirmado no proj
    → agendamento → Meus agendamentos. Confira os eventos no PostHog.
 
 Sem token e ativação explícita, nenhum evento é enviado e nenhum estado de analytics é
-persistido. A integração está limitada ao Vite em desenvolvimento em localhost/127.0.0.1/::1.
-Builds de produção, inclusive Vercel, permanecem desativados mesmo com variáveis preenchidas;
-o SDK é carregado dinamicamente apenas no teste local. Ativar preview/produção é outra mudança.
+persistido. A restrição a localhost foi removida a pedido do usuário em 22/09/2026.
+Na Vercel, configure as mesmas variáveis no ambiente Production antes do build.
+A coleta e o replay ficam ativos quando `VITE_POSTHOG_ENABLED=true` e há token público.
+Sem essas condições, permanecem desligados em qualquer ambiente. O SDK é carregado sob demanda.
 
 ## Eventos e leitura dos resultados
 
@@ -106,18 +107,28 @@ alterar a seleção padrão ou ler detalhes), esse objetivo ainda não foi espec
 
 ## Limites de dados
 
-Replay, autocapture, pageviews automáticos, erros automáticos, heatmaps, performance, surveys
-e feature flags remotos estão desligados. Nenhuma pergunta ou nota ao final foi adicionada.
+Autocapture, pageviews automáticos, erros automáticos, heatmaps, performance e surveys
+estão desligados. A consulta de configuração remota está habilitada para obter a configuração
+de replay do projeto. O replay está habilitado no índice e nas rotas conhecidas do onboarding;
+a navegação para outros destinos, incluindo o Diário, interrompe a gravação. Nenhuma pergunta ou nota ao final foi adicionada.
 Não usamos `identify` nem criamos perfis pessoais. A interface de instrumentação não recebe
 valores de formulários, respostas de saúde, profissionais, empresa, datas ou horários escolhidos.
+No replay, todo texto é mascarado. Campos (inclusive hidden/file), cartões de opções, chips
+de seleção, imagens, vídeos, canvas e iframes são substituídos por blocos. Atributos de texto,
+identificadores e dados também são removidos; ficam apenas atributos de layout e SVG.
+Console, corpos/cabeçalhos de rede, JSON-LD e captura de canvas estão desativados. URLs
+da gravação perdem query string e fragmento. Isso reduz a fidelidade visual de propósito: a
+gravação mostra navegação, rolagem e estrutura, sem o conteúdo pessoal.
 
-O filtro `before_send` aceita somente os eventos e propriedades listados, além dos
+O filtro `before_send` aceita somente os eventos e propriedades listados e `$snapshot`
+com seu payload já mascarado pelo gravador, além dos
 identificadores anônimos e campos de transporte necessários ao SDK. Remove URL, query string,
 referrer, propriedades de pessoa e demais campos. Geolocalização está desativada e o IP na propriedade do evento é substituído por `0.0.0.0`. Como qualquer
 requisição HTTP, o serviço recebe metadados de transporte; não se trata de anonimato absoluto.
 Session storage guarda só a tentativa e os identificadores anônimos. Falhas de armazenamento
-ou captura não interrompem o fluxo. Para ativar replay futuramente, verificar mascaramento
-em navegador antes de alterar o bloqueio atual.
+ou captura não interrompem o fluxo. O projeto PostHog foi conferido: Record user sessions
+está ligado, com amostragem de 100% e sem duração mínima. As proteções locais prevalecem
+sobre as configurações remotas de captura de console e rede.
 
 ## Verificação
 
@@ -142,3 +153,11 @@ Essa URL não contém esta integração local.
 
 Referências: [instalação React](https://posthog.com/docs/libraries/react) e
 [configuração do SDK](https://posthog.com/docs/libraries/js/config).
+
+## Verificação da ativação em 22/09/2026
+
+O gravador real foi exercitado em navegador local com dados fictícios. O payload de snapshot
+foi inspecionado por diagnóstico temporário: continha estrutura, textos mascarados e blocos,
+sem o nome/e-mail de teste. O diagnóstico foi removido antes do commit; nenhuma amostra
+de conteúdo foi gravada no repositório. Os testes também cobrem máscaras e transporte de
+snapshots. A ativação final em produção depende do build com as variáveis da Vercel.

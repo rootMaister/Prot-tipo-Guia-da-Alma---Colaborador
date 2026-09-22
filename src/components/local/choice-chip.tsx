@@ -25,7 +25,7 @@ export function ChoiceChip({ label, selected, onToggle }: ChoiceChipProps) {
       aria-pressed={selected}
       onClick={onToggle}
       className={cn(
-        'text-label-m cursor-pointer rounded-full border px-4 py-2',
+        'ph-no-capture text-label-m cursor-pointer rounded-full border px-4 py-2',
         'transition-colors duration-150 ease-out',
         selected
           ? 'bg-action-primary text-fg-on-action border-action-primary hover:bg-action-primary-hover hover:border-action-primary-hover'

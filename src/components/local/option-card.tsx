@@ -27,7 +27,7 @@ export function OptionCard({ id, label, checked, onCheckedChange }: OptionCardPr
     <label
       htmlFor={id}
       className={cn(
-        'flex w-full cursor-pointer items-center gap-4 rounded-2xl border py-4 pl-4 pr-6',
+        'ph-no-capture flex w-full cursor-pointer items-center gap-4 rounded-2xl border py-4 pl-4 pr-6',
         'transition-colors duration-150 ease-out',
         checked
           ? 'bg-fg-on-action border-outline-success-subtle hover:border-outline-success'

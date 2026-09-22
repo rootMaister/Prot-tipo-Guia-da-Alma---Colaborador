@@ -1,23 +1,24 @@
 import type { PostHog } from 'posthog-js'
 import { privacyConfig } from './privacy'
-import { createOnboardingTracker } from './onboarding'
+import { createOnboardingTracker, paths } from './onboarding'
 import type { CompletionKind, EventName, Properties } from './onboarding'
 
-// Production builds cannot enable capture, even if someone sets the environment variables.
-const enabled = import.meta.env.DEV &&
-  ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname) &&
+// Explicit opt-in applies equally to local, preview and production builds.
+const enabled =
   import.meta.env.VITE_POSTHOG_ENABLED === 'true' &&
   Boolean(import.meta.env.VITE_POSTHOG_KEY?.trim())
 
+const replayAllowed = (path: string) => path === '/' || paths.includes(path)
 let client: PostHog | undefined
 let failed = false
 const pending: { event: EventName; properties: Properties; timestamp: Date }[] = []
 if (enabled) {
-  // Keep the SDK out of the production bundle and never delay rendering for analytics.
+  // Load separately so analytics never delays rendering.
   void import('posthog-js').then(({ default: posthog }) => {
     posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
       api_host: 'https://us.i.posthog.com',
       ...privacyConfig,
+      disable_session_recording: !replayAllowed(location.pathname),
     })
     client = posthog
     for (const { event, properties, timestamp } of pending.splice(0)) {
@@ -38,7 +39,12 @@ const tracker = createOnboardingTracker({
 export const onboarding = {
   stepCompleted: (path: string, kind?: CompletionKind) => { if (enabled) tracker.stepCompleted(path, kind) },
   start: () => { if (enabled) tracker.start() },
-  view: (path: string) => { if (enabled) tracker.view(path) },
+  view: (path: string) => {
+    if (!enabled) return
+    if (replayAllowed(path)) client?.startSessionRecording()
+    else client?.stopSessionRecording()
+    tracker.view(path)
+  },
   exit: (reason: 'skip_match' | 'explore_app') => { if (enabled) tracker.exit(reason) },
   blocked: () => { if (enabled) tracker.blocked() },
   requestBooking: () => { if (enabled) tracker.requestBooking() },

@@ -137,8 +137,12 @@ test('privacy filter strips sensitive payloads, URLs and person properties but k
   assert.equal(filtered.$set, undefined)
   assert.equal(filtered.$set_once, undefined)
   assert.equal(privacyConfig.before_send({ event: '$autocapture', properties: {} }), null)
-  assert.equal(privacyConfig.before_send({ event: '$snapshot', properties: {} }), null)
-  assert.equal(privacyConfig.disable_session_recording, true)
+  const replay = privacyConfig.before_send({ event: '$snapshot', properties: {
+    $snapshot_data: [{ type: 2, data: { text: '***' } }], $snapshot_bytes: 12, email: 'private',
+  } })
+  assert.equal(replay.properties.email, undefined)
+  assert.deepEqual(replay.properties.$snapshot_data, [{ type: 2, data: { text: '***' } }])
+  assert.equal(privacyConfig.disable_session_recording, false)
   assert.equal(privacyConfig.disable_surveys, true)
 })
 
@@ -183,4 +187,24 @@ test('screen completion requires an action, is scoped to the current step and de
   tracker.stepCompleted('/match/o-que-te-traz')
   assert.equal(count(events, 'onboarding_step_completed'), 2)
   assert.equal(events.at(-1).properties.completion_kind, 'skip_optional')
+})
+
+
+test('replay masks text, attributes, fields and URLs before serialization', () => {
+  const r = privacyConfig.session_recording
+  assert.equal(r.maskAllInputs, true)
+  assert.equal(r.maskTextSelector, '*')
+  assert.equal(r.maskInputFn('private@example.test'), '••••')
+  assert.equal(r.maskTextFn('private@example.test'), '********************')
+  assert.equal(r.maskAttributeFn('aria-label', 'private'), '')
+  assert.equal(r.maskAttributeFn('value', 'private'), '')
+  assert.equal(r.maskAttributeFn('data-name', 'private'), '')
+  assert.equal(r.maskAttributeFn('class', 'flex'), 'flex')
+  assert.equal(r.maskCapturedNetworkRequestFn({name:'https://example.test/cadastro?email=private#private'}).name,
+    'https://example.test/cadastro')
+  assert.equal(r.recordBody, false)
+  assert.equal(r.recordHeaders, false)
+  assert.equal(r.captureCanvas.recordCanvas, false)
+  assert.equal(r.recordCrossOriginIframes, false)
+  for (const selector of ['input', 'textarea', 'select', '.ph-no-capture']) assert.ok(r.blockSelector.includes(selector))
 })

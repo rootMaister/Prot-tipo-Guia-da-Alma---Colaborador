@@ -18,18 +18,44 @@ export const privacyConfig: Partial<PostHogConfig> = {
   capture_exceptions: false,
   capture_heatmaps: false,
   capture_performance: false,
-  disable_session_recording: true,
+  disable_session_recording: false,
   disable_surveys: true,
-  advanced_disable_flags: true,
+  advanced_disable_flags: false,
   person_profiles: 'never',
   persistence: 'sessionStorage',
   ip: false,
   enable_recording_console_log: false,
-  session_recording: { maskAllInputs: true, maskTextSelector: '*', blockSelector: 'body' },
+  session_recording: {
+    maskAllInputs: true,
+    maskTextSelector: '*',
+    maskInputFn: () => '••••',
+    maskTextFn: (text) => text.replace(/[^\s]/g, '*'),
+    // Block fields (including hidden/file), health choices and media before serialization.
+    blockSelector: '.ph-no-capture, input, textarea, select, canvas, video, img, iframe',
+    maskAttributeFn: (name, value) => {
+      // Preserve only layout/SVG styling. No labels, values, IDs or data attributes.
+      if (['class', 'style', 'width', 'height', 'viewBox', 'd', 'fill', 'stroke',
+        'stroke-width', 'xmlns', 'role', 'type', 'rel'].includes(name)) return value
+      if (name === 'href' && /\.css(?:[?#]|$)/.test(value)) return value.split(/[?#]/)[0]
+      return ''
+    },
+    recordHeaders: false,
+    recordBody: false,
+    captureCanvas: { recordCanvas: false },
+    recordCrossOriginIframes: false,
+    captureJsonLd: false,
+    maskCapturedNetworkRequestFn: (request) => ({
+      ...request, name: request.name?.split(/[?#]/)[0],
+    }),
+  },
   before_send: (event) => {
-    if (!event || !eventNames.some((name) => name === event.event)) return null
+    if (!event) return null
+    const replay = event.event === '$snapshot'
+
+    if (!replay && !eventNames.some((name) => name === event.event)) return null
     event.properties = Object.fromEntries(Object.entries(event.properties ?? {})
-      .filter(([key]) => allowedProperties.has(key)))
+      .filter(([key]) => allowedProperties.has(key) || (replay &&
+        ['$snapshot_data', '$snapshot_bytes', '$snapshot_host'].includes(key))))
     event.properties.$process_person_profile = false
     event.properties.$geoip_disable = true
     // Ingestion otherwise fills the IP from the HTTP connection, even with ip: false.
