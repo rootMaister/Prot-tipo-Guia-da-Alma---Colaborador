@@ -612,3 +612,156 @@ sempre visível nas quatro. A coluna rola por dentro só nas duas primeiras.
 **Divergência que sobra:** o frame desenha **4 horários numa linha** e o mock do protótipo
 gera de 5 a 7 por dia útil, que quebram em duas linhas (+50px). Mantido o mock, que existe
 para os dias não parecerem todos iguais — ver `disponibilidade.ts`.
+
+---
+
+# Sincronizar no Figma — revisão de 23/09/2026 (Detalhes da sessão, card-profissional e Início do Match)
+
+## Aplicado
+
+- **Detalhes da sessão ganhou a aba "Formação"** (3254:2973 / 3255:3422), entre Descrição e
+  Avaliações: graduação, pós, especializações, certificações e registro profissional.
+- **O desktop do Detalhes passou a usar abas.** Antes empilhava descrição, avaliações e mais
+  sessões numa coluna só; agora a coluna da direita tem as mesmas quatro abas do mobile, com
+  um frame por aba (1236:12522, 3255:3422, 3255:3248, 3255:3336). A fila de abas fica parada e
+  só o conteúdo rola. O frame "scrolled" (1279:13740) saiu do arquivo.
+- **Vídeo de apresentação** no topo da Descrição (160px no mobile, 220px no desktop), com a
+  legenda "Apresentação de Daniele · 1 min". Não há vídeo no protótipo: o botão de play existe
+  e não toca nada.
+- **CRP abaixo do nome**: no cabeçalho do Detalhes e em todo `card-profissional` (resultados do
+  Match e Busca), como a descrição do componente (1173:4573) pede.
+- **"Mais sessões" com foto**: os cartões viraram o `card-profissional` Compact — foto de 56px
+  ao lado do título, sobre degradê. No desktop o segundo cartão é o super-compact (título em
+  cima, depois foto, nome, CRP e avaliação).
+- **Início do Match**: lockup no topo nos dois breakpoints; no desktop, ilustração e texto
+  viraram um bloco só, centralizado no espaço livre e com o texto centrado (3237:16419). O
+  filete acima das ações volta ao desktop — o frame agora o desenha, a 3% de preto.
+- **Especialidade**: o subtítulo ganhou o acento — "Sua preferência por especialidade".
+- **Consentimento**: "Termo de Uso" e "Política de Privacidade" viraram links de verdade,
+  para as páginas publicadas da plataforma (`/termos-de-uso/` e `/politica-de-privacidade/`),
+  abrindo em aba nova para não perder o cadastro. O mobile agora também escreve a frase longa,
+  toda em `fg/muted`. Sobra no arquivo: "Politica" continua sem acento.
+
+## Decidido no protótipo, sem desenho no arquivo
+
+- **CRP dos outros profissionais.** O arquivo só escreve "CRP 06/123456", o da Daniele. Lucas,
+  Mariana, Roberto e Carlos ganharam números inventados, um para cada, para a Busca não mostrar
+  o mesmo registro em cinco pessoas.
+- **Onde o CRP não entra.** "Confirmar informações" (1236:10804) e a coluna de resumo das telas
+  de duas colunas continuam sem ele, porque os frames não o desenham.
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **Dois tipos de cartão na mesma lista** | Detalhes desktop → Mais sessões (3255:3336) | O primeiro é Compact e o segundo super-compact, e o mobile usa Compact nos dois. Reproduzido como está; vale confirmar se é intencional. |
+| **Título repetido** | Mesmo frame, segundo cartão | Repete "Sessão de Casal"; o mobile traz "Orientação Vocacional", que é o que o protótipo usa nos dois. |
+| **Cor do título da seção** | Mesmo frame | "Mais sessões oferecidas por Daniele" está em `fg/muted`, enquanto "Sobre a sessão" e "Avaliações (38)" estão em `fg/default`. Reproduzido. |
+| **Depoimento em itálico** | Detalhes mobile → Avaliações (1184:5198) | Só o primeiro `card-review` (a instância que é o próprio componente, 1170:3967) sai em Inter Tight Italic; os outros são Regular. Tratado como sobra e mantido Regular. |
+| **Confirmação ainda com CPF** | 1236:10804 | Continua listando "CPF 123.123.123-12" — ver a revisão de 21/09. |
+| **Anotação "Criar versão pós cadastro"** | Frames desktop do Detalhes | Pendência de design: a versão "com menu" dessas telas ainda não existe. |
+
+## Visto e não aplicado nesta rodada, a pedido
+
+- **"Não tenho preferência" como opção da lista** da Especialidade, com os estados 4a
+  (1105:11678) e 4b (3151:1491, novo). O protótipo continua com o botão no rodapé.
+- **As três regras do Cadastro** anotadas no canvas (3083:14282, 3083:14283, 3083:14285):
+  código só para quem chega pela landing page, pré-cadastro de e-mails pelo RH, e "Em análise"
+  só para status pendente.
+- **"Novo na plataforma" e "Tem vídeo"**, propriedades novas do `card-profissional` que nenhum
+  frame do onboarding usa.
+
+## Cadastro — "Acesso não aprovado" (23/09/2026)
+
+> **Substituído em 08/10/2026**: o arquivo ganhou o frame "8b. Acesso recusado", e o
+> protótipo passou a segui-lo. Ver a revisão de 08/10/2026 no fim deste arquivo.
+
+O arquivo só desenha o desfecho feliz do "Em análise". O protótipo ganhou o outro,
+`/cadastro/reprovado`, **desenhado aqui** — precisa ser desenhado no Figma.
+
+| Decisão | O que foi feito |
+|---|---|
+| **Shell** | O mesmo do "Em análise" (`surface/base`, símbolo no mobile, lockup no desktop, rodapé de ajuda), e não o fundo lima do "Perfil aprovado": é a resposta daquela espera, e o lima é celebração. |
+| **Ícone** | `featured-icon` 80px, `warning`, com o `user-x` do lucide. Não `negative`: quem reprova é a empresa, e o vermelho de erro leria como culpa da pessoa. |
+| **Cópia** | Título "Acesso não aprovado". Texto: "Sua empresa não confirmou o seu cadastro. Isso costuma acontecer quando o e-mail ou o nome informados não batem com os registros do RH. Revise seus dados ou fale com o responsável pelo benefício na sua empresa." |
+| **Ações** | "Revisar meus dados" (primária) volta para "Suas informações" com tudo preenchido; dali segue senha e nova análise. "Voltar para a tela de acesso" (texto), como no "Em análise". |
+| **Como chegar** | Código da empresa `999999` — o par do `000000`, que demonstra o erro na tela do código. Só a **primeira** análise reprova: depois de revisar, a seguinte aprova, para o caminho não virar um laço. |
+
+---
+
+# Sincronizar no Figma — segunda passada de 23/09/2026 (Match e Agendamento)
+
+O Cadastro não mudou: mesma estrutura e mesmas medidas. Só os frames "Welcome" foram
+renomeados para "Bem-vindo".
+
+## Aplicado
+
+- **Barra de progresso do Match**: "Etapa N de 4", 25 → 50 → 75 → 100%, com barra e badge
+  concordando. Os rótulos agora nomeiam a própria etapa: Temas para a sessão, Especialidade,
+  Disponibilidade, Sessões recomendadas. Os valores interpolados do protótipo saíram.
+- **Passo 2 do Match** (3283:16761 com seleção, 3283:16905 vazio): o título virou "Temas /
+  para a sessão", e o rodapé é "Escolher temas →" com algo marcado e "Não sei ainda" sem nada.
+- **Especialidade**: o primário virou "Escolher especialidades →".
+- **Sessões recomendadas**: o título foi corrigido para "recomendadas".
+- **`card-profissional`**: "Ver agenda" virou "Ver mais" no próprio componente, então vale
+  para o Match e para a Busca.
+- **Informações complementares**: saiu a "Data de nascimento (opcional)". O texto de apoio do
+  WhatsApp virou "Usado para você receber informações das suas sessões".
+- **Confirmar informações**: entrou o bloco "Formato da sessão" (Online, pelo Google Meet), com
+  o aviso de onde fica o link. O rótulo virou "Confirme as informações", e "Data de horário"
+  virou "Data e horário da sessão". No desktop o passo passou a ter duas colunas, com título e
+  profissional à esquerda.
+- **Sessão agendada**: nova linha abaixo do título, dizendo que a sessão é pelo Google Meet e
+  onde fica o link.
+
+## Reproduzido como está, mas vale revisar no arquivo
+
+| Item | Onde | O que há |
+|---|---|---|
+| **Subtítulo do passo 2** | 3283:16777 | "Marque os temas que mais fazem sentido que gostaria de levar para a sessão" — junta duas versões da frase. Reproduzido. |
+| **Primário do Confirmar** | 1279:15578 × 1236:10804 | O desktop escreve "Confirmar agendamento" e 98%; o mobile, "Agendar" e 95%. Vale o mobile. |
+| **CPF na confirmação** | 1236:10804, 1279:15578 | Continua desenhado, embora o campo tenha saído do fluxo em 21/09. Fora do protótipo. |
+| **Linha do Google Meet só no mobile** | 1236:11034 × 1279:15911 | O desktop da Sessão agendada não ganhou a linha. Vale o mobile, nos dois. |
+| **Primário de Suas sessões no desktop** | 1134:2636 | Escreve "Escolher horário das sessões"; o mobile, "Buscar sessões". Vale o mobile. |
+| **Mesmo CRP para todos** | 1134:2891 | Os quatro profissionais do desktop mostram "CRP 06/123456". O protótipo mantém um número por pessoa. |
+| **Fotos novas no desktop dos resultados** | 1134:2891 | Lucas, Mariana e Roberto ganharam retratos próprios. O protótipo ainda reaproveita os três que tem. |
+
+---
+
+# Sincronizar no Figma — revisão de 08/10/2026 (Cadastro)
+
+## Aplicado
+
+- **"8b. Acesso recusado"** (3689:699 / 3689:709) ganhou frame e substitui o "Acesso não
+  aprovado" que o protótipo tinha desenhado em 23/09. É o layout do "Perfil aprovado" em
+  sunflower: `featured-icon` com o `x` do lucide (Color=Carefull, `warning` no DS), "Acesso
+  recusado" e "Fale com o responsável para entender o que aconteceu.". A única ação é "Acesse
+  a central de ajuda" — saíram "Revisar meus dados" e "Voltar para a tela de acesso", e com
+  elas a regra de só a primeira análise reprovar: com `999999` a análise sempre recusa. A rota
+  continua `/cadastro/reprovado`.
+- **Central de ajuda com link**: o botão do "Em análise" e o do "Acesso recusado" abrem a
+  central publicada no Google Sites, em aba nova (`lib/central-de-ajuda.ts`).
+- **Contrato de confiança**: o subtítulo perdeu o "; tudo é anônimo." e termina em "…seu caso
+  terapêutico.".
+- **Suas informações**: entrou "Data de nascimento *" (DD/MM/AAAA, obrigatória) entre o nome
+  e o CPF. Valida data completa, que existe no calendário e não está no futuro.
+
+## Decidido no protótipo
+
+- **Data de nascimento nos dois breakpoints.** Só o desktop (1089:10089) a desenha; o mobile
+  (1078:8944) segue com nome, CPF, e-mail e WhatsApp. O mesmo formulário não pode pedir dados
+  diferentes conforme a largura, então o campo vale para os dois.
+- **Mesmo arranjo do "Perfil aprovado" no desktop.** O frame do 8b centraliza ícone e texto
+  juntos e alinha o texto ao centro; o protótipo usa o `FeatureShell`, com o ícone no centro
+  da área e o texto embaixo à esquerda, como nas outras telas de feedback (decisão do review).
+- **A frase muda de lugar com o breakpoint**, como no arquivo: abaixo do título no mobile,
+  acima no desktop. É um nó só, reordenado por CSS, para o leitor de tela ler sempre título e
+  depois frase.
+
+## Precisa mudar no arquivo do Figma
+
+| Item | Onde | Mudança |
+|---|---|---|
+| **Data de nascimento no mobile** | 1078:8944 | Acrescentar o campo entre "Nome completo" e "CPF", como no desktop. |
+| **Nome da camada do ícone** | 3689:704, 3689:715 | A camada do glifo se chama `lucide/arrow-right`, mas mostra o `x`. |
+| **Cor do título** | 3689:706, 3689:718 | O título usa `category/sunflower/icon` e a frase `category/sunflower/text` — mesmo valor hoje, tokens diferentes. O protótipo usa `text` nos dois, como o "Perfil aprovado" faz com o verde. |

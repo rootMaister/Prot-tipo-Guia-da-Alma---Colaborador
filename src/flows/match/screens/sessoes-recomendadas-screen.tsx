@@ -24,6 +24,7 @@ const SESSOES: SessaoRecomendada[] = [
       'Sessão de Psicoterapia Analítica/Junguiana | atendimento exclusivo para mulheres e pessoas LGBT+',
     titulo: 'Psi.',
     nome: 'Daniele Tramontina',
+    crp: 'CRP 06/123456',
     tags: ['Junguiana', 'Autoconhecimento'],
     avatar: avatar1,
     estrelas: 4,
@@ -36,6 +37,7 @@ const SESSOES: SessaoRecomendada[] = [
     sessao: 'Sessão de Terapia Cognitivo-Comportamental | foco na ansiedade e depressão',
     titulo: 'Psic.',
     nome: 'Lucas Mendes',
+    crp: 'CRP 06/187342',
     tags: ['Cognitivo-comportamental', 'Ansiedade'],
     avatar: avatar2,
     estrelas: 5,
@@ -47,6 +49,7 @@ const SESSOES: SessaoRecomendada[] = [
     sessao: 'Sessão de Psicoterapia Humanista | abordagem centrada na pessoa',
     titulo: 'Psic.',
     nome: 'Mariana Souza',
+    crp: 'CRP 06/154920',
     tags: ['Humanista', 'Autoconhecimento'],
     avatar: avatar1,
     estrelas: 4,
@@ -58,6 +61,7 @@ const SESSOES: SessaoRecomendada[] = [
     sessao: 'Sessão de Terapia Familiar | trabalho com dinâmicas familiares',
     titulo: 'Psi.',
     nome: 'Roberto Lima',
+    crp: 'CRP 06/139875',
     tags: ['Terapia familiar', 'Família'],
     avatar: avatar1,
     estrelas: 5,
@@ -71,13 +75,12 @@ export function SessoesRecomendadasScreen() {
 
   return (
     <StepBody
-      // "recomendas" is how the heading is spelled in the file, while the subtitle right
-      // below it says "recomendadas". Reproduced as drawn and logged, not corrected.
+      // O arquivo escrevia "recomendas"; a revisão de 23/09/2026 corrigiu.
       title={
         <>
           Sessões
           {/* The mobile frame breaks the line; the desktop one sets it on a single line. */}
-          <br className="lg:hidden" /> recomendas
+          <br className="lg:hidden" /> recomendadas
         </>
       }
       subtitle="Sessões recomendadas para o seu perfil com os horários mais próximos de atendimento"

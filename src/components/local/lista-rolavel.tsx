@@ -23,8 +23,9 @@ export function ListaRolavel({
   className?: string
   /**
    * Esconde a barra de rolagem, deixando só o esmaecido como indicação. Usado no "Detalhes
-   * da sessão" do Agendamento, onde a barra competia com o desenho. A rolagem continua
-   * inteira — roda, arrasto, teclado e leitor de tela.
+   * da sessão" do Agendamento e nas listas do Match (via `rolavel` do `StepBody`), onde a
+   * barra competia com o desenho. A rolagem continua inteira — roda, arrasto, teclado e
+   * leitor de tela.
    */
   semBarra?: boolean
 }) {

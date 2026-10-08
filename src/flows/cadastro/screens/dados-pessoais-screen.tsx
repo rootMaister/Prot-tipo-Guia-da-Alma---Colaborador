@@ -7,13 +7,14 @@ import { ArrowRightIcon } from 'lucide-react'
 
 import { SignUpBody } from '@/components/layout/sign-up-shell'
 import { FieldShake, useSubmitAttempts } from '@/components/local/field-shake'
-import { maskCpf, maskPhone, onlyDigits } from '@/lib/masks'
+import { maskCpf, maskDate, maskPhone, onlyDigits } from '@/lib/masks'
 
 import { useCadastro } from '../cadastro-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
 type Errors = {
   fullName?: string
+  nascimento?: string
   cpf?: string
   email?: string
   whatsapp?: string
@@ -24,6 +25,13 @@ const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)
 const isWhatsapp = (value: string) => onlyDigits(value).length >= 10
 /** Só o comprimento: o protótipo não confere dígito verificador. */
 const isCpf = (value: string) => onlyDigits(value).length === 11
+/** Uma data que existe no calendário e não está no futuro — `31/02` e `2099` não passam. */
+const isNascimento = (value: string) => {
+  const [dia, mes, ano] = value.split('/').map(Number)
+  if (onlyDigits(value).length !== 8) return false
+  const data = new Date(ano, mes - 1, dia)
+  return data.getDate() === dia && data.getMonth() === mes - 1 && ano >= 1900 && data <= new Date()
+}
 
 export function DadosPessoaisScreen() {
   const { data, update } = useCadastro()
@@ -36,6 +44,12 @@ export function DadosPessoaisScreen() {
 
     if (!data.fullName.trim()) {
       nextErrors.fullName = 'Informe seu nome completo.'
+    }
+
+    if (!data.nascimento.trim()) {
+      nextErrors.nascimento = 'Informe sua data de nascimento.'
+    } else if (!isNascimento(data.nascimento)) {
+      nextErrors.nascimento = 'Data inválida.'
     }
 
     if (!data.cpf.trim()) {
@@ -101,6 +115,24 @@ export function DadosPessoaisScreen() {
             error={errors.fullName}
             autoComplete="name"
             onChange={(event) => update({ fullName: event.target.value })}
+          />
+        </FieldShake>
+
+        {/*
+          Entrou em 08/10/2026, entre o nome e o CPF — só no frame desktop (1089:10089); o
+          mobile (1078:8944) ainda não o desenha. Um formulário não muda de campos com a
+          largura da tela, então vale para os dois. Ver SYNC-FIGMA.md.
+        */}
+        <FieldShake trigger={errors.nascimento ? attempt : 0}>
+          <InputField
+            id="nascimento"
+            label="Data de nascimento *"
+            inputMode="numeric"
+            placeholder="DD/MM/AAAA"
+            value={data.nascimento}
+            error={errors.nascimento}
+            autoComplete="bday"
+            onChange={(event) => update({ nascimento: maskDate(event.target.value) })}
           />
         </FieldShake>
 

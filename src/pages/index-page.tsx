@@ -13,7 +13,7 @@ import { useScreenSurface } from '@/lib/use-screen-surface'
  * A porta de entrada do protótipo.
  *
  * Mostra **um** fluxo: o onboarding, que são o Cadastro, o Match e o Agendamento emendados —
- * eles já se costuram sozinhos no protótipo (o "Perfil aprovado" abre o Match, o "Ver agenda"
+ * eles já se costuram sozinhos no protótipo (o "Perfil aprovado" abre o Match, o "Ver mais"
  * do card abre o Agendamento, e o fim cai em Meus agendamentos), então aqui aparecem como uma
  * jornada só, e não como três listas.
  *
@@ -42,7 +42,7 @@ const etapas = [
     nome: 'Agendamento',
     basePath: '/agendamento',
     steps: agendamentoSteps,
-    descricao: 'Continua de "Ver agenda": detalhe da sessão, data e horário, dados e confirmação.',
+    descricao: 'Continua de "Ver mais": detalhe da sessão, data e horário, dados e confirmação.',
   },
 ]
 
@@ -110,15 +110,19 @@ export function IndexPage() {
                     </p>
 
                     <div className="text-caption text-fg-subtle mt-auto flex flex-wrap gap-x-3 gap-y-1">
-                      <a
-                        className="underline underline-offset-2"
-                        href={figmaNodeUrl(step.nodeMobile)}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Figma mobile
-                      </a>
-                      {step.nodeDesktop ? (
+                      {step.nodeMobile ? (
+                        <a
+                          className="underline underline-offset-2"
+                          href={figmaNodeUrl(step.nodeMobile)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Figma mobile
+                        </a>
+                      ) : (
+                        <span>sem desenho no Figma</span>
+                      )}
+                      {!step.nodeMobile ? null : step.nodeDesktop ? (
                         <a
                           className="underline underline-offset-2"
                           href={figmaNodeUrl(step.nodeDesktop)}

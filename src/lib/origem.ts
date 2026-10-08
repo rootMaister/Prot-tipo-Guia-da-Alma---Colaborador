@@ -39,7 +39,7 @@ export function lerOrigem(search: string, padrao: string): string {
 /**
  * Se o fluxo foi aberto de dentro do app. É o que decide se a régua lateral continua na
  * tela enquanto se agenda — os frames "com menu" (1617:*) desenham o fluxo com ela, e a
- * revisão de 11/09/2026 pediu que ela não sumisse ao clicar em "Ver agenda" na Busca.
+ * revisão de 11/09/2026 pediu que ela não sumisse ao clicar em "Ver mais" na Busca.
  *
  * Só o desktop: os frames "com menu" do mobile não têm barra nenhuma, porque agendar é
  * tarefa e não destino.

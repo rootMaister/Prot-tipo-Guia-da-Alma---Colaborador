@@ -16,13 +16,14 @@ export type StepSlug =
   | 'senha'
   | 'analise'
   | 'aprovado'
+  | 'reprovado'
 
 export type Step = {
   slug: StepSlug
   /** Screen name as it reads in Figma, for the index page and for re-finding the node. */
   title: string
-  /** Figma node id for the mobile frame. */
-  nodeMobile: string
+  /** Figma node id for the mobile frame; null where the screen has no design yet. */
+  nodeMobile: string | null
   /** Figma node id for the desktop frame; null where the screen is mobile-only. */
   nodeDesktop: string | null
   /**
@@ -122,6 +123,19 @@ export const cadastroSteps: readonly Step[] = [
     title: '8. Perfil aprovado',
     nodeMobile: '275:2195',
     nodeDesktop: '346:108',
+    progress: null,
+    stepLabel: null,
+  },
+  {
+    /*
+      O outro desfecho do "Em análise", no lugar do "Perfil aprovado" — não é um passo a
+      mais. Fica depois dele só para a ordem da animação e do índice, como os finais da
+      Avaliação.
+    */
+    slug: 'reprovado',
+    title: '8b. Acesso recusado',
+    nodeMobile: '3689:699',
+    nodeDesktop: '3689:709',
     progress: null,
     stepLabel: null,
   },

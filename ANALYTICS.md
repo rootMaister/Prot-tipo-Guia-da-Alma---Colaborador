@@ -45,6 +45,10 @@ emitido no máximo uma vez por tentativa. São conclusões **do protótipo**: n�
 real do RH nem reserva de atendimento num backend. Abrir Sessão agendada diretamente continua
 funcionando para revisão, mas não gera confirmação de analytics sem o clique anterior.
 
+"Acesso recusado" (`/cadastro/reprovado`, só com o código `999999`) fica **fora** da
+lista de etapas, para não deslocar o `step_index` do que vem depois: chegar nela encerra a
+tentativa como `left_flow`, depois do `step_completed` automático do "Em análise".
+
 As saídas distinguem `skip_match` (confirmou Pular match), `explore_app` (Agora não),
 `left_flow` (navegou para fora da jornada) e `restart` (novo começo). Não há evento de
 "abandono" no fechamento, refresh, perda de foco ou unload. Saída observada é um comportamento,

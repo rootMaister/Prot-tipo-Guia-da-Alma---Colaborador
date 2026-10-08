@@ -16,7 +16,7 @@ type CardSessaoProps = {
  * session title, with the action pinned bottom-right. It is `card-profissional` in Figma
  * too (1429:6320 on the Home, 1568:2128 on Meus agendamentos), but a different composition
  * of it from the one on the Match results — that one leads with the session title and
- * carries the rating, the availability line and "Ver agenda"; this one leads with the date
+ * carries the rating, the availability line and "Ver mais"; this one leads with the date
  * and carries neither rating nor availability.
  *
  * Hence a sibling of `card-profissional.tsx` rather than a variant of it: the two share a

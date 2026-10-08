@@ -607,7 +607,11 @@ Um app só não pode servir as duas: a seleção quebraria ao cruzar o breakpoin
 mobile é canônico neste fluxo, conforme combinado. A lista do desktop parece a passada mais
 recente e vale reconciliar no arquivo.
 
-### B2. Barra de progresso e badge não carregam informação nenhuma
+### B2. Barra de progresso e badge não carregam informação nenhuma — RESOLVIDO NO ARQUIVO (23/09/2026)
+
+O arquivo passou a desenhar 25 → 50 → 75 → 100%, com barra e badge concordando, e o
+protótipo adotou esses valores. O registro abaixo fica como histórico.
+
 
 | Passo | Badge | Barra mobile | Barra desktop |
 |---|---|---|---|

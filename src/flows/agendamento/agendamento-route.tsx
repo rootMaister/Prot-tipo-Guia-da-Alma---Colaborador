@@ -71,7 +71,11 @@ export function AgendamentoLayout() {
             stepLabel={step.stepLabel!}
             progress={step.progress}
             onBack={goBack}
-            aside={step.split ? <ResumoAgendamento /> : undefined}
+            aside={
+              step.split ? (
+                <ResumoAgendamento semDados={step.slug === 'confirmar'} />
+              ) : undefined
+            }
             comMenu={comMenu}
           >
             {conteudo}

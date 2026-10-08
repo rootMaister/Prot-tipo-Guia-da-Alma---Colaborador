@@ -33,7 +33,7 @@ export type SessaoRecomendada = Profissional & {
  * out below — `rounded-2xl` is 16px and there is nothing above it. See item 9 of
  * DS-GAPS.md.
  *
- * "Ver agenda" is the seam into the Agendamento flow: the design opens the session detail
+ * "Ver mais" is the seam into the Agendamento flow: the design opens the session detail
  * from here, so every card leads to the one session that flow is drawn around. The card's
  * availability rides along in router state, so the scheduling step opens on the slot this
  * card advertises rather than a fixed one.
@@ -121,7 +121,7 @@ export function CardProfissional({
               })
             }}
           >
-            Ver agenda
+            Ver mais
           </Button>
         </div>
       </div>

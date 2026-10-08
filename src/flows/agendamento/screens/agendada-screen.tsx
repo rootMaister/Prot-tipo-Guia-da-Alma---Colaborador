@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router'
 import { FeatureShell } from '@/components/layout/feature-shell'
 import { SESSAO_DEMO, useConta } from '@/state/conta-provider'
 
-import { HOJE, useAgendamento } from '../agendamento-provider'
+import { HOJE, SESSAO, useAgendamento } from '../agendamento-provider'
 
 /**
  * Step 5 — nodes 1236:11034 (mobile) and 1279:15911 (desktop).
@@ -49,6 +49,9 @@ export function AgendadaScreen() {
           Agendada
         </>
       }
+      // Só o mobile desenha esta linha (3306:3344); o desktop (1279:15911) não mudou. Vale
+      // o mobile, nos dois.
+      descricao={`A sessão é ${SESSAO.formato.charAt(0).toLowerCase()}${SESSAO.formato.slice(1)}. O link fica disponível nos detalhes do agendamento, em Meus agendamentos.`}
       footer={
         <Button
           variant="contained"

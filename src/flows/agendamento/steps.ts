@@ -2,7 +2,7 @@
  * Single source of truth for the Agendamento flow: order, URLs, progress and the Figma
  * node each screen was built from. Same shape as the other two flows.
  *
- * The flow continues from the Match results, where "Ver agenda" on a session card opens
+ * The flow continues from the Match results, where "Ver mais" on a session card opens
  * the session detail.
  */
 
@@ -35,9 +35,12 @@ export type Step = {
    * Whether the desktop frame is the two-column layout: a 436px running summary of the
    * booking on the left, the step on the right. True for "Escolher data e horário" and
    * "Informações complementares" — and in *both* sets of desktop frames, the onboarding ones
-   * (1279:14636, 1279:14976) and the "com menu" ones (1617:4660, 1617:4923). "Confirmar
-   * informações" is a single 450px column in both, and `detalhes` splits differently and
-   * draws its own.
+   * (1279:14636, 1279:14976) and the "com menu" ones (1617:4660, 1617:4923). `detalhes`
+   * splits differently and draws its own.
+   *
+   * "Confirmar informações" passou a ser de duas colunas em 23/09/2026 (1279:15578), mas a
+   * esquerda dele só traz título e profissional: os dados estão todos à direita, na própria
+   * confirmação. O frame "com menu" dele continua de coluna única.
    */
   split?: boolean
 }
@@ -49,9 +52,9 @@ export const AGENDAMENTO_FILE_KEY = 'mHWlzkeyvbLscICaXIjkcG'
  * nodes are not lost: the scrolled/selected/filled variants used while building.
  */
 export const VARIANT_NODES = {
-  detalhesAvaliacoes: '1184:5198',
-  detalhesMaisSessoes: '1184:5259',
-  detalhesDesktopScrolled: '1279:13740',
+  detalhesFormacao: { mobile: '3254:2973', desktop: '3255:3422' },
+  detalhesAvaliacoes: { mobile: '1184:5198', desktop: '3255:3248' },
+  detalhesMaisSessoes: { mobile: '1184:5259', desktop: '3255:3336' },
   horarioSelecionado: { mobile: '1203:1108', desktop: '1279:13985' },
   informacoesPreenchido: { mobile: '1236:10602', desktop: '1279:15398' },
 } as const
@@ -89,7 +92,8 @@ export const agendamentoSteps: readonly Step[] = [
     nodeMobile: '1236:10804',
     nodeDesktop: '1279:15578',
     progress: 95,
-    stepLabel: 'Confirme suas informações',
+    stepLabel: 'Confirme as informações',
+    split: true,
   },
   {
     slug: 'agendada',

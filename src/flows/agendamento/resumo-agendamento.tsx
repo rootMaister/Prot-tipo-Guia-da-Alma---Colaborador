@@ -22,21 +22,24 @@ import { formatarQuando, SESSAO, useAgendamento } from './agendamento-provider'
  *
  * Desktop only: the mobile frames have no second column, and the same information appears
  * inline as each step needs it.
+ *
+ * `semDados` é o "Confirmar informações" (1279:15578): lá a coluna fica só com título e
+ * profissional, porque a própria confirmação, à direita, lista os dados.
  */
-export function ResumoAgendamento() {
+export function ResumoAgendamento({ semDados = false }: { semDados?: boolean }) {
   const { data } = useAgendamento()
 
-  const temHorario = data.data !== null && data.horario !== null
+  const temHorario = !semDados && data.data !== null && data.horario !== null
   // Era o CPF que revelava este bloco; com o campo fora do fluxo, quem o revela é o
   // WhatsApp, o único dado que a tela de informações ainda pede. Ver `informacoes-screen`.
-  const temDados = data.whatsapp.trim().length > 0
+  const temDados = !semDados && data.whatsapp.trim().length > 0
 
   return (
     <>
       {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
       <h1 className="font-display text-heading-l text-fg-default">{SESSAO.titulo}</h1>
 
-      <ProfissionalResumo {...SESSAO.profissional} />
+      <ProfissionalResumo {...SESSAO.profissional} semCrp />
 
       {temHorario || temDados ? (
         <div className="flex flex-col gap-8">

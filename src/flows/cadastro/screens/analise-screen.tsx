@@ -1,3 +1,5 @@
+import { onboarding } from '@/analytics/posthog'
+
 import { useEffect } from 'react'
 
 import { Button, FeaturedIcon } from '@guia-da-alma/ds'
@@ -5,7 +7,9 @@ import { EyeIcon } from 'lucide-react'
 import { useNavigate } from 'react-router'
 
 import { StatusShell } from '@/components/layout/status-shell'
+import { abrirCentralDeAjuda } from '@/lib/central-de-ajuda'
 
+import { useCadastro } from '../cadastro-provider'
 import { useStepNavigation } from '../use-step-navigation'
 
 /** Mocked HR review. Long enough to read the screen, short enough to keep a walkthrough moving. */
@@ -19,16 +23,27 @@ const REVIEW_DELAY_MS = 4000
  * acima da linha de ajuda.
  */
 export function AnaliseScreen() {
-  const { goNext } = useStepNavigation('analise')
+  const { goNext, goTo } = useStepNavigation('analise')
+  const { analiseReprovada } = useCadastro()
   const navigate = useNavigate()
 
+  // Dois desfechos: "Perfil aprovado", o próximo passo, ou "Acesso recusado", com o
+  // código que simula a reprovação — ver `CODIGO_REPROVADO`.
   useEffect(() => {
-    const timer = window.setTimeout(goNext, REVIEW_DELAY_MS)
+    const concluir = () => {
+      if (!analiseReprovada) {
+        goNext()
+        return
+      }
+      onboarding.stepCompleted('/cadastro/analise', 'automatic')
+      goTo('reprovado')
+    }
+    const timer = window.setTimeout(concluir, REVIEW_DELAY_MS)
 
     return () => {
       window.clearTimeout(timer)
     }
-  }, [goNext])
+  }, [analiseReprovada, goNext, goTo])
 
   return (
     <StatusShell
@@ -57,7 +72,7 @@ export function AnaliseScreen() {
             DS-GAP: Figma draws this as `fg/subtle` (#6e6e6e) semibold; the closest DS
             variant, `text-neutral`, is `action/neutral` (#434343) bold.
           */}
-          <Button variant="text-neutral" size="small">
+          <Button variant="text-neutral" size="small" onClick={abrirCentralDeAjuda}>
             Acesse a central de ajuda
           </Button>
         </>

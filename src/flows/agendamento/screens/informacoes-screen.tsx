@@ -2,7 +2,7 @@ import { Button, InputField, Textarea } from '@guia-da-alma/ds'
 import { ArrowRightIcon } from 'lucide-react'
 
 import { StepBody } from '@/components/layout/step-shell'
-import { maskDate, maskPhone } from '@/lib/masks'
+import { maskPhone } from '@/lib/masks'
 
 import { useAgendamento } from '../agendamento-provider'
 import { useStepNavigation } from '../use-step-navigation'
@@ -26,6 +26,9 @@ import { useStepNavigation } from '../use-step-navigation'
  *
  * O CPF do **Cadastro** é outro, e continua: ele foi *adicionado* ao arquivo na mesma
  * revisão. Ver SYNC-FIGMA.md.
+ *
+ * Em 23/09/2026 saiu também a "Data de nascimento (opcional)": a tela ficou com o WhatsApp
+ * e as observações.
  */
 export function InformacoesScreen() {
   const { goNext } = useStepNavigation('informacoes')
@@ -49,19 +52,10 @@ export function InformacoesScreen() {
         <InputField
           id="whatsapp"
           label="Confirme o seu Whatsapp"
-          helperText="Usado para o profissional entrar em contato"
+          helperText="Usado para você receber informações das suas sessões"
           inputMode="tel"
           value={data.whatsapp}
           onChange={(event) => update({ whatsapp: maskPhone(event.target.value) })}
-        />
-
-        <InputField
-          id="nascimento"
-          label="Data de nascimento (opcional)"
-          placeholder="DD/MM/AAAA"
-          inputMode="numeric"
-          value={data.nascimento}
-          onChange={(event) => update({ nascimento: maskDate(event.target.value) })}
         />
 
         <div className="flex flex-col gap-2">

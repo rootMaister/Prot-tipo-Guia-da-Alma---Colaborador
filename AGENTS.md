@@ -4,11 +4,12 @@ App React navegável que reproduz os fluxos do Figma
 [Colaborador UI](https://www.figma.com/design/mHWlzkeyvbLscICaXIjkcG/Colaborador-UI),
 com estados mockados e sem backend:
 
-- **Cadastro** — seção `266:4`, página `266:3`. 9 telas, do splash ao perfil aprovado.
+- **Cadastro** — seção `266:4`, página `266:3`. 9 telas, do splash ao perfil aprovado, mais
+  o "Acesso recusado", o desfecho alternativo da análise (código `999999` para ver).
 - **Match de terapia** — seção `791:1078`. 5 telas, que continuam direto do "Perfil
   aprovado": questionário e sessões recomendadas. Eram 7 até a revisão de 21/09/2026, que
   tirou a espera "Buscando sessões" do arquivo.
-- **Agendamento** — seção `1184:5843`. 5 telas, que continuam do "Ver agenda" nas sessões
+- **Agendamento** — seção `1184:5843`. 5 telas, que continuam do "Ver mais" nas sessões
   recomendadas: detalhe da sessão, data e horário, dados e confirmação.
 - **Avaliação** — página `1769:9713`, seção `2288:12017`. 8 telas, abertas por "Entrar na
   sala" de uma sessão marcada: sessão realizada, quatro perguntas e um de três finais.
@@ -147,7 +148,7 @@ deixou de existir quando o desenho chegou: a rota e a pasta `src/experiments/` f
 ### Costuras: quem abre um fluxo diz para onde voltar
 
 As costuras são explícitas: o CTA de `aprovado-screen` (Cadastro) navega para `/match/inicio`,
-o "Ver agenda" de `card-profissional` (Match **e** Busca) para `/agendamento/detalhes`, o
+o "Ver mais" de `card-profissional` (Match **e** Busca) para `/agendamento/detalhes`, o
 "Reagendar" de `detalhes-sessao` para `/agendamento/horario`, e o "Continuar" de
 `agendada-screen` fecha o ciclo em `/app/agendamentos`. "Entrar na sala" de `detalhes-sessao` abre
 `/avaliacao/realizada` — não há sala, então o protótipo pula a sessão —, e os horários dos finais
@@ -282,7 +283,7 @@ tem equivalente — itens 16, 18, 23 e 31 do [DS-GAPS.md](DS-GAPS.md). São os c
 fortes a subir para a biblioteca.
 
 Cuidado com dois nomes parecidos: `card-profissional` é o cartão de resultado (título da
-sessão, avaliação, disponibilidade, "Ver agenda"), usado pelo Match e pela Busca;
+sessão, avaliação, disponibilidade, "Ver mais"), usado pelo Match e pela Busca;
 `card-sessao` é o cartão de sessão já marcada (badge de data, "Ver detalhes"), usado pelo
 Início e por Meus agendamentos. No Figma os dois se chamam `card-profissional` e não têm
 quase nada em comum.

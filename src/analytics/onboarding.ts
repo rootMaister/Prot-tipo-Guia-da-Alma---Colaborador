@@ -3,7 +3,10 @@ import { matchSteps } from '../flows/match/steps.ts'
 import { agendamentoSteps } from '../flows/agendamento/steps.ts'
 
 export const paths = [
-  ...cadastroSteps.map(({ slug }) => `/cadastro/${slug}`),
+  // "Acesso recusado" fica fora de propósito: é o fim da tentativa, não uma etapa dela,
+  // e incluí-lo deslocaria o `step_index` de tudo o que vem depois. Visitá-lo encerra a
+  // tentativa como `left_flow`. Ver ANALYTICS.md.
+  ...cadastroSteps.filter(({ slug }) => slug !== 'reprovado').map(({ slug }) => `/cadastro/${slug}`),
   ...matchSteps.map(({ slug }) => `/match/${slug}`),
   ...agendamentoSteps.map(({ slug }) => `/agendamento/${slug}`),
   '/app/agendamentos',

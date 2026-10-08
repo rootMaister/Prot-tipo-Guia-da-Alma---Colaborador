@@ -4,6 +4,7 @@ import { Button } from '@guia-da-alma/ds'
 import { useLocation, useNavigate } from 'react-router'
 
 import escutaAtiva from '@/assets/match/escuta-ativa.svg'
+import { GuiaLockup } from '@/components/local/guia-lockup'
 import { lerOrigem } from '@/lib/origem'
 
 import { useStepNavigation } from '../use-step-navigation'
@@ -14,8 +15,8 @@ import { useScreenSurface } from '@/lib/use-screen-surface'
  * Opening screen of the Match flow — nodes 478:6794 (mobile) and 861:4122 (desktop).
  * Picks up straight from the last Cadastro screen, "Perfil aprovado".
  *
- * Both breakpoints are the same dark composition; desktop centres it in a 450px column
- * and wraps the orb in two counter-rotating halos the mobile frame does not have.
+ * Both breakpoints are the same dark composition, lockup on top and actions at the
+ * bottom; desktop centres it in a 450px column.
  *
  * A cópia diverge entre os frames: o mobile agora diz "vamos indicar as sessões mais
  * recomendadas" e "Agora não", e o desktop, "iremos indicar o melhor profissional" e "Quero
@@ -40,45 +41,41 @@ export function InicioScreen() {
 
   return (
     <div className="bg-surface-brand-strong pt-safe px-safe flex min-h-dvh flex-col lg:items-center lg:[--px-safe:2.25rem]">
-      {/*
-        No desktop o conjunto inteiro — ilustração, texto e ações — é centrado na altura,
-        e não esticado até as bordas: é assim que o frame compõe, com folga acima e abaixo.
-        No mobile ele continua ocupando a tela toda, com as ações no rodapé.
-      */}
-      <div className="flex w-full flex-1 flex-col lg:max-w-[450px] lg:justify-center">
+      <div className="flex w-full flex-1 flex-col lg:max-w-[450px]">
         {/*
-          Os dois breakpoints passaram a ter a mesma montagem na revisão de 21/09/2026: a
-          ilustração centralizada no espaço que sobra, e o título e o subtítulo descendo
-          para junto dos botões. Antes o desktop centralizava ilustração e texto como um
-          bloco só (`lg:justify-center`), o que abria um vão entre o texto e as ações.
+          O lockup no topo e as ações no rodapé, nos dois breakpoints (2395:24125 e
+          2395:24196). O que muda é o meio: no mobile a ilustração ocupa o espaço livre e o
+          texto desce para junto dos botões; no desktop ilustração e texto são um bloco só,
+          centralizado no espaço livre e com o texto centrado — o frame 3237:16419, que entrou
+          na revisão de 23/09/2026.
         */}
-        <div className="flex flex-1 flex-col items-center justify-end gap-6 px-6 py-12 lg:flex-none lg:gap-14 lg:px-0 lg:py-0">
-          {/*
-            A ilustração "Guia da Alma_Escuta ativa" (2395:24096) substituiu o orbe animado
-            nesta tela, na revisão de 21/09/2026. O orbe continua no projeto — é ele que o
-            banner do Match no Início desenha (`promo-match`).
+        <div className="flex flex-1 flex-col items-center gap-6 px-6 py-12 lg:gap-0 lg:px-0 lg:pb-0">
+          <GuiaLockup height={20} className="text-fg-on-action" />
 
-            `flex-1` nos dois: é o que centraliza a ilustração na altura livre acima do
-            texto, em vez de encostá-la nele.
-          */}
-          <div className="flex flex-1 items-center justify-center lg:flex-none">
-            <img src={escutaAtiva} alt="" className="h-auto w-[229px] max-w-full" />
-          </div>
+          <div className="flex w-full flex-1 flex-col gap-6 lg:justify-center lg:gap-0">
+            {/*
+              A ilustração "Guia da Alma_Escuta ativa" (2395:24096) substituiu o orbe animado
+              nesta tela, na revisão de 21/09/2026. O orbe continua no projeto — é ele que o
+              banner do Match no Início desenha (`promo-match`).
+            */}
+            <div className="flex flex-1 items-center justify-center lg:flex-none lg:py-8">
+              <img src={escutaAtiva} alt="" className="h-auto w-[229px] max-w-full" />
+            </div>
 
-          <div className="text-fg-on-action flex w-full flex-col gap-4">
-            {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
-            <h1 className="font-display text-heading-l">Vamos encontrar o profissional ideal</h1>
-            <p className="text-body-s">
-              Com base nas suas respostas, vamos indicar as sessões mais recomendadas
-            </p>
+            <div className="text-fg-on-action flex w-full flex-col gap-4 lg:text-center">
+              {/* No weight utility: Calma Serif ships Regular only — see styles/index.css. */}
+              {/* A quebra é do arquivo, nos dois breakpoints: "Vamos encontrar / o profissional ideal". */}
+              <h1 className="font-display text-heading-l">
+                Vamos encontrar <br />o profissional ideal
+              </h1>
+              <p className="text-body-s">
+                Com base nas suas respostas, vamos indicar as sessões mais recomendadas
+              </p>
+            </div>
           </div>
         </div>
 
-        {/*
-          No desktop o frame não desenha o filete: as ações são a continuação do texto, não
-          uma barra à parte. Daí `lg:border-t-0` e o respiro maior embaixo.
-        */}
-        <div className="pb-safe flex w-full flex-col gap-3 border-t border-black/3 px-6 pt-3 [--pb-safe:1rem] lg:border-t-0 lg:px-0 lg:pt-8 lg:[--pb-safe:0px]">
+        <div className="pb-safe flex w-full flex-col gap-3 border-t border-black/3 px-6 pt-3 [--pb-safe:1rem] lg:[--pb-safe:2rem]">
           <Button variant="lime" className="w-full" onClick={goNext}>
             Continuar
           </Button>

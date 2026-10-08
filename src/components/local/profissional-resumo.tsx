@@ -1,8 +1,16 @@
+import { cn } from '@guia-da-alma/ds'
+
 export type Profissional = {
   /** Abbreviated title as drawn: "Psi." on some cards, "Psic." on others. */
   titulo: string
   nome: string
   avatar: string
+  /**
+   * O registro no conselho, "CRP 06/123456" — a linha que o `card-profissional` passou a
+   * trazer "fixa abaixo do nome" (1173:4573) e que o cabeçalho do Detalhes da sessão ganhou
+   * junto, em 23/09/2026.
+   */
+  crp?: string
   /** 0–5, drawn as filled and hollow star glyphs. */
   estrelas: number
   avaliacoes: number
@@ -10,6 +18,19 @@ export type Profissional = {
 }
 
 const MAX_ESTRELAS = 5
+
+type ProfissionalResumoProps = Profissional & {
+  /**
+   * A foto de 56px e raio 12 do `Foto profissional / Size=Small` (2694:12403), que o card
+   * de "Mais sessões" usa, no lugar do retrato de 88px.
+   */
+  compacto?: boolean
+  /**
+   * Esconde o CRP onde o arquivo não o desenha: o "Confirmar informações" (1236:10804) e a
+   * coluna de resumo das telas de duas colunas continuam sem ele.
+   */
+  semCrp?: boolean
+}
 
 /**
  * The 88px portrait plus name, rating and session count — the block shared by
@@ -28,16 +49,22 @@ export function ProfissionalResumo({
   titulo,
   nome,
   avatar,
+  crp,
   estrelas,
   avaliacoes,
   sessoesRealizadas,
-}: Profissional) {
+  compacto,
+  semCrp,
+}: ProfissionalResumoProps) {
   return (
-    <div className="flex w-full items-center gap-4 py-2">
+    <div className={cn('flex w-full items-center', compacto ? 'gap-2.5' : 'gap-4 py-2')}>
       <img
         src={avatar}
         alt=""
-        className="border-outline-avatar size-[88px] shrink-0 rounded-2xl border object-cover"
+        className={cn(
+          'border-outline-avatar shrink-0 border object-cover',
+          compacto ? 'size-14 rounded-xl' : 'size-[88px] rounded-2xl',
+        )}
       />
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -45,6 +72,8 @@ export function ProfissionalResumo({
           <span className="text-fg-subtle">{titulo}</span>
           <span className="text-fg-muted">{nome}</span>
         </div>
+
+        {crp && !semCrp ? <p className="text-caption text-fg-subtle">{crp}</p> : null}
 
         <div className="flex flex-col gap-1">
           <p className="text-accent-rating text-label-s flex items-center gap-2.5">

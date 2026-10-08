@@ -35,6 +35,15 @@ const suavizar = (valor: number) => {
 const GRADE = 96
 /** Quadros por segundo. */
 const FPS = 60
+/**
+ * Onde a animação começa. Na fase 0 a segunda onda — uma onda plana, `cos(ny·3 − nx·1,6)` —
+ * atravessa o painel como uma faixa diagonal reta, e como a `speed` da receita avança a fase
+ * devagar, era essa faixa que ficava na tela nos primeiros segundos de toda visita. 3,6 é o
+ * ponto a que o loop chegava aos ~12s, já com as manchas desenhadas. O movimento é o mesmo;
+ * só a abertura pula o trecho ruim — e é também o quadro que fica parado com
+ * `prefers-reduced-motion`.
+ */
+const FASE_INICIAL = 3.6
 
 export function AtmosferaAnimada({
   proporcao = 1,
@@ -91,7 +100,7 @@ export function AtmosferaAnimada({
       tabela[indice * 3 + 2] = cor[2]
     }
 
-    let fase = 0
+    let fase = FASE_INICIAL
     let anterior = 0
     let quadro = 0
     let descartado = false

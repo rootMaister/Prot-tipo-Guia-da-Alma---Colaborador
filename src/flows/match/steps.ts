@@ -24,15 +24,10 @@ export type Step = {
    * Drives both the header badge and the progress-bar fill, so the two cannot drift
    * apart. Null on screens with no header.
    *
-   * These are NOT the percentages drawn in Figma. The badges there read 6 → 12 → 6 → 98
-   * → 76: step 4's is a literal copy of step 2's, and step 5's 98% lands before step 7's
-   * 76%. The bars corroborate nothing — every mobile bar in the section is 15.891px of
-   * 279 (5.7%) and every desktop bar is 112.5px of 384 (29.3%), both stale values carried
-   * over from the Cadastro file.
-   *
-   * So only 6 (step 2), 12 (step 3) and 76 (step 7) survive as stated intent, and steps 4
-   * and 5 are interpolated evenly between 12 and 76. Confirmed with you before writing.
-   * See the annex in DS-GAPS.md.
+   * Desde a revisão de 23/09/2026 são os valores do arquivo, e barra e badge concordam:
+   * "Etapa N de 4", 25 → 50 → 75 → 100, com a trilha de 279px cheia em 70, 140, 209 e 279.
+   * Até então o arquivo dizia 6 → 12 → 6 → 98 → 76 e as barras eram sobras do Cadastro, e
+   * os passos 4 e 5 eram interpolados aqui — ver o anexo do DS-GAPS.md, agora resolvido.
    */
   progress: number | null
   /**
@@ -52,12 +47,9 @@ export type Step = {
    */
   alturaFixa?: boolean
   /**
-   * Label beside the progress bar, taken from the rendered text — never the layer name,
-   * which is "Progress Bar - Etapa 1 de 4: Empresa" on every screen here too.
-   *
-   * On steps 5 and 7 the *rendered* text is stale as well: both read "Temas para a
-   * sessão", which belongs to step 2, on screens about schedules and results. Copy is the
-   * designer's call, so it is reproduced verbatim and logged rather than rewritten.
+   * Label beside the progress bar, taken from the rendered text — never the layer name.
+   * Desde 23/09/2026 cada passo nomeia a própria etapa: Temas para a sessão, Especialidade,
+   * Disponibilidade e Sessões recomendadas.
    */
   stepLabel: string | null
 }
@@ -83,9 +75,10 @@ export const matchSteps: readonly Step[] = [
   {
     slug: 'o-que-te-traz',
     title: '2. O que te traz aqui',
-    nodeMobile: '1105:10872',
+    // Refeito em 23/09/2026; o frame antigo (1105:10872) saiu. 3283:16905 é o estado vazio.
+    nodeMobile: '3283:16761',
     nodeDesktop: '1133:1393',
-    progress: 6,
+    progress: 25,
     stepLabel: 'Temas para a sessão',
     alturaFixa: true,
   },
@@ -94,9 +87,8 @@ export const matchSteps: readonly Step[] = [
     title: '4. Preferência de abordagem',
     nodeMobile: '1105:11678',
     nodeDesktop: '1134:2358',
-    // Interpolated: the badge in Figma still reads 6%, copied from step 2.
-    progress: 33,
-    stepLabel: 'Escolha uma especialidade',
+    progress: 50,
+    stepLabel: 'Especialidade',
     alturaFixa: true,
   },
   {
@@ -104,11 +96,8 @@ export const matchSteps: readonly Step[] = [
     title: '5. Suas sessões',
     nodeMobile: '1119:12331',
     nodeDesktop: '1134:2636',
-    // Interpolated: the badge in Figma reads 98%, which lands before step 7's 76%.
-    progress: 55,
-    // O rótulo era "Temas para a sessão", sobra do passo 2; o arquivo agora escreve
-    // "sua disponibilidade", em minúscula, e é reproduzido assim. O desktop diz "Opcional".
-    stepLabel: 'sua disponibilidade',
+    progress: 75,
+    stepLabel: 'Disponibilidade',
     alturaFixa: true,
   },
   {
@@ -116,10 +105,10 @@ export const matchSteps: readonly Step[] = [
     title: '7. Sessões recomendadas',
     nodeMobile: '1119:12688',
     nodeDesktop: '1134:2891',
-    progress: 76,
+    progress: 100,
     alturaFixa: true,
     wide: true,
-    stepLabel: 'Temas para a sessão',
+    stepLabel: 'Sessões recomendadas',
   },
 ]
 

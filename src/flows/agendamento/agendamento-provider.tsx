@@ -8,16 +8,22 @@ import { lerDisponibilidade } from './disponibilidade'
 
 /**
  * The flow is drawn around one session throughout, so it is a constant rather than
- * something carried over from the Match results. Every "Ver agenda" on step 7 of Match
+ * something carried over from the Match results. Every "Ver mais" on step 7 of Match
  * lands here.
  */
 export const SESSAO = {
   titulo:
     'Sessão de Psicoterapia Analítica/Junguiana | atendimento exclusivo para mulheres e pessoas LGBT+',
   duracao: '45 minutos de duração',
+  /**
+   * Onde a sessão acontece — entrou na confirmação e na tela de sucesso em 23/09/2026
+   * (3297:2979, 3306:3344). É informação da sessão, não escolha da pessoa.
+   */
+  formato: 'Online, pelo Google Meet',
   profissional: {
     titulo: 'Psi.',
     nome: 'Daniele Tramontina',
+    crp: 'CRP 06/123456',
     avatar,
     estrelas: 4,
     avaliacoes: 67,
@@ -36,7 +42,6 @@ export type AgendamentoData = {
   data: Date | null
   horario: string | null
   whatsapp: string
-  nascimento: string
   observacoes: string
 }
 
@@ -48,7 +53,6 @@ const MOCK_DEFAULTS: AgendamentoData = {
   data: null,
   horario: null,
   whatsapp: '(11) 99999-9999',
-  nascimento: '',
   observacoes: '',
 }
 

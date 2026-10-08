@@ -25,9 +25,9 @@ export function PreferenciaAbordagemScreen() {
   return (
     <StepBody
       title="Especialidade"
-      // "preferencia" is unaccented in the file. Copy is the designer's call, so the
-      // rendered text is reproduced as drawn and logged instead of corrected.
-      subtitle="Sua preferencia por especialidade"
+      // O arquivo escrevia "preferencia" sem acento, e o protótipo reproduzia; o acento veio
+      // na revisão de 23/09/2026.
+      subtitle="Sua preferência por especialidade"
       rolavel
       footer={
         <>
@@ -38,7 +38,7 @@ export function PreferenciaAbordagemScreen() {
               onClick={goNext}
               trailingIcon={<ArrowRightIcon className="size-[18px]" />}
             >
-              Escolher horário das sessões
+              Escolher especialidades
             </Button>
           ) : (
             <Button variant="outlined" className="w-full" onClick={() => {

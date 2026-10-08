@@ -4,6 +4,7 @@ export type CadastroData = {
   companyCode: string
   companyName: string
   fullName: string
+  nascimento: string
   cpf: string
   email: string
   whatsapp: string
@@ -19,16 +20,26 @@ const MOCK_DEFAULTS: CadastroData = {
   companyCode: '',
   companyName: 'Imobiliária Novo Lar',
   fullName: '',
+  nascimento: '',
   cpf: '',
   email: '',
   whatsapp: '',
   password: '',
 }
 
+/**
+ * O código que simula a reprovação pelo RH: passa pela busca da empresa como qualquer outro,
+ * e o "Em análise" termina em "Acesso recusado" em vez de "Perfil aprovado". É o par do
+ * `000000`, que demonstra o erro na própria tela do código.
+ */
+export const CODIGO_REPROVADO = '999999'
+
 type CadastroContextValue = {
   data: CadastroData
   update: (patch: Partial<CadastroData>) => void
   reset: () => void
+  /** Se a análise deste cadastro termina em "Acesso recusado" — ver `CODIGO_REPROVADO`. */
+  analiseReprovada: boolean
 }
 
 const CadastroContext = createContext<CadastroContextValue | null>(null)
@@ -48,7 +59,12 @@ export function CadastroProvider({ children }: CadastroProviderProps) {
     setData(MOCK_DEFAULTS)
   }, [])
 
-  const value = useMemo(() => ({ data, update, reset }), [data, update, reset])
+  const analiseReprovada = data.companyCode === CODIGO_REPROVADO
+
+  const value = useMemo(
+    () => ({ data, update, reset, analiseReprovada }),
+    [data, update, reset, analiseReprovada],
+  )
 
   return <CadastroContext.Provider value={value}>{children}</CadastroContext.Provider>
 }

@@ -9,12 +9,21 @@ import { SignUpBody } from '@/components/layout/sign-up-shell'
 import { useStepNavigation } from '../use-step-navigation'
 
 type ConsentLinkProps = {
+  href: string
   children: ReactNode
 }
 
-/** The three policy documents are links in the design; they have no destination yet. */
-function ConsentLink({ children }: ConsentLinkProps) {
-  return <span className="text-fg-muted underline underline-offset-2">{children}</span>
+/**
+ * Os documentos abrem as páginas publicadas da plataforma, numa aba nova — os mesmos links
+ * que o frame (3266:16644) carrega desde 23/09/2026. Sair do cadastro na mesma aba perderia
+ * o que a pessoa já preencheu.
+ */
+function ConsentLink({ href, children }: ConsentLinkProps) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+      {children}
+    </a>
+  )
 }
 
 export function ConsentimentoScreen() {
@@ -29,20 +38,26 @@ export function ConsentimentoScreen() {
           estão seguros
         </>
       }
-      subtitle="Suas informações com profissionais são sigilosas. O RH não tem dados sobre seu caso terapêutico; tudo é anônimo."
+      subtitle="Suas informações com profissionais são sigilosas. O RH não tem dados sobre seu caso terapêutico."
       footer={
         <div className="flex flex-col gap-5">
           {/*
             Continua sem checkbox: o consentimento é o próprio botão, "Eu concordo,
             continuar". Nenhum dos dois frames desenha um controle.
 
-            Os dois breakpoints escrevem esta linha diferente — o mobile para em "Termo de
-            Uso." e o desktop acrescenta "e Politica de Privacidade.", sem o acento. Fica a
-            versão longa, com o acento corrigido. Ver SYNC-FIGMA.md.
+            A linha é toda `fg/muted`, links incluídos — só o sublinhado os distingue. O
+            arquivo escreve "Politica" sem o acento; aqui vai corrigido. Ver SYNC-FIGMA.md.
           */}
-          <p className="text-caption text-fg-subtle">
-            Li e concordo com o <ConsentLink>Termo de Uso</ConsentLink> e{' '}
-            <ConsentLink>Política de Privacidade</ConsentLink>.
+          <p className="text-caption text-fg-muted">
+            Li e concordo com o{' '}
+            <ConsentLink href="https://plataforma.guiadaalma.com.br/termos-de-uso/">
+              Termo de Uso
+            </ConsentLink>{' '}
+            e{' '}
+            <ConsentLink href="https://plataforma.guiadaalma.com.br/politica-de-privacidade/">
+              Política de Privacidade
+            </ConsentLink>
+            .
           </p>
 
           <Button

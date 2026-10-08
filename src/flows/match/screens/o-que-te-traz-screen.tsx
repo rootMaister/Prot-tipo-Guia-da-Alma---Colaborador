@@ -1,6 +1,7 @@
 import { onboarding } from '@/analytics/posthog'
 
 import { Button } from '@guia-da-alma/ds'
+import { ArrowRightIcon } from 'lucide-react'
 
 import { StepBody } from '@/components/layout/step-shell'
 import { PularMatchButton } from '@/components/local/pular-match-button'
@@ -11,7 +12,8 @@ import { TEMAS } from '../opcoes'
 import { useStepNavigation } from '../use-step-navigation'
 
 /**
- * Step 2 — nodes 1105:10872 (mobile) and 1133:1393 (desktop).
+ * Step 2 — nodes 3283:16761 (mobile, com seleção), 3283:16905 (mobile, vazio) and
+ * 1133:1393 (desktop).
  *
  * The two frames list completely different themes: desktop offers "Não sei ainda",
  * "Ansiedade / preocupação constante", "Tristeza / desânimo", "Relacionamento(s)",
@@ -28,19 +30,28 @@ export function OQueTeTrazScreen() {
 
   return (
     <StepBody
-      title="Seu momento"
-      subtitle="Marque os temas que você gostaria de levar para a sessão. Tudo bem se não souber agora"
+      title={
+        <>
+          Temas
+          <br />
+          para a sessão
+        </>
+      }
+      // Reproduzido como o arquivo escreve (3283:16777) — a frase junta duas versões ("que
+      // mais fazem sentido" e "que gostaria de levar"). Ver SYNC-FIGMA.md.
+      subtitle="Marque os temas que mais fazem sentido que gostaria de levar para a sessão. Tudo bem se não souber agora"
       rolavel
       footer={
         <>
-          {/*
-            Copy not in the design: neither frame draws a primary action here, not even the
-            desktop one with two themes ticked, which leaves no way forward once you have
-            chosen something. Added so the flow stays walkable. See DS-GAPS.md.
-          */}
+          {/* Os dois estados do arquivo: "Escolher temas" com algo marcado, "Não sei ainda" sem. */}
           {hasSelection ? (
-            <Button variant="contained" className="w-full" onClick={goNext}>
-              Continuar
+            <Button
+              variant="contained"
+              className="w-full"
+              onClick={goNext}
+              trailingIcon={<ArrowRightIcon className="size-[18px]" />}
+            >
+              Escolher temas
             </Button>
           ) : (
             <Button variant="outlined" className="w-full" onClick={() => {

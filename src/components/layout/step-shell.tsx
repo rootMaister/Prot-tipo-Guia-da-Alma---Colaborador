@@ -270,7 +270,13 @@ export function StepBody({
         </div>
       ) : null}
 
-      {rolavel ? <ListaRolavel className="px-6 lg:px-0">{children}</ListaRolavel> : corpo}
+      {rolavel ? (
+        <ListaRolavel semBarra className="px-6 lg:px-0">
+          {children}
+        </ListaRolavel>
+      ) : (
+        corpo
+      )}
 
       <StepFooter>{footer}</StepFooter>
     </>
